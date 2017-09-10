@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <title></title>
+    <link rel="stylesheet" href="__PUBLIC__/css/index.css" type="text/css" />
+    <link rel="stylesheet" href="__PUBLIC__/css/dtree.css" type="text/css" />
+    <link rel="stylesheet" href="__PUBLIC__/css/showLayer.css" type="text/css" />
+    <script type="text/javascript" src="__PUBLIC__/js/jquery1.5.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/PopupDiv_v1.0.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/loadTree.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/dtree.js"></script>
+</head>
+<body class="leftbody">
+
+<div class="c_side">
+    <div class="c_title">菜单栏</div>
+    <div class="c_main">
+    <!--树形菜单-->
+        <div class="c_table">
+            <script language="javascript">
+                dtree();
+            </script>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    //关闭除了第一个的所有节点
+    d.closeAllNotone();
+    $(document).ready(function(){
+        $("#sd2").parent(".dTreeNode").css({
+            'background':'#CBD6E8'
+        });
+        $("#sd2").css({
+            'color':'#216200',
+            'font-weight':'bold'
+        });
+        //$(".dtree").children(".clip").eq(0).children(".clip").eq(0).children(".dTreeNode").eq(0).css("background-color","#CBD6E8");
+        //$(".dtree").children(".clip").eq(0).children(".clip").eq(0).children(".dTreeNode").eq(0).children("a").css({"color":"#216200","font-weight":"bold"});
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<include file="Public:file"/>
+<script type="text/javascript">
+setInterval(
+    function(){
+     location.href="index.php?s=/Hdfs/installDis";
+    },2000
+);
+</script>
+<body class="rightbody" onload="buttonLast()">
+    <div class="right_title" style="">
+        <span>首页 </span> &raquo; 分布式消冗文件系统  &raquo; 安装节点
+    </div>
+    <div class="right_main">
+        <div class="right_fortable">
+            <hr class="hr_top" />
+            
+            <!--页面操作成功与否提示-->
+            <div class="publicNotice pN_error" id="pN_info">{$errorInfo}</div>
+            <div class="publicNotice pN_error" id="pN_info">{$error}</div>
+            <!--页面操作成功与否提示 over-->
+            
+            <form name="addCluster" id="setSysTime" action="__URL__/index/indexname/{$idxIp}" method="post">
+                <input type="hidden" value="{$lastData}" id="lastData" />
+                <input type="hidden" value="{$laststate}" id="laststate" />
+	            <fieldset class="d_lightblue">
+	            <legend class="orange">安装节点</legend><br />
+	                <table class="hdfstab">
+	                    <volist name="installData" id="v" key="k">
+	                    <tr>
+	                        <td width="90px"><if condition = "$v.progress neq 0">install </if></td>
+	                        <td width="110px">{$v.ip}</td>
+	                        <td width="115px">
+	                            <div class="bg_jindu"><div style="background:url(__PUBLIC__/img/icons/bg_jin.png) no-repeat;width:{$v.progress}%;height:10px;"></div></div>
+	                        </td>
+	                        <td width="60px">{$v.progress}%</td>
+	                        <if condition = "$v.state eq ok || $v.state eq error">
+	                            <td width="100px">{$v.state} </td>
+	                        </if>
+	                        <td width="200px"><if condition = "$v.state neq 'ok'" >{$v.description}</if></td>
+	                    </tr>
+	                    </volist>
+	                </table>
+	            </fieldset>
+	            <hr class="hr_bottom" />
+	            <div class="tright bbb">
+	                <input type="submit" value="完成" id="doneNode" class="btn btn_big"/>
+	            </div>
+            </form>
+        </div>
+    </div>
+    <script type="text/javascript">
+    //安装页面
+    function buttonLast()
+    {
+        var lastData  = jQuery("#lastData").val();
+        var laststate = jQuery("#laststate").val();
+        if (laststate == "error" || laststate == "ok") {
+            document.getElementById("doneNode").disabled = false;
+        } else {
+            document.getElementById("doneNode").disabled = true;
+        }
+    }
+    </script>
+</body>

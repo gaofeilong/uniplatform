@@ -1,0 +1,59 @@
+#!/bin/bash
+# chkconfig: - 85 15
+# description: scidata gateway server daemon
+# processname: gwengine 
+# config: 
+# pidfile: /etc/ddfs/ServerMain.pid
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+#---------
+#HTTPD_LANG=${HTTPD_LANG-"CC"}
+#---------------
+serverprog=gwserver
+server=/usr/local/bin/ServerMain
+RETVAL=0
+
+#---------------- 
+start() {
+        serverpid=`pidof -o $$ -o $PPID -o %PPID -x $1 || \
+                        pidof -o $$ -o $PPID -o %PPID -x $server`
+        if [ -n "$serverpid" ]; then
+                servername=${server##*/}
+                echo $"$servername (pid $pid) is already running..."
+        else
+                echo -n $"Starting $serverprog: "
+                daemon --user=root $server
+                echo
+        fi 
+}
+
+#--------------------
+stop() {
+	echo -n $"Stopping $serverprog: "
+	killproc $server 9
+	echo
+}
+
+# See how we were called.
+case "$1" in
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  status)
+        status $server
+	;;
+  restart)
+	stop
+	start
+	;;
+  *)
+	echo $"Usage: $prog {start|stop|restart|status}"
+	RETVAL=3
+esac
+
+exit $RETVAL

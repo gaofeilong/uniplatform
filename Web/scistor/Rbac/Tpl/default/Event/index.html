@@ -1,0 +1,96 @@
+<include file="Public:file"/>
+<body class="rightbody">
+    <div class="right_title" style="">
+        <span>首页 </span> &raquo; 系统设置  &raquo; 事件通知
+    </div>
+    <div class="right_main">
+        <div class="right_fortable">
+            <hr class="hr_top" />
+            
+            <!--页面操作成功与否提示-->
+            <div class="publicNotice pN_error" id="pN_info"></div>
+            <!--页面操作成功与否提示 over-->
+            
+            <form name="eventForm" id="eventForm" action="" method="post">
+                <p class="mail_choice">启用报警邮件:&nbsp;&nbsp;&nbsp;
+                    <input type="checkbox" name="warn" id="warn" class="refuseCover" value="yes" onclick="checkNeedMail(this,'coverMail')" />
+                    <input type="hidden" id="isEvent" name="isEvent" value="{$isEvent}" />
+                </p>
+                <fieldset class="mailSet blackblue" id="mailSet">
+                <legend class="orange">报警邮件设置</legend><br />
+                <div class="forCover">
+                <div class="coverMail" id="coverMail">.</div>
+                <table class="table3">
+                    <tr>
+                        <td width="120px">邮件服务器：</td>
+                        <td><input type="text" value="{$mailServer}" name="mailServer" id="mailServer" class="s_width2" title="只允许合法网段IP地址"/></td>
+                    </tr>
+                    <tr>
+                        <td>发件箱：</td>
+                        <td><input type="text" value="{$mail_from}" id="mail_from" name="mail_from" class="s_width2" /></td>
+                    </tr>
+                    <tr>
+                        <td>发件箱密码：</td>
+                        <td><input type="password" value="{$mail_fromPass}" id="mail_fromPass" name="mail_fromPass" class="s_width2" /></td>
+                    </tr>
+                    <tr>
+                        <td>认证方式：</td>
+                        <td>
+                            <input type="radio" name="identy_way" id="common_way" value="common";/><label for="common_way">普通认证 </label>
+                            <input type="radio" name="identy_way" id="ssl_way" value="ssl"/><label for="ssl_way">SSL认证</label> 
+                            <input type="hidden" name="verify" id="verify" value="{$verify}"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>收件箱：</td>
+                        <td class="mail_to">
+                            <table class="table1 theight" id="">
+                                <tr class="top">
+                                    <th width="30px"><input type="checkbox" name="mailAll" onclick="All(this, 'maillist')" /></th>
+                                    <th width="420px">邮件地址</th>
+                                    <th>事件级别</th>
+                                </tr>
+                            </table>
+                            <div class="mailDiv">
+                                <table class="newtable1 theight" id="emailTable">
+                                    <volist name="event_data" id="vo" key="k">
+                                        <tr>
+                                            <td width="30px" class="l_b_none vmiddle"><input type="checkbox" name="maillist" value="{$vo[id]}" id="mail{$k}" onclick="Item(this, 'mailAll')" /></td>
+                                            <label for="mail{$k}">
+                                            <td width="420px" class="wrap">
+                                                <div class="emailVal" id="emailVal">{$vo[recv]}</div>
+                                                <input type="hidden" class="nobg_input" value="{$vo[recv]}" title="{$vo[recv]}" name="eventMail[]" readonly>
+                                            </td>
+                                            <td class="r_b_none vmiddle">
+                                                <div class="levelVal">{$vo[level]}</div>
+                                                <input type="hidden" class="nobg_input" value="{$vo[level]}" name="mailLevel[]" readonly />
+                                                <input type="hidden" class="nobg_input" value="" name="hideLevel[]" readonly />
+                                            </td></label>
+                                        </tr>
+                                    </volist>
+                                </table>
+                            </div>
+                            <div class="mailtool">
+                                <span>邮箱地址：</span><input type="text" class="s_width193" name="newmail" id="newmail" value="{$recvive}"/>
+                                <span>事件级别：</span><span class="">
+                                <label><input type="checkbox" name="eventlevel" value="info" />info </label>
+                                <label><input type="checkbox" name="eventlevel" value="warning" />warning</label>
+                                <label><input type="checkbox" name="eventlevel" value="error" />error</label>
+                                </span>
+                                  <input type="button" value="添加" class="btn btn_small" id="addmail" name="addmail" onclick="addEmail()" style="margin-left:3px;" />
+                                  <input type="button" value="删除" class="btn btn_small" id="delmail" name="delmail" onclick="delEmail()" />
+                                  <input type="button" value="测试" class="btn btn_small" id="testmail" name="testmail" onclick="testEmail()" />
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                </div>
+                <div class="btndiv">
+                    <input type="button" value="确认" id="submitEvent" name="submitEvent" class="btn btn_big refuseCover" onclick="checkEvent()" /></td>
+                </div>
+            </fieldset>
+            </form>
+            <hr class="hr_bottom" />
+        </div>
+    </div>
+</body>

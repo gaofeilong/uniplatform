@@ -1,0 +1,331 @@
+<include file="Public:file"/>
+<body class="rightbody" onload="idbondcard()">
+    <div class="right_title" style="">
+        <span>首页 </span> &raquo; 网络管理  &raquo; 网卡配置
+    </div>
+    <div class="right_main">
+        <div class="right_fortable">
+            <hr class="hr_top" />
+
+			<!--页面操作成功与否提示-->
+            <div class="publicNotice pN_error" id="pN_info"></div>
+            <!--页面操作成功与否提示 over-->
+            <input type="hidden" value="{$name}" id="netBondName" />
+            <!--所有的IP-->
+            <fieldset class="d_lightblue">
+                <legend class="orange">网卡信息</legend>
+                <div class="insetTable">
+                        <table border="0" id="tablevols" class="table1 thin sortable">
+                            <tr class="top"> 
+                               <th><input type="checkbox" value="0" name="ddfs" class="chek" onclick="All(this, 'choice')"/></th>
+                               <th width="5%">设备名</th>
+                               <th>型号</th>
+                               <th >物理地址</th>
+                               <th >IP获取方式</th>
+                               <th >IP</th>
+                               <th >掩码</th>
+                               <th >网关</th>
+                               <th >MTU</th>
+                               <th >速率</th>
+                               <th >状态</th>
+                               <th >操作</th>
+                            </tr>
+                            <volist name="netinfo" id="vo" key="k">
+                                <tr class="bbb">
+                                    <td><input type="checkbox" name="choice" id="choice{$k}" value="1" class="chek" <if condition = "$vo.state eq unlink">disabled</if> onclick="Item(this, 'ddfs')"/></td>
+                                    <label for="choice{$k}">
+                                    <td id="workName{$k}" class="document">{$vo.name}</td>
+                                    <td title="{$vo.vendor}"><p class="hideMore">{$vo.vendor}</p></td>
+                                    <td id="netMmac{$k}">{$vo.mac}</td>
+                                    <td id="bootState{$k}">{$vo.bootProto}</td>
+                                    <td id="networkIp{$k}" class="ipList">{$vo.ip}</td>
+                                    <td id="networkMask{$k}">{$vo.mask}</td>
+                                    <td id="networkgate{$k}">{$vo.gateway}</td>
+                                    <td id="mtu_size{$k}">{$vo.mtu}</td>
+                                    <td>{$vo.speed}</td>
+                                    <td>
+                                        <if condition = "$vo.state eq unlink"><span class="status_no"></span></if>
+                                        <if condition = "$vo.state eq linked"><span class="status_ok"></span></if>
+                                        <span class="status_con">{$vo.state}</span>
+                                    </td>
+                                    <td>
+                                        <input type="button" value="配置" class="btn btn_small" onclick="netWorkSet({$k})" />
+                                    </td>
+                                    </label>
+                                </tr>
+                            </volist>
+                        </table>
+                </div>
+                <div class="table_bottom"></div>
+                <!--分页条-->
+                <!--<div id="controls" class="controls">
+	                <div id="perpage" class="perpage">
+	                    <span>跳转到</span>
+	                    <input type="text" name="gopage" value="{$jump_page}" class="gopage" id="gopage" /> 页
+	                    <a href="#" id="jump_img"><img src="__PUBLIC__/img/left_grey.png" alt="跳页" title="跳转到指定页" onclick="jumpPage('Network')"/></a>
+	                </div>
+	                <include file="Public:page" />
+	            </div>-->
+                <div class="bondright">
+                    <input type="button" value="绑定" class="btn btn_big bind_newvols" id="Bond_set"/>
+                </div>
+            </fieldset>
+        
+            <!-- 绑定后的网卡显示 -->
+        
+            <hr class="hr_top" />
+            <fieldset class="d_lightblue">
+                <legend class="orange">已绑定网卡信息</legend>
+                <div class="insetTable">
+                        <table border="0" id="tablevols" class="table1 thin sortable">
+                            <tr class="top">
+                                <th width="10%">设备名</th>
+                                <th width="10%">绑定模式</th>
+                                <th width="10%">IP获取方式</th>
+                                <th width="10%">IP</th>
+                                <th width="10%">掩码</th>
+                                <th width="10%">网关</th>
+                                <th width="10%">状态</th>
+                                <th width="10%">子网卡</th>
+                                <th width="15%">操作</th>
+                            </tr>
+                            <volist name="bondinfo" id="vo" key="k">
+                                <tr class="bbb">
+                                    <td class="volsname" name="bondname" id="bondName{$k}">{$vo[name]}</td>
+                                    <td id="bondMode{$k}">{$vo[mode]}</td>
+                                    <td id="bondPro{$k}">{$vo[bootProto]}</td>
+                                    <td id="bondcard_ip{$k}" class="bondIpList">{$vo[ip]}</td>
+                                    <td id="bondmask{$k}">{$vo[mask]}</td>
+                                    <td id="bondgeteWay{$k}">{$vo[gateway]}</td>
+                                    <td>
+                                        <if condition = "$vo.state eq unlink"><span class="status_no"></span></if>
+                                        <if condition = "$vo.state eq linked"><span class="status_ok"></span></if>
+                                        <span class="status_con">{$vo.state}</span>
+                                    </td>
+                                    <td id="con_devi{$k}">{$vo[card]}</td>
+                                    <td>
+                                        <input type="hidden" value="{$k}" id="bondNetId" />
+                                        <input type="button" value="配置" class="btn btn_small" onclick="config_bond({$k})">
+                                        <input type="button" value="解绑" class="btn btn_small bond_remove" name="" id="k1">
+                                    </td>
+                                </tr>
+                            </volist>
+                        </table>
+                </div>
+                <div class="table_bottom"></div>
+                <!--分页条-->
+                <!--<div id="controls" class="controls">
+                    <div id="perpage" class="perpage">
+                        <span>跳转到</span>
+                        <input type="text" name="gopage" value="{$jump_pagenew}" class="gopage" id="gopagenew" /> 页
+                        <a href="#" id="jump_imgnew"><img src="__PUBLIC__/img/left_grey.png" alt="跳页" title="跳转到指定页" onclick="jumpPagenew('Network')"/></a>
+                    </div>
+                    <include file="Public:pageNew" />
+                </div>-->
+            </fieldset>
+            <div style="clear:both"></div>
+            <hr class="hr_bottom" />
+        
+            <!-- 网卡配置 -->
+            <div class="configcard hide" id="configcard"> 
+                <form name="frm" id="setNetfrm" action="" method="post">
+                    <input type="hidden" value="" id="netId" /> 
+                    <input type="hidden" id="netMmac" name="netMmac" value=""/>
+                    <table class="margin10" id="netTable">
+                        <tr> 
+                            <td width="100px">　设备名:</td>
+                            <td> 
+                                <input class="s_width220" id="mtu_name" name="card_name" type="text" value="" disabled/>
+                            </td>
+                        </tr> 
+                        <tr> 
+                            <td>　MTU:</td>
+                            <td><input class="s_width220" id="nobondMtu" name="mtu_set" type="text" value="" /></td>
+                        </tr>
+                    </table>
+                    <div class="noband_info">
+                        <div class="zidongspan"> 
+                            <input type="radio" name="config_ip" id="cardauto_ip" class="auto_IP" value="dhcp" onclick="net_radio()"/>
+                            <label for="cardauto_ip">自动获取IP地址</label><br>
+                        </div>
+                        <fieldset class="lightblue">
+                            <legend class="card_ge">
+                                <input type="radio" name="config_ip" id="cardhand_ip" value="none" onclick="net_radio()"/>
+                                <label for="cardhand_ip">使用以下IP地址</label>
+                            </legend>
+                            <table class="margin10" cellspacing="0" cellpadding="0" border="0"> 
+                                <tr> 
+                                    <td width="87px">IP地址：</td>
+                                    <td><input name="ipAdd" class="s_width220 netcard_edit" type="text" id="cardSetIp" value="" /></td>
+                                </tr>
+                                <tr> 
+                                    <td>子网掩码：</td>
+                                    <td><input name="mask" class="s_width220 netcard_edit" type="text" id="cardSetmask" value="" /></td>
+                                </tr>
+                                <tr> 
+                                    <td>默认网关：</td>
+                                    <td><input name="geteWay" class="s_width220 netcard_edit" id="cardSetgeteWay"  type="text" value=""/></td>
+                                </tr>
+                            </table>
+                        </fieldset>
+                        <div class="set_sub">
+                            <input type="button" value="确定" class="btn btn_small" id="bondSetsum" onclick="setNetwork()"/>
+                            <input type="button" value="取消" class="btn btn_small cancel" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <!-- 网卡配置结束 -->
+            
+            <!-- 绑定网卡 -->
+            <div class="card_bond hide" id="card_bond"> 
+                <form name="frm" id="bondNetfrm" action="" method="post">
+                        <table border="0" class="margin10"> 
+                            <tr>
+                                <td width="100px">　DEVICES:</td>
+                                <td>
+                                    <input class="s_width220" id="DEVICES" name="DEVICES" type="hidden" value=""/>
+                                    <div id="devicesDiv" class="moniIpt"></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>　MODE:</td>
+                                <td>
+                                    <select name="bondmode" id="bondmode" class="bandsel" >
+                                        <option value="0">0 - balance-rr</option>
+                                        <option value="1">1 - active-backup</option>
+                                        <option value="2">2 - balance-xor</option>
+                                        <option value="3">3 - broadcast</option>
+                                        <option value="4">4 - 802.3ad</option>
+                                        <option value="5">5 - balance-tlb</option>
+                                        <option value="6" selected>6 - balance-alb</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>　MTU:</td>
+                                <td>
+                                    <input class="s_width220" name="mtu_set" id="setbondmtu" type="text" value="1500" />
+                                </td>
+                            </tr>
+                        </table>
+                        <div> 
+                            <input type="radio" name="bondip" id="auto_setip" class="auto_IP" value="dhcp" onclick="bondip_set()"/>
+                            <label for="auto_setip">自动获取IP地址</label><br>
+                        </div>
+                        <fieldset class="lightblue">
+                            <legend class="card_ge">
+                                <input type="radio" name="bondip" id="hand_setip" value="none" checked onclick="bondip_set()"/>
+                                <label for="hand_setip">使用以下IP地址</label>
+                            </legend>
+                            <table class="margin10" cellspacing="0" cellpadding="0" border="0"> 
+                                <tr> 
+                                    <td width="87px">IP地址：</td>
+                                    <td><input name="ipAdd" class="s_width220 hand_bondip" id="bondcardIp" type="text" value="" /></td>
+                                </tr>
+                                <tr> 
+                                    <td>子网掩码：</td>
+                                    <td><input name="mask" class="s_width220 hand_bondip" type="text" id="bondcardmask" value="" /></td>
+                                </tr>
+                                <tr> 
+                                    <td>默认网关：</td>
+                                    <td><input name="geteWay" class="s_width220 hand_bondip" id="bondcardga"  type="text" value=""/></td>
+                                </tr>
+                            </table>
+                        </fieldset>
+                        <div class="set_sub">
+                            <input type="button" value="确定" class="btn btn_small" onclick="bondNetwork()"/>
+                            <input type="button" value="取消" class="btn btn_small cancel" />
+                        </div>
+                </form>
+            </div>
+            <!-- 绑定网卡结束 -->
+            
+            <!-- 绑定网卡配置 -->
+            <div class="bondcon_card hide" id="bondcon_card"> 
+                <form name="con_bondfrm" id="bondWorkSet" action="" method="post">
+                        <table border="0" class="margin10" id="bondNetTable"> 
+                            <tr>
+                                <td width="100px">　DEVICES:</td>
+                                <td>
+                                    <input class="s_width220" id="con_devi" name="bondDEVICES" type="text" value="" disabled/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>　设备名:</td>
+                                <td>
+                                    <input class="s_width220" id="bond_name" name="bondmtu_name" type="text" value="" disabled/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>　MODE:</td>
+                                <td>
+                                    <select name="bondmode" id="bondmodeset" class="bandsel" >
+                                        <option value="0">0 - balance-rr</option>
+                                        <option value="1">1 - active-backup</option>
+                                        <option value="2">2 - balance-xor</option>
+                                        <option value="3">3 - broadcast</option>
+                                        <option value="4">4 - 802.3ad</option>
+                                        <option value="5">5 - balance-tlb</option>
+                                        <option value="6" selected>6 - balance-alb</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>　MTU:</td>
+                                <td>
+                                    <input class="s_width220" name="bondmtu_set" id="bondmtu_set" type="text" value="1500" />
+                                </td>
+                            </tr>
+                        </table>
+                        <div> 
+                            <input type="radio" name="bondiphand" id="auto_set" class="auto_IP" value="dhcp" onclick="bondcard_pei()"/>
+                            <label for="auto_set">自动获取IP地址</label><br>
+                        </div>
+                        <fieldset class="lightblue">
+                            <legend class="card_ge">
+                                <input type="radio" name="bondiphand" id="hand_set" value="none" onclick="bondcard_pei()"/>
+                                <label for="hand_set">使用以下IP地址</label>
+                            </legend>
+                            <table class="margin10" cellspacing="0" cellpadding="0" border="0"> 
+                                <tr> 
+                                    <td width="87px">IP地址：</td>
+                                    <td><input name="ipAdd" id="bondSetIp" class="s_width220 hand_bondcard" type="text" value="" /></td>
+                                </tr>
+                                <tr> 
+                                    <td>子网掩码：</td>
+                                    <td><input name="mask" id="bondSetmask" class="s_width220 hand_bondcard" type="text" value="" /></td>
+                                </tr>
+                                <tr> 
+                                    <td>默认网关：</td>
+                                    <td><input name="geteWay" id="bondSetgeteWay" class="s_width220 hand_bondcard" type="text" value=""/></td>
+                                </tr>
+                            </table>
+                        </fieldset>
+                        <div class="set_sub">
+                            <input type="button" value="确定" class="btn btn_small" onclick="bondworkSet()"/>
+                            <input type="button" value="取消" class="btn btn_small cancel" />
+                        </div>
+                </form>
+            </div>
+            <!-- 绑定网卡配置结束 -->
+            <!--删除绑定网卡-->
+            <div class="del_bond hide" id="del_bond"> 
+                <form action="" method="post" id="bondDelfrm"> 
+                    <div class="del_div1">
+	                    <table>
+	                        <tr><td valign="top" width="90px;"><img src="__PUBLIC__/img/warning.png" alt="警告" /></td>
+	                        <td>确定删除绑定网卡:<span class="del_list" id="del_bondname"></span></td></tr>
+	                    </table>
+	                </div>
+	                <div class="tright bottom_bg">
+	                    <input type="button" value="确定" class="btn btn_small" onclick="bondDel()"/>
+	                    <input type="button" value="取消" class="btn btn_small cancel" />
+	                </div>
+                </form>
+            </div>
+            <!--删除绑定网卡结束-->
+        
+        </div>
+    </div>
+</body>

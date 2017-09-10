@@ -1,0 +1,47 @@
+<include file="Public:file"/>
+<body class="rightbody">
+    <div class="right_title" style="">
+        <span>首页 </span> &raquo; 系统设置  &raquo; 管理口令
+    </div>
+    <div class="right_main">
+        <div class="right_fortable">
+            <hr class="hr_top" />
+            
+            <!--页面操作成功与否提示-->
+            <div class="publicNotice pN_error" id="pN_info"></div>
+            <!--页面操作成功与否提示 over-->
+            
+            <fieldset class="d_lightblue">
+                <legend class="orange">管理口令设置</legend>
+                <form id="passForm" name="passForm" method="post">
+                    <input type="hidden" value="{$password}" id="hiPwd"/> 
+                    <table class="table3">
+                        <tr>
+                            <td width="150px">管理员账号：</td>
+                            <td><input type="text" name="username" value="{$username}" id="username" class="s_width250" readonly /></td>
+                        </tr>
+                        <tr>
+                            <td>原口令：</td>
+                            <td><input type="password" name="password" value="" id="password" class="s_width250" title="密码由6-20位数字、字母或_组成"/></td>
+                        </tr>
+                        <tr>
+                            <td>新口令：</td>
+                            <td><input type="password" name="newPass" value="" id="newPass" class="s_width250" title="密码由6-20位数字、字母或_组成"/></td>
+                        </tr>
+                        <tr>
+                            <td>确认新口令：</td>
+                            <td><input type="password" name="newPassOk" value="" id="newPassOk" class="s_width250" title="密码由6-20位数字、字母或_组成"/></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td class="td_top">
+                                <input type="button" value="确认" name="submitPass" id="submitPass" class="btn btn_big" onclick="checkPass()"/>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </fieldset>
+            <hr class="hr_bottom" />
+        </div>
+    </div>
+</body>

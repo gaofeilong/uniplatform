@@ -1,0 +1,213 @@
+<include file="Public:file"/>
+<body class="rightbody" onload="configNode()">
+    <div class="right_title" style="">
+        <span>首页 </span> &raquo; 分布式消冗文件系统  &raquo; 配置管理
+    </div>
+    <div class="right_main">
+        <div class="right_fortable">
+            <hr class="hr_top" />
+            
+            <!--页面操作成功与否提示-->
+            <div class="publicNotice pN_error" id="pN_info"></div>
+            
+            <!--接收内容判断显示索引还是显示数据-->
+            <input type="hidden" value="{$newType}" id="identify"/>
+            
+            <!--  添加索引节点时的配置   -->
+            <div class="new_ddfs hdfstab" id="indexConfig">
+            <form name="newddfsForm" id="newddfsForm" action="__URL__/installNode" method="post">
+                <div class="yu_shuju">
+                    <p class="hdfs_pnew">索引存储根目录:</p>
+                    <div class="fleft">
+                        <table id="dataindexTab" class="archive_table" > 
+                            <tr>
+                                <td>
+                                    <input type="text" name="idxRootPath[]" id="idxRootPath" class="s_width250" />
+                                </td>
+                                <td>
+                                    <img src="__PUBLIC__/img/clear.gif" class="hdfs_delete" align="" title="删除索引存储路径" onclick="hdfsindexdel_row()"/><br>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="hdfs_data">
+                        <input type="button" value="添加路径" class="btn btn_middle" title="添加路径" onclick="hdfsindex_row()"/>
+                    </div>
+                </div>
+                
+                <!--<span class="gray">———</span>
+                <input type="button" value="高级选项" name="super" class="btn btn_middle" onclick="showSuper(this,'hdfs_superDiv')" />
+                <span class="gray">—————————————————————————————————</span>-->
+                <hr class="hr_bottom" />
+                <div class="tright bbb">
+	                <input type="button" value="上一步" class="btn btn_big" onclick="javascript:history.back()" />
+	                <input type="submit" value="安装节点" class="btn btn_big" />
+	            </div>
+            </form>
+            </div>
+            
+            <!--  添加数据节点时的配置   -->
+            <div class="new_ddfs hdfstab" id="dataConfig">
+            <form name="newddfsForm" id="newddfsForm" action="__URL__/installNode" method="post">
+                <div class="yu_shuju">
+                    <p class="hdfs_pnew">数据存储路径:</p>
+                    <div class="fleft">
+                        <table id="dataconTab" class="archive_table" > 
+                            <tr>
+                                <td>
+                                    <input type="text" name="dataconPath[]" id="dataconPath" class="s_width250"/>
+                                </td>
+                                <td>
+                                    <img src="__PUBLIC__/img/clear.gif" class="hdfs_delete" align="absmiddle" title="删除数据存储路径" onclick="hdfsDatadel_row()"/><br>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="hdfs_data">
+                        <input type="button" value="添加路径" class="btn btn_middle" title="添加路径" onclick="hdfsData_row()"/>
+                    </div>
+                </div>
+                <div id="hdfs_superDiv">
+                    <table class="margin10">
+                        <tr>
+                            <td width="120px">元数据存储路径:</td>
+                            <td>
+                                <input type="text" name="metaPath" id="metaPath" class="s_width250" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>二级块索引路径:</td>
+                            <td>
+                                <input type="text" name="biPath" id="biPath" class="s_width250" />
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <hr class="hr_bottom" />
+                <div class="tright bbb">
+                    <input type="button" value="上一步" class="btn btn_big" onclick="javascript:history.back()" />
+                    <input type="submit" value="安装节点" class="btn btn_big"/>
+                </div>
+            </form>
+            </div>
+            <!--  添加数据节点时的配置完成   -->
+        </div>
+    </div>
+    <script>
+        function configNode()
+        {
+            var identify = jQuery("#identify").val();
+            if (identify == "index") {
+                document.getElementById("indexConfig").style.display = "";
+                document.getElementById("dataConfig").style.display = "none";
+                document.getElementById("hdfs_superDiv").style.display = "none";
+            } else {
+            	document.getElementById("indexConfig").style.display = "none";
+                document.getElementById("dataConfig").style.display = "";
+            }
+        }
+        //索引配置文件，添加索引存储路径
+        function hdfsindex_row()
+        {
+            var dataPath = document.getElementsByName("idxRootPath[]");
+            for(var i = 0;i < dataPath.length; i++){
+                if(dataPath[i].value == ""){
+                    alert("索引存储根目录不能为空！");
+                    dataPath[i].focus();
+                    return false;
+                }
+            }
+            var e = event.srcElement ? event.srcElement.parentNode : event.target.parentNode;//js三目运算
+            //表格图片片段
+            var row = e.parentNode.sectionRowIndex;
+             // alert(row);
+              //return;
+            //图片判断结束
+            var len       = dataindexTab.rows.length;
+            var new_row   = dataindexTab.insertRow(len);
+            var new_col01 = new_row.insertCell(0);
+            var new_col02 = new_row.insertCell(1);
+            new_col01.innerHTML='<input type="text" name="idxRootPath[]" id="idxRootPath" class="s_width250new"/>';
+            new_col02.innerHTML='<img src="/scistor/Public/img/clear.gif" align="absmiddle" class="img_delete1" onclick = "hdfsindexdel_row()" title="删除索引存储路径"/>';
+
+            var j = dataPath.length - 1; //得到新增的input，以便获得焦点
+            dataPath[j].focus();
+        }
+
+        function hdfsindexdel_row()
+        {
+            var deldataPath=document.getElementsByName("idxRootPath[]");
+            var e = event.srcElement ? event.srcElement.parentNode : event.target.parentNode;//js三目运算
+            if(deldataPath.length > 1){
+                var row  = e.parentNode.sectionRowIndex;
+                var cell = e.cellIndex;
+                if(row < 0){
+                      alert("操作无效");
+                    return;
+                }
+                //如果为空并且count>1删除该编辑框时不需要提示
+                var con = 1;
+                if(con == 1){
+                    if(e.tagName == "TD"){
+                    	dataindexTab.deleteRow(row - 0);    
+                    }
+                }
+            } else {
+                alert("不能全部删除");
+            }
+        }
+        
+        //数据配置文件，添加数据存储路径
+        function hdfsData_row()
+        {
+        	var dataPath = document.getElementsByName("dataconPath[]");
+            for(var i = 0;i < dataPath.length; i++){
+                if(dataPath[i].value == ""){
+                    alert("数据存储路径不能为空！");
+                    dataPath[i].focus();
+                    return false;
+                }
+            }
+            var e = event.srcElement ? event.srcElement.parentNode : event.target.parentNode;//js三目运算
+            //表格图片片段
+            var row = e.parentNode.sectionRowIndex;
+             // alert(row);
+              //return;
+            //图片判断结束
+            var len       = dataconTab.rows.length;
+            var new_row   = dataconTab.insertRow(len);
+            var new_col01 = new_row.insertCell(0);
+            var new_col02 = new_row.insertCell(1);
+            new_col01.innerHTML='<input type="text" name="dataconPath[]" id="dataconPath" class="s_width250new"/>';
+            new_col02.innerHTML='<img src="/scistor/Public/img/clear.gif" align="absmiddle" class="img_delete1" onclick = "hdfsDatadel_row()" title="删除数据存储路径"/>';
+
+            var j = dataPath.length - 1; //得到新增的input，以便获得焦点
+            dataPath[j].focus();
+        }
+
+        function hdfsDatadel_row()
+        {
+        	var deldataPath=document.getElementsByName("dataconPath[]");
+            var e = event.srcElement ? event.srcElement.parentNode : event.target.parentNode;//js三目运算
+            if(deldataPath.length > 1){
+                var row  = e.parentNode.sectionRowIndex;
+                var cell = e.cellIndex;
+                if(row < 0){
+                      alert("操作无效");
+                    return;
+                }
+                //如果为空并且count>1删除该编辑框时不需要提示
+                var con = 1;
+                if(con == 1){
+                    if(e.tagName == "TD"){
+                    	dataconTab.deleteRow(row - 0);    
+                    }
+                }
+            } else {
+                alert("不能全部删除");
+            }
+        }
+
+        
+    </script>
+</body>

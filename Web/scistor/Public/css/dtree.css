@@ -1,0 +1,89 @@
+/*--------------------------------------------------|
+| dTree 2.05 | www.destroydrop.com/javascript/tree/ |
+|---------------------------------------------------|
+| Copyright (c) 2002-2003 Geir Landr?              |
+|--------------------------------------------------*/
+
+.dtree {
+    font-family: 宋体,Verdana, Geneva, Arial, Helvetica, sans-serif;
+    font-size: 13px;
+    color: #666;
+    white-space: nowrap;
+}
+.dtree img {
+    border: 0px;
+    display:inline-block;
+    *display:inline;
+    vertical-align: middle;
+    margin-bottom:5px;
+}
+.dtree a {
+    color: #333;
+    text-decoration: none;
+    font-family: 宋体,Verdana, Geneva, Arial, Helvetica, sans-serif;
+    outline:none;
+}
+.dtree a.node, .dtree a.nodeSel {
+    white-space: nowrap;
+    padding: 1px 2px 1px 2px;
+}
+.dtree .clip .clip a.node:hover, .dtree .clip .clip a.nodeSel:hover {
+    color:#216200;
+    font-weight:bold;
+}
+.dtree .clip .clip  a.nodeSel {
+    font-weight:bold;
+    color:#216200;
+    /*background:url(../img/nodeSel.png) no-repeat scroll 70% 50%;*/
+}
+.dtree a.nodeSel:hover{
+    color:#216200;
+}
+.dtree .clip {
+    overflow: hidden;
+}
+
+/*新加样式*/
+.dtree .clip .dTreeNode{
+    background:url(../img/left_bb.png) no-repeat;
+    width:207px;
+    height:30px;
+    line-height:30px;
+    padding-left:10px;
+}
+.dtree .clip .clip .dTreeNode{
+    background:none;
+    height:25px;
+    line-height:25px;
+}
+/*.dtree .clip .clip .dTreeNode:hover{
+    background-color:#DEE8F5;
+    color:#216200;
+}*在js中有重新定义**/
+
+.dtree a.node, .dtree a.nodeSel {
+    margin-left:5px;
+    /* padding-right:95px; */
+    display:inline-block;
+    *height:18px;
+    *line-height:18px;
+    *margin-top:5px;
+    height:21px;
+    width:140px;
+    *margin-bottom:-5px;
+}
+.dtree .clip .clip .dTreeNode a{
+    display:inline;
+}
+.dtree a.plus_right{
+    float:right;
+    display:inline-block;
+    *display:inline;
+    height:14px;
+    margin-top:7px;
+    margin-right:10px;
+}
+
+/* .dtree a:focus{
+    outline:1px dotted #000;
+} */

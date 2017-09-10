@@ -1,0 +1,131 @@
+<include file="Public:file"/>
+<body class="rightbody">
+    <div class="right_title" style="">
+        <span>首页 </span> &raquo; NAS管理 &raquo; 共享管理 &raquo; FC共享
+    </div>
+    <div class="right_main">
+        <div class="right_fortable">
+            <!--头部切换页面标签栏-->
+            <div class="shareNav">
+                <ul>
+                    <li class="navson"><a href="__URL__/index" >ISCSI共享</a></li>
+                    <li class="navson select"><a href="__URL__/FCshare">FC共享</a></li>
+                    <li class="navson"><a href="__URL__/NASshare" >NAS共享</a></li>
+                </ul>
+            </div>
+            <!--over 头部切换页面标签栏-->
+            
+            <!--页面操作成功与否提示-->
+            <div class="publicNotice pN_error" id="pN_info"></div>
+            <!--页面操作成功与否提示 over-->
+            <fieldset class="d_lightblue  marginSet">
+                <legend class="orange">FC target Lun Map</legend>
+                    选择FC卡:
+                    <select name="fctarget" id="fctarget" class="s_widths" onchange="SelFcTar()">
+                        <volist name='card' id='j' key='l'>
+                        <option value="{$j['name']}" <if condition="$tar eq $j['name']">selected</if>>{$j['name']}</option>
+                        </volist>
+                    </select>
+            </fieldset>
+            <div>
+                <form id="fcLunFrom" action="" method="post">
+                <table class="table1" id="fc_table">
+                    <tr class="top">
+                        <!--<input type="checkbox" name="fc_all" value="checkall" onclick="All(this, 'choice[]')" />-->
+                        <th>卷</th>
+                        <th>卷组</th>
+                        <th>大小</th>
+                        <th>Lun</th>
+                        <th>状态</th>
+                        <th width="40px" title="映射到 {$tar}">映射</th>
+                    </tr>
+                    <volist name='lun' id='i' key='k'>
+                    <tr>
+                        <label for="choice{$k}">
+                        <td class="lv">{$i['lv']}</td>
+                        <td>{$i['vg']}</td>
+                        <td>{$i['size']}</td>
+                        <td><input type="hidden" id="fcNewLunNum{$k-1}" name="fcNewLunNum[]" value="{$i['lunnum']}" style="width:25px" />{$i['lunnum']}</td>
+                        <td><if condition="$i['mapped'] neq ''">已映射</if><if condition="$i['mapped'] eq ''">空闲</if></td>
+                        <td><input type="checkbox" name="choice[]" id="choice{$k}" value="{$k-1}"
+                            onclick="Item(this, 'fc_all');" <if condition="$i['mapped'] neq ''">checked</if> />
+                            <input type="hidden" name="fcMapped[{$k-1}]" value="{$i['lunnum']},{$i['path']},{$i['mapped']}"/></td>
+                        </label>
+                    </tr>
+                    </volist>
+                </table>
+                </form>
+                <!--分页条-->
+                <div id="controls" class="controls">
+                    <div id="perpage" class="perpage">
+                        <span>跳转到</span>
+                        <input type="text" name="gopage" value="{$jump_page}" class="gopage" id="gopage" /> 页
+                        <a href="#" id="jump_img"><img src="__PUBLIC__/img/left_grey.png" alt="跳页" title="跳转到指定页" onclick="jumpPage('Share')"/></a>
+                    </div>
+                    <include file="Public:page" />
+                </div>
+                <!--over 分页条-->
+                
+                <hr class="hr_bottom" />
+                
+                <div class="tright bbb">
+                    <input type="button" value="提交" class="btn btn_big " onclick="FcLunMap('{$tar}')"/>
+                </div>
+            </div>
+            
+            <!--新建FC导出卷-->
+            <div class="hide new_fc" id="new_fc">
+            <form name="newfcForm" id="newfcForm" action="" method="post">
+                <p class="wwn_newP">
+                    wwn: <select name="new_fctarget" id="new_fctarget" class="s_width180">
+                        <option value="0">wwn 0</option>
+                        <option value="1">wwn 1</option>
+                    </select>
+                </p>
+                <table class="table1">
+                    <tr class="top">
+                        <th width="30px"><input type="checkbox" name="newfc_all" value="checkall" onclick="All(this, 'newchoice')" /></th>
+                        <th>卷</th>
+                        <th>卷组</th>
+                        <th>空间</th>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" name="newchoice" id="newchoice1" value="1" onclick="Item(this, 'newfc_all')" /></td>
+                        <label for="newchoice1">
+                        <td>lv 1</td>
+                        <td>vg 1</td>
+                        <td>1024MB</td></label>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" name="newchoice" id="newchoice2" value="2" onclick="Item(this, 'newfc_all')" /></td>
+                        <label for="newchoice2">
+                        <td>lv 2</td>
+                        <td>vg 2</td>
+                        <td>256MB</td></label>
+                    </tr>
+                </table>
+                <div class="tright bottom_bg">
+                    <input type="button" value="确定" class="btn btn_small" />
+                    <input type="button" value="取消" class="btn btn_small cancel" />
+                </div>
+            </form>
+            </div>
+            
+            <!--删除FC导出卷-->
+            <div class="hide del_fc" id="del_fc">
+            <form name="delfcForm" id="delfcForm" action="" method="post">
+                <div class="del_div1">
+                    <table>
+                        <tr><td class="vtop" width="90px;"><img src="__PUBLIC__/img/warning.png" alt="警告" /></td>
+                        <td>&nbsp;确定删除FC导出卷:<span class="del_list" id="delFC_list"></span></td></tr>
+                    </table>
+                </div>
+                <div class="tright bottom_bg">
+                    <input type="submit" value="确定" class="btn btn_small" />
+                    <input type="button" value="取消" class="btn btn_small cancel" />
+                </div>
+            </form>
+            </div>
+        </div>
+    </div>
+</body>

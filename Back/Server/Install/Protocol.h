@@ -1,0 +1,14 @@
+#ifndef _ARCHIVE_PROTOCOL_H_
+#define _ARCHIVE_PROTOCOL_H_
+
+#define CMD_CONNECT_INDEX       0x02080010
+#define CMD_CONNECT_DATA        0x02080020
+#define CMD_INSTALL_INDEX       0x02080030
+#define CMD_INSTALL_DATA        0x02080040
+#define CMD_REMOVE_INDEX        0x02080050
+#define CMD_REMOVE_DATA         0x02080060
+#define CMD_LICENSE_LOOKUP      0x02080070              // 0x00010090
+#define CMD_LICENSE_EXPORT      0x02080080              // 0x000100A0
+#define CMD_LICENSE_IMPORT      0x02080090              // 0x000100B0
+
+#endif //_ARCHIVE_PROTOCOL_H_

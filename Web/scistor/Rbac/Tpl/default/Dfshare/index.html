@@ -1,0 +1,861 @@
+<include file="Public:file"/>
+<style type="text/css">
+    .p10{
+	   padding:0 0 5px 0;
+    }
+    table.tableNone{
+        table-layout:fixed;
+    }
+    .exp{
+        background:#D6E3ED;
+    }
+    .col{
+        background:#F0F3F5;
+    }
+    .s_h:hover{
+        background:#F5FAFC;
+    }
+    tr.client-ip td{
+        padding-top:7px;
+    }
+    .mleft170{
+        margin:5px 0 0 297px;
+    }
+    #new_ddfsShare .s_width110, #e_ddfsShare .s_width110{
+        margin:0;
+    }
+    .s_width250s{
+        /*width:254px;*/
+        width:380px;
+    }
+    .Ipt-w1{
+        width:372px;
+        height:38px;
+        margin:0 0 5px 0;
+        padding:2px 3px;
+        word-break:break-all;
+        work-wrap:break-word;
+        overflow:auto;
+        color:#888;
+        text-shadow:0 1px 1px #fff;
+    }
+</style>
+<body class="rightbody">
+    <div class="right_title" style="">
+        <span>首页 </span> &raquo; 消冗文件系统  &raquo; 共享管理
+    </div>
+    <div class="right_main">
+        <div class="right_fortable">
+            <hr class="hr_top" />
+            
+            <!--页面操作成功与否提示-->
+            <div class="publicNotice pN_error" id="pN_info"></div>
+            <input type="hidden" value="{$serverIP}" id ="serverIP"/>
+            <fieldset class="indexFile marginSet p10">
+                <div class="tright bbb">
+                    <input type="button" value="启动服务" class="btn btn_big" onclick="startServer()" <if condition = "$nfsState eq running or $nfsCount lt 1 or $mpState eq umounted">disabled</if>/>
+                    <input type="button" value="停止服务" class="btn btn_big" onclick="stopServer()" <if condition = "$umountSig neq 1 or $nfsState eq stopped or $nfsCount lt 1 or $mpState eq umounted">disabled</if> title="所有客户端卸载时可用"/>
+                </div>
+            </fieldset>
+            
+            <input type="hidden" id="mplnum" value="{$mplnum}" />
+            <table class="table1 tab-fix" id="" style="table-layout:fixed;">
+                <tr class="top">
+                    <th width="3%"><input type="checkbox" name="share_cbox" value="0" onclick="All(this, 'node_cbox')" /></th>
+                    <th width="8%">共享名称</th>
+                    <th width="15%">共享路径</th>
+                    <th width="20%">共享参数</th>
+                    <th width="10%">客户端IP</th>
+                    <th width="20%">客户端挂载路径</th>
+                    <th width="10%">状态</th>
+                    <th width="15%">操作</th>
+                </tr>
+            </table>
+            
+            <!--外层大循环-->
+            <volist name = "nfsList" id="vo" key = "k">
+            <div onclick="shareShow('{$k}')" title="点击收起" class="s_h exp">
+              <input type="hidden" value="{$vo.strIp}" id="strIP{$k}" />
+              <table class="tableNone">
+                <tr>
+                    <td width="3%">
+                        <span onclick="stopPop(event)">
+                            <input type="checkbox" name="node_cbox" id="node_cbox1" value="{$vo.name}" onclick="Item(this, 'share_cbox')" <if condition = "$vo.umountSig neq 1" > disabled </if> title="客户端全部卸载时可选"/>
+                        </span>
+                    </td>
+                    <td width="8%" id="shareName{$k}">{$vo.name}</td>
+                    <td width="15%" id="sharePath{$k}" class="tleft td_sPath" title="{$vo.path}">{$vo.path}</td>
+                    <td width="20%" id="shareParameter{$k}" title="{$vo.parameter}" >{$vo.parameter}</td>
+                    <td width="10%">----</td>
+                    <td width="20%" id="shareMp{$k}" class="tleft td_cmPath" title="{$vo.mp}">{$vo.mp}</td>
+                    <td width="10%">
+                        <if condition = '$vo.state eq running'>
+                        <span class="status_ok"></span>
+                        <span class="status_con">{$vo.state}</span>
+                        <elseif condition = '$vo.state eq stopped' />
+                        <span class="status_no"></span>
+                        <span class="status_con">{$vo.state}</span>    
+                        </if>
+                    </td>
+                    <td width="15%">
+                        <input type="button" title="编辑" value="编辑" class="btn btn_small" onclick="stopPop(event);editDdfsShare({$k})" />
+                        <if condition = "$vo.mountSig eq 1">
+                            <input type="button" value="卸载" title="卸载" class="btn btn_small" onclick="stopPop(event);umonutAll({$k})" <if condition = "$vo.mpState eq umounted or $vo.state neq running or $vo.client_num lt 1">disabled</if> />
+                        <elseif condition = "$vo.umountSig eq 1" />
+                            <input type="button" value="挂载" title="挂载" class="btn btn_small" onclick="stopPop(event);monutAll({$k})" <if condition = "$vo.mpState eq umounted or $vo.state neq running">disabled</if> />
+                        <else />
+                            <input type="button" value="挂载" title="挂载" class="btn btn_small" disabled />
+                        </if>
+                    </td>
+                </tr>
+              </table>
+            </div>
+            <!--内层循环-->
+            <div id="shareNode{$k}">
+              <table class="table1 tableNone">
+                <volist name = "vo.client" id="v" key="ky">
+                <tr>
+                    <td width="3%"></td>
+                    <td width="8%">----</td>
+                    <td width="15%">----</td>
+                    <td width="20%">----</td>
+                    <td width="10%" id="clientIP{$k}{$ky}" class="nodesIp{$k} clientIp">{$v.ip}</td>
+                    <td width="20%" class="tleft" title="{$vo.mp}">{$vo.mp}</td>
+                    <td width="10%">
+                        <if condition = '$v.state eq mounted'>
+                        <span class="status_ok"></span>
+                        <span class="status_con">{$v.state}</span>
+                        <elseif condition = '$v.state eq umounted' />
+                        <span class="status_no"></span>
+                        <span class="status_con">{$v.state}</span>    
+                        </if>
+                    </td>
+                    <td width="15%" onclick="stopPop(event)">
+                        <if condition = "$v.state eq umounted">
+                            <input type="button" value="挂载" class="btn btn_small" onclick="mountClient({$k},{$ky})" <if condition = "$vo.state neq running or $vo.mpState eq umounted">disabled</if> title="服务运行中可用" />
+                        <elseif condition = "$v.state eq mounted" />
+                            <input type="button" value="卸载" class="btn btn_small" onclick="umountClient({$k},{$ky})" <if condition = "$vo.state neq running or $vo.mpState eq umounted">disabled</if> title="服务运行中可用"/>
+                        </if>
+                        <input type="button" value="删除" class="btn btn_small" onclick="delClient({$k},{$ky})" <if condition = "$v.state eq mounted">disabled</if> title="客户端卸载时可用"/>
+                    </td>
+                </tr>
+                </volist>
+              </table>
+            </div>
+            </volist>
+            <!--内层循环结束-->
+            <!--外层大循环结束-->
+            <hr class="hr_bottom" />
+            <div class="tright bbb">
+                <input type="button" value="新建共享" class="btn btn_big" onclick="addDdfsShare()" />
+                <input type="button" value="删除共享" class="btn btn_big" onclick="delDdfsShare()" />
+            </div>
+        </div>
+        
+        <!--新建共享-->
+        <div class="new_ddfsShare hide" id="new_ddfsShare" style="width:550px">
+          <form name="myfrm" action="" method="post" id="createShareForm">
+            <table class="margin10">
+                <tr>
+                    <td width="120px">共享名称:</td>
+                    <td><input type="text" name="shareName" id="shareName" class="s_width350" title="输入字母、下划线、数字或 '.' 组成的20位以内字符"/></td>
+                </tr>
+                <tr>
+                    <td>共享路径:</td>
+                    <td>
+                    <select name="sharePath" id="sharePath" class="s_width250s">
+                        <volist name="mp" id="vo">
+                        <option value="{$vo.mp}">{$vo.mp}</option>
+                        </volist>
+                    </select>
+                    <!--<input type="text" name="sharePath" id="sharePath" class="s_width250" />-->
+                    </td>
+                </tr>
+                <tr>
+                    <td>客户端挂载路径:</td>
+                    <td><input type="text" name="clientMountPath" id="clientMountPath" class="s_width350" /></td>
+                </tr>
+                <tr>
+                    <td>共享参数:</td>
+                    <td><input type="text" name="shareParameter" id="shareParameter" class="s_width350" value="rw,async,no_root_squash,fsid=0" /></td>
+                </tr>
+                <tr>
+                    <td valign="top" class="ptop7">客户端IP:</td>
+                    <td class="ptop7">
+                      <div class="ip_way">
+                        <input type="radio" name="addIpWay" id="IpWay1" value="single" onclick="changeIpWay('')" checked />
+                        <label for="IpWay1">按IP地址添加</label>
+                        <input type="radio" name="addIpWay" id="IpWay2" value="multi" class="mleft20" onclick="changeIpWay('')" />
+                        <label for="IpWay2">按IP段添加</label>
+                      </div>
+                      <div id="ipList" class="mtop10">
+                        <table id="tab_ipList" class="" > 
+                            <tr class="orange">
+                                <td width="30px">IP:</td>
+                                <td width="184px">
+                                    <input type="text" name="ipName[]" id="ipName" class="s_width180" value="" />
+                                </td>
+                                <td width="42px">密码:</td>
+                                <td>
+                                    <input type="password" name="ipPass[]" id="ipPass" class="s_width110" value="" />
+                                </td>
+                                <td>
+                                    <img src="__PUBLIC__/img/clear.gif" class="hdfs_delete" align="absmiddle" title="删除IP" onclick="deleteIp(this,'')"/>
+                                </td>
+                            </tr>
+                        </table>
+                        <div class="mleft170">
+                            <input type="button" value="添加IP" class="btn btn_middle" title="添加IP" onclick="addIp('')"/>
+                        </div>
+                      </div>
+                      <div id="ipField" class="mtop10">
+                        <table>
+                            <tr>
+                                <td width="127px">起始IP:</td>
+                                <td>
+                                    <input type="text" name="startIp" id="startIp" class="s_width250" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>结束IP:</td>
+                                <td>
+                                    <input type="text" name="endIp" id="endIp" class="s_width250" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>密码：</td>
+                                <td><input type="password" name="ipPwd" id="ipPassF" class="s_width250" /></td>
+                            </tr>
+                        </table>
+                      </div>
+                    </td>
+                </tr>
+            </table>
+                
+                <div class="tright bottom_bg">
+                    <input type="button" value="确定" class="btn btn_small" onclick="createDdfs()"/>
+                    <input type="button" value="取消" class="btn btn_small cancel" />
+                </div>
+          </form>
+        </div>
+        
+        <!--编辑共享-->
+        <div class="e_ddfsShare hide" id="e_ddfsShare" style="width:550px">
+          <form name="e_myfrm" action="" method="post" id="editShareForm">
+            <table class="margin10">
+                <tr>
+                    <td width="120px">共享名称:</td>
+                    <td><input type="text" name="shareName" id="e_shareName" class="s_width350" disabled /></td>
+                </tr>
+                <tr>
+                    <td>共享路径:</td>
+                    <td><input type="text" name="sharePath" id="e_sharePath" class="s_width350" disabled /></td>
+                </tr>
+                <tr>
+                    <td>客户端挂载路径:</td>
+                    <td><input type="text" name="clientMountPath" id="e_clientMountPath" class="s_width350" disabled /></td>
+                </tr>
+                <tr>
+                    <td>共享参数:</td>
+                    <td><input type="text" name="shareParameter" id="e_shareParameter" class="s_width350" /></td>
+                </tr>
+                <tr>
+                    <td valign="top" class="ptop7">客户端IP:</td>
+                    <td class="ptop7">
+                      <div class="moniIpt Ipt-w1" id="oldIplist"></div>
+                      <input type="hidden" name="allIpList" id="allIpList" value="" />
+                      <!-- <textarea name="allIpList" id="allIpList" class="s_width250" style="height:35px;" readonly ></textarea> -->
+                      <div class="ip_way">
+                        <input type="radio" name="e_addIpWay" id="e_IpWay1" value="single" onclick="changeIpWay('e_')" checked />
+                        <label for="e_IpWay1">按IP地址添加</label>
+                        <input type="radio" name="e_addIpWay" id="e_IpWay2" value="multi" class="mleft20" onclick="changeIpWay('e_')" />
+                        <label for="e_IpWay2">按IP段添加</label>
+                      </div>
+                      <div id="e_ipList" class="mtop10">
+                        <table id="e_tab_ipList" class="" > 
+                            <tr class="orange">
+                                <td width="30px">IP</td>
+                                <td width="184px">
+                                    <input type="text" name="e_ipName[]" id="e_ipName" class="s_width180" value="" />
+                                </td>
+                                <td width="42px">密码</td>
+                                <td>
+                                    <input type="password" name="e_ipPass[]" id="e_ipPass" class="s_width110" value="" />
+                                </td>
+                                <td>
+                                    <img src="__PUBLIC__/img/clear.gif" class="hdfs_delete" align="absmiddle" title="删除IP" onclick="deleteIp(this,'e_')"/>
+                                </td>
+                            </tr>
+                        </table>
+                        <div class="mleft170">
+                            <input type="button" value="添加IP" class="btn btn_middle" title="添加IP" onclick="addIp('e_')"/>
+                        </div>
+                      </div>
+                      <div id="e_ipField" class="mtop10">
+                        <table>
+                            <tr>
+                                <td width="127px">起始IP:</td>
+                                <td>
+                                    <input type="text" name="e_startIp" id="e_startIp" class="s_width250" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>结束IP:</td>
+                                <td>
+                                    <input type="text" name="e_endIp" id="e_endIp" class="s_width250" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>密码：</td>
+                                <td><input type="password" name="e_ipPwd" id="e_ipPassF" class="s_width250" /></td>
+                            </tr>
+                        </table>
+                      </div>
+                    </td>
+                </tr>
+            </table>
+                
+                <div class="tright bottom_bg">
+                    <input type="button" value="确定" class="btn btn_small" onclick="editDdfs()"/>
+                    <input type="button" value="取消" class="btn btn_small cancel" />
+                </div>
+          </form>
+        </div>
+        
+         <!--删除共享-->
+        <div class="r_ddfsShare hide" id="r_ddfsShare">
+            <form name="r_myfrm" action="" method="post" id="delShareForm">
+              <input type="hidden" name="delSNameVal" value="" id="delSNameVal" />
+              <div class="del_div1">
+                <table>
+                    <tr><td valign="top" width="90px;"><img src="__PUBLIC__/img/warning.png" alt="警告" /></td>
+                    <td>&nbsp;确定删除共享任务:<span class="del_list" id="del_share"></span></td></tr>
+                </table>
+              </div>
+              <div class="tright bottom_bg">
+                <input type="button" value="确定" class="btn btn_small cancel" onclick="delShare()"/>
+                <input type="button" value="取消" class="btn btn_small cancel" />
+              </div>
+            </form>
+        </div>
+    </div>
+    
+<script type="text/javascript">
+	//显示更多 client IP
+	function shareShow(num)
+	{
+	    jQuery("#shareNode"+num).toggle();
+	}
+	jQuery(".s_h").toggle(
+	    function(){
+	        jQuery(this).attr("title","点击展开").removeClass("exp").addClass("col");
+	    },
+	    function(){
+	        jQuery(this).attr("title","点击收起").removeClass("col").addClass("exp");
+	    }
+	);
+	
+	//新建共享
+	function addDdfsShare()
+	{
+		var mplnum = jQuery("#mplnum").val() * 1;
+		if (mplnum < 1) {
+		    alert("请先添加消冗文件系统！");
+	    } else {
+		    changeIpWay('');
+		    publicP('new_ddfsShare','newDdfsShare','新建共享');
+	    }
+	}
+	
+	//编辑共享
+	function editDdfsShare(id)
+	{
+	    var shareName = jQuery("#shareName"+id).text();
+	    var sharePath = jQuery("#sharePath"+id).text();
+	    var sharePar  = jQuery("#shareParameter"+id).text();
+	    var shareMp   = jQuery("#shareMp"+id).text();
+	    var strIP     = jQuery("#strIP"+id).val();
+	    jQuery("#e_shareName").val(shareName);
+	    jQuery("#e_sharePath").val(sharePath);
+	    jQuery("#e_clientMountPath").val(shareMp);
+	    jQuery("#e_shareParameter").val(sharePar);
+	    jQuery("#oldIplist").text(strIP);
+	    jQuery("#allIpList").val(strIP);
+	    
+	    changeIpWay('e_');
+	    publicP('e_ddfsShare','eDdfsSahre','编辑共享');
+	}
+	
+	//删除共享
+	function delDdfsShare()
+	{
+	    var n = 0;//统计sharename 个数
+	    var shareName = document.getElementsByName("node_cbox");//复选框，其value值sharename
+	    var sNameVal  = document.getElementById("delSNameVal");//隐藏控件提交 sharename
+	    var newSName  = "", newDelName = "";
+	    
+	    for (var i = 0; i < shareName.length; i++) {
+	        if (shareName[i].checked) {
+	            n++;
+	            newSName += shareName[i].value + ";";
+	            newDelName += shareName[i].value + "&nbsp;";
+	            if (n%4 === 0) {
+	                newDelName += "<br />";
+	            }
+	        }
+	    }
+	    if (n == 0) {
+	        alert("未选中任何共享！");
+	        return false;
+	    } else if (n == shareName.length) {
+	        document.getElementById("del_share").innerHTML = "全部共享";
+	    } else {
+	        document.getElementById("del_share").innerHTML = newDelName;
+	    }
+	    document.getElementById("delSNameVal").value = newSName;
+	    publicP('r_ddfsShare','rDdfsSahre','删除共享');
+	}
+	
+	//添加IP文本框
+	function addIp(n_e)
+	{
+	    var rowID  = 1;//rowID是为了给每行的 共享名称 添加特定的ID值
+	    ip_table   = document.getElementById(n_e+"tab_ipList");
+	    var last   = jQuery("#"+n_e+"tab_ipList tr").length;//表格单元行个数
+	    var ipName = document.getElementsByName(n_e+"ipName[]");
+	    var ipPass = document.getElementsByName(n_e+"ipPass[]");
+	    
+	    for (i = 0; i < ipName.length; i++) {
+	        if (ipName[i].value == "") {
+	            alert("IP地址不能为空！");
+	            ipName[i].focus();
+	            return false;
+	        }
+	        if (ipPass[i].value == "") {
+	            alert("密码不能为空！");
+	            ipPass[i].focus();
+	            return false;
+	        }
+            ipName[i].id = n_e + "ipName" + rowID;//重新给ip赋予ID值;
+            ipPass[i].id = n_e + "ipPass" + rowID;
+            rowID++;
+	    }
+	     
+	    //添加行
+	    var ip_tr = ip_table.insertRow(last);
+        ip_tr.className = "orange";
+	    
+	    //添加列
+	    var td1 = ip_tr.insertCell(0);
+        var td2 = ip_tr.insertCell(1);
+        td1.innerHTML = "IP:";
+        td2.innerHTML = '<input type="text" name="'+n_e+'ipName[]" id="'+n_e+'ipName' + rowID + '" class="s_width180" />';
+         
+        var td3 = ip_tr.insertCell(2);
+        var td4 = ip_tr.insertCell(3);
+        //nfs_td2.innerHTML = allowip.value;
+        td3.innerHTML = "密码:";
+        td4.innerHTML = '<input type="password" name="'+n_e+'ipPass[]" id="'+n_e+'ipPass' + rowID + '" class="s_width110" />';
+               
+        
+        var td5 = ip_tr.insertCell(4);
+        td5.innerHTML = '<img src="__PUBLIC__/img/clear.gif" class="hdfs_delete" align="absmiddle" title="删除IP" onclick="deleteIp(this,\''+n_e+'\')"/>';
+        
+	    //将焦点放在下一个Ip地址上
+	    ipName[ipName.length-1].focus();
+	}
+	//删除IP
+	function deleteIp(e, n_e){
+	    var iplist = document.getElementsByName(n_e+"ipName[]");
+	    
+	    if (iplist.length > 1){
+	        e.parentNode.parentNode.parentNode.removeChild(e.parentNode.parentNode);
+	    } else {
+	        alert("不能全部删除!");
+	    }
+	}
+	
+	//切换添加 client Ip 的方式
+	function changeIpWay(way)
+	{
+	    var ipWay = document.getElementsByName(way+"addIpWay");
+	    if (ipWay[0].checked) {
+	        document.getElementById(way+"ipList").style.display = "block";
+	        document.getElementById(way+"ipField").style.display = "none";
+	    } else {
+	        document.getElementById(way+"ipList").style.display = "none";
+	        document.getElementById(way+"ipField").style.display = "block";
+	    }
+	}
+	//判断路径是否为空
+	function isPathEmpty(p1)
+	{
+	    var divide = "/";
+	    var split1 = p1.split(divide);
+	    var np1    = "";
+	    
+	    for (var i = 0; i < split1.length; i++) {
+	        if (split1[i]) {
+	            np1 += split1[i];
+	        }
+	    }
+	    return (np1 == "") ? true :false;
+	}
+	//判断路径是否相同（互为子目录可以）
+	function isPathRepeat(p1,p2)
+	{
+	    var divide = "/";
+	    var split1 = p1.split(divide);
+	    var split2 = p2.split(divide);
+	    var np1 = "", np2 = "";
+	    for (var i = 0; i < split1.length; i++) {
+	        if (split1[i]) {
+	            np1 += split1[i]+"/";
+	        }
+	    }
+	    for (var i = 0; i < split2.length; i++) {
+	        if (split2[i]) {
+	            np2 += split2[i]+"/";
+	        }
+	    }
+	    return (np1 == np2) ? true : false;
+	}
+    //处理IP，去除“.”
+    function delIpDot(ipVal)
+    {
+        var newIp  = ipVal.split(".");
+        var lastIp = "";
+        
+        for (var i = 0;i < newIp.length; i++) {
+            lastIp += newIp[i];
+        }
+        return lastIp;
+    }
+    //限制起始IP和结束IP的范围
+    function limitIpRange(start,end)
+    {
+        var startIp    = document.getElementById(start).value.split(".");
+        var endIp      = document.getElementById(end).value.split(".");
+        var flag = true;
+        
+        for (var i = 0;i < startIp.length - 1; i++) {
+            if (startIp[i] != endIp[i]) {
+                showMsg(end,"起始IP与结束IP前三个字段必须保持一致！");
+                flag = false;
+            }
+        }
+        return flag;
+    }
+    //得到ip前面三个的字段 和最后一个字段，并将之拼接起来
+    function concatIp(ipVal, lastField)
+    {
+        var newIp = ipVal.split(".");
+        var ipField3 = "";
+        
+        for (var i = 0;i < newIp.length - 1; i++) {
+            ipField3 += newIp[i] + ".";
+        }
+        lastIp = ipField3 + lastField;
+        return lastIp;
+    }
+</script>
+<script type="text/javascript">	
+	//新建共享
+	function createDdfs()
+	{
+	    var shareName  = document.getElementById("shareName");//新建共享名称
+	    var sharePath  = document.getElementById("sharePath");
+	    var clientMountPath = document.getElementById("clientMountPath");
+	    var shareParameter  = document.getElementById("shareParameter");
+	    var allSName   = document.getElementsByName("node_cbox");
+        var allIp      = document.getElementsByName("ipName[]");
+        var allIpPass  = document.getElementsByName("ipPass[]");
+        var ipRadio    = document.getElementsByName("addIpWay");
+        var $td_cmPath = jQuery(".td_cmPath");//已有的客户端挂载路径
+        var $td_sPath  = jQuery(".td_sPath");//已有的共享路径
+        var serverIp   = document.getElementById("serverIP").value;
+        var existIp    = jQuery(".clientIp");//已有客户端IP
+        
+        if (!limitName(shareName.value)) {
+            showMsg(shareName.id,"共享名称输入为空或不合法！");
+            return false;
+        }
+	    for (var i = 0; i < allSName.length; i++) {
+	        if (shareName.value == allSName[i].value) {
+                showMsg(shareName.id,"该共享名称已经存在！");
+	            return false;
+	        }
+	    }
+	    for (var i = 0; i < $td_sPath.length; i++) {
+	        if (isPathRepeat(sharePath.value,$td_sPath.eq(i).html())) {
+                showMsg(sharePath.id,"该共享路径已经存在！");
+	            return false;
+	        }
+	    }
+        if (isPathEmpty(clientMountPath.value)) {
+            showMsg(clientMountPath.id,"客户端挂载路径输入为空或不合法！");
+            return false;
+        }
+	    /*for (var i = 0; i < $td_cmPath.length; i++) {
+	        if (IsDirRepeat(clientMountPath.value, $td_cmPath.eq(i).html())) {
+                showMsg(clientMountPath.id,"客户端挂载路径输入不合法或已经存在！");
+	            return false;
+	        }
+	    }*/
+	    if (shareParameter.value == "") {
+            showMsg(shareParameter.id,"共享参数输入为空或不合法！");
+	        return false;
+	    }
+        //判断IP的输入是否合法 新建共享时，只需判断所有添加的IP是否有重复
+        if (ipRadio[0].checked) {
+            for (var i = 0; i < allIp.length; i++) {
+                if (!limitIpnew(allIp[i].value, allIp[i].id, "IP输入不合法！")) {
+                    return false;
+                }
+                if (allIp[i].value == serverIp) {
+                    showMsg(allIp[i].id,"服务器IP不能作为NFS客户端！");
+                    return false;
+                }
+                //与自身比较
+                for (var j = i+1; j < allIp.length; j++) {
+                    if (allIp[i].value == allIp[j].value) {
+                        showMsg(allIp[j].id,"IP地址重复！");
+                        return false;
+                    }
+                }
+                //与已存在的IP比较重复
+                for (var j = 0; j < existIp.length; j++) {
+                    if (allIp[i].value == existIp.eq(j).text()) {
+                        showMsg(allIp[i].id,"IP地址与已有客户IP重复！");
+                        return false;
+                    }
+                }
+                if (allIpPass[i].value == "") {
+                    showMsg(allIpPass[i].id,"密码输入不能为空！");
+                    return false;
+                }
+            }
+        } else if (ipRadio[1].checked) {
+            var startIp = document.getElementById("startIp");
+            var endIp   = document.getElementById("endIp");
+            var ipPassG = document.getElementById("ipPassF");
+            
+            if (!limitIpnew(startIp.value, startIp.id, "IP输入不合法！") || !limitIpnew(endIp.value, endIp.id, "IP输入不合法！")) {
+                return false;
+            }
+            if (!limitIpRange(startIp.id, endIp.id)) {
+                return false;
+            }
+            if (delIpDot(startIp.value)*1 >= delIpDot(endIp.value)*1) { //起始IP不得大于或等于结束IP
+                showMsg(startIp.id,"起始IP不能大于或等于结束IP！");
+                return false;
+            }
+            // *1 的目的是将其转换成数字，避免for循环出问题
+            var startNum = startIp.value.split(".")[3]*1;
+            var endNum   = endIp.value.split(".")[3]*1;
+            for (var i = startNum; i <= endNum; i++) {
+                if (concatIp(startIp.value,i) == serverIp) {
+                    showMsg(endIp.id,"服务器IP不能作为NFS客户端!");
+                    return false;
+                }
+                //与已存在的IP比较重复
+                for (var j = 0; j < existIp.length; j++) {
+                    if (concatIp(startIp.value,i) == existIp.eq(j).text()) {
+                        showMsg(endIp.id,"IP地址与已有客户IP重复！");
+                        return false;
+                    }
+                }
+            }
+            if (ipPassG.value == "") {
+                showMsg(ipPassG.id,"密码输入为空！");
+                return false;
+            }
+        } else {
+            alert("请选择添加客户端IP的添加方式！");
+            return false;
+        }
+	    //document.getElementById("createShareForm").action = "index.php?s=/Dfshare/addShare";
+	    //document.getElementById("createShareForm").submit();
+	    closeCover();
+	    createCorage();
+	    set_ajax('createShareForm','index.php?s=/Dfshare/addShare',pwdHandle,"pN_info");
+	
+	}
+	function editDdfs()
+	{
+        var e_sharePm    = document.getElementById("e_shareParameter");
+        var e_allIp      = document.getElementsByName("e_ipName[]");
+        var e_allIpPass  = document.getElementsByName("e_ipPass[]");
+        //var e_existIp  = document.getElementById("allIpList").value.split(";");//已有客户端IP
+        var e_existIp    = jQuery(".clientIp");//已有客户端IP
+        var e_ipRadio    = document.getElementsByName("e_addIpWay");
+        var serverIp     = document.getElementById("serverIP").value;
+        
+        if (e_sharePm.value == "") {
+            showMsg(e_sharePm.id,"共享参数输入为空！");
+            return false;
+        }
+        if (e_ipRadio[0].checked) {
+            for (var i = 0; i < e_allIp.length; i++) {
+                if (e_allIp[i].value != "" || e_allIpPass[i].value != "") {
+                    if (!limitIpnew(e_allIp[i].value, e_allIp[i].id, "IP输入不合法！")) {
+                        return false;
+                    }
+                    //不能用网关服务器IP
+                    if (e_allIp[i].value == serverIp) {
+                        showMsg(e_allIp[i].id,"服务器IP不能作为NFS客户端!");
+                        return false;
+                    }
+                    //与自身比较重复
+                    for (var j = i+1; j < e_allIp.length; j++) {
+                        if (e_allIp[i].value == e_allIp[j].value) {
+                            showMsg(e_allIp[j].id,"IP地址重复！");
+                            return false;
+                        }
+                    }
+                    //与该共享存在的IP比较重复
+                    for (var j = 0; j < e_existIp.length; j++) {
+                        if (e_allIp[i].value == e_existIp.eq(j).text()) {
+                            showMsg(e_allIp[i].id,"IP地址与已有客户IP重复！");
+                            return false;
+                        }
+                    }
+                    if (e_allIpPass[i].value == "") {
+                        showMsg(e_allIpPass[i].id,"密码输入不能为空！");
+                        return false;
+                    }
+                }
+            }
+        } else if (e_ipRadio[1].checked) {
+            var e_startIp = document.getElementById("e_startIp");
+            var e_endIp   = document.getElementById("e_endIp");
+            var e_ipPassG = document.getElementById("e_ipPassF");
+            
+            if (e_startIp.value != "" || e_endIp.value != "" || e_ipPassG.value != "") {
+                if (!limitIpnew(e_startIp.value, e_startIp.id, "IP输入不合法！") || !limitIpnew(e_endIp.value, e_endIp.id, "IP输入不合法！")) {
+                    return false;
+                }
+                if (!limitIpRange(e_startIp.id, e_endIp.id)) {
+                    return false;
+                }
+                if (delIpDot(e_startIp.value)*1 >= delIpDot(e_endIp.value)*1) { //起始IP不得大于或等于结束IP
+                    showMsg(e_startIp.id,"起始IP不能大于或等于结束IP！");
+                    return false;
+                }
+                // *1 的目的是将其转换成数字，避免for循环出问题
+                var startNum = e_startIp.value.split(".")[3]*1;
+                var endNum   = e_endIp.value.split(".")[3]*1;
+                for (var i = startNum; i <= endNum; i++) {
+                    if (concatIp(e_startIp.value, i) == serverIp) {
+                        showMsg(e_endIp.id,"服务器IP不能作为NFS客户端!");
+                        return false;
+                    }
+                    for (var j = 0; j < e_existIp.length; j++) {
+                        if (concatIp(e_startIp.value,i) == e_existIp.eq(j).text()) {
+                            showMsg(e_endIp.id,"该批IP地址中与已有IP地址重复！");
+                            return false;
+                        }
+                    }
+                }
+                
+                if (e_ipPassG.value == "") {
+                    showMsg(e_ipPassG.id,"密码输入为空！");
+                    return false;
+                }
+            }
+        } else {
+            alert("请选择添加客户端IP的添加方式！");
+            return false;
+        }
+	    //document.getElementById("editShareForm").action = "index.php?s=/Dfshare/editShare";
+	    //document.getElementById("editShareForm").submit();
+	    closeCover();
+	    createCorage();
+	    set_ajax('editShareForm','index.php?s=/Dfshare/editShare',pwdHandle,"pN_info");
+	
+	}
+	function delShare()
+	{
+	    //document.getElementById("delShareForm").action = "index.php?s=/Dfshare/delShare";
+	    //document.getElementById("delShareForm").submit();
+	    closeCover();
+	    createCorage();
+	    set_ajax('delShareForm','index.php?s=/Dfshare/delShare',pwdHandle,"pN_info");
+	
+	}
+	function startServer()
+	{
+	    closeCover();
+	    createCorage();
+	    //window.location = "index.php?s=/Dfshare/startServer/";
+	    ThinkAjax.send("index.php?s=/Dfshare/startServer/",'ajax=1',pwdHandle,"pN_info");
+	}
+	function stopServer()
+	{
+	    closeCover();
+	    createCorage();
+	    //window.location = "index.php?s=/Dfshare/stopServer/";
+	    ThinkAjax.send("index.php?s=/Dfshare/stopServer/",'ajax=1',pwdHandle,"pN_info");
+	}
+	//挂载客户端
+	function mountClient(key,id)
+	{
+		var shareName = jQuery("#shareName"+key).text();
+	    var ip = jQuery("#clientIP"+key+id).text();
+	    closeCover();
+	    createCorage();
+	    //window.location = "index.php?s=/Dfshare/mountClient/ip/"+ip+"/shareName/"+shareName;  
+	    ThinkAjax.send("index.php?s=/Dfshare/mountClient/",'ajax=1&ip='+ip+'&shareName='+shareName,pwdHandle,"pN_info");
+	}
+	//卸载客户端
+	function umountClient(key,id)
+	{
+		var shareName = jQuery("#shareName"+key).text();
+	    var ip = jQuery("#clientIP"+key+id).text();
+	    closeCover();
+	    createCorage();
+	    //window.location = "index.php?s=/Dfshare/umountClient/ip/"+ip+"/shareName/"+shareName;  
+	    ThinkAjax.send("index.php?s=/Dfshare/umountClient/",'ajax=1&ip='+ip+'&shareName='+shareName,pwdHandle,"pN_info");
+	}
+	//删除客户端
+    function delClient(key,id)
+    {
+        var shareName = jQuery("#shareName"+key).text();
+        var ip = jQuery("#clientIP"+key+id).text();
+        closeCover();
+        createCorage();
+        //window.location = "index.php?s=/Dfshare/delClient/ip/"+ip+"/shareName/"+shareName;  
+        ThinkAjax.send("index.php?s=/Dfshare/delClient/",'ajax=1&ip='+ip+'&shareName='+shareName,pwdHandle,"pN_info");
+    }
+	//挂载所有客户端
+    function monutAll(id)
+    {
+        var shareName = jQuery("#shareName"+id).text();
+        var nodesIp   = jQuery(".nodesIp"+id);
+        var nodes     = new Array();
+        for (var i = 0; i < nodesIp.length; i++) {
+            nodes.push(nodesIp.eq(i).text());
+        }
+
+        closeCover();
+        createCorage();
+        //window.location = "index.php?s=/Dfshare/monutAll/nodes/"+nodes+"/shareName/"+shareName;
+        ThinkAjax.send("index.php?s=/Dfshare/monutAll/",'ajax=1&nodes='+nodes+'&shareName='+shareName,pwdHandle,"pN_info");
+    }
+    //卸载所有客户端
+    function umonutAll(id)
+    {
+        var shareName = jQuery("#shareName"+id).text();
+        var nodesIp   = jQuery(".nodesIp"+id);
+        var nodes     = new Array();
+        for (var i = 0; i < nodesIp.length; i++) {
+            nodes.push(nodesIp.eq(i).text());
+        }
+
+        closeCover();
+        createCorage();
+        //window.location = "index.php?s=/Dfshare/umonutAll/nodes/"+nodes+"/shareName/"+shareName;
+        ThinkAjax.send("index.php?s=/Dfshare/umonutAll/",'ajax=1&nodes='+nodes+'&shareName='+shareName,pwdHandle,"pN_info");
+    }
+</script>
+</body>

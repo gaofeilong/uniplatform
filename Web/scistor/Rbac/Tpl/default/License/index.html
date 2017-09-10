@@ -1,0 +1,175 @@
+<include file="Public:file"/>
+<script type="text/javascript" src="__PUBLIC__/js/jquery.form.js"></script>
+<body class="rightbody" onload="licNode()">
+    <div class="right_title" style="">
+        <span>首页 </span> &raquo; 系统设置  &raquo; LICENSE
+    </div>
+    <div class="right_main">
+        <div class="right_fortable">
+            <hr class="hr_top" />
+            <input type="hidden" id="totalNode" value="{$totalNode}"/>
+            <!--页面操作成功与否提示-->
+            <div class="publicNotice pN_error" id="pN_info">{$errorinfo}</div>
+            <div class="progress"> 
+                <span class="bar"></span><span class="percent">0%</span > 
+            </div> 
+            <div id="showimg"></div> 
+            <!--页面操作成功与否提示 over-->
+            <div>
+                <div class="sysTime">
+	                <div class="clearfix">
+	                    <select  class="s_widths ddfsel fleft" name="nodeIp" onchange="licnodesel(this)">
+	                    <volist name="indexArr" id="v">
+	                        <option value="{$v}" <if condition="$ipname eq $v">selected</if>>{$v}</option>    
+	                    </volist>
+	                    </select>
+	                </div>
+	            </div>
+                <div class="licenseModel">
+                    <h4 class="l_title" id="licsingle">
+                    <if condition = '$totalNode lt 1'>DDFS
+                    <else />ISTRI
+                    </if></h4>
+                    <!--<h4 class="l_title" id="licdistri">DISTRI</h4>-->
+                    <table class="lic">
+                        <!--<tr>
+                            <th width="120px">版本号：</th>
+                            <td>{$licdata.Version}</td>
+                        </tr>-->
+                        <tr>
+                            <th width="120px">状态：</th>
+                            <td>
+	                            <if condition = "$licdata.Activated eq y">正式版
+	                            <else />试用版
+	                            </if>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th width="120px">剩余时间：</th>
+                            <td>{$licdata.leftTime}</td>
+                        </tr>
+                        <tr>
+                            <th>总数据量：</th>
+                            <td>{$licdata.ABSQuota}</td>
+                        </tr>
+                        <!--<tr>
+                            <th>当前数据量：</th>
+                            <td>{$licdata.CurQuota}</td>
+                        </tr>-->
+                        <tr id="NodeNumber">
+                            <th>最大节点数：</th>
+                            <td>{$licdata.NodeNumber}</td>
+                        </tr>
+                        <!--<tr id="CurNodeNumber">
+                            <th>当前节点数：</th>
+                            <td>{$licdata.CurNodeNumber}</td>
+                        </tr>-->
+                        <tr>
+                            <th>授权码：</th>
+                            <td>{$licdata.SerialCode}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            
+            <div style="clear:both"></div>
+            <hr class="hr_bottom" />
+            <div class="tright bbb">
+                <div class="import_inline">
+                    <form id="myupload" action="__URL__/uploadFile"  method="post" enctype="multipart/form-data">
+                       <div class="bttn btn_big">
+                           <span>&lt;&lt;&nbsp;&nbsp;导入</span>
+                           <input id="fileupload" class="filenone" type="file" name="mypic">
+                       </div> 
+                    </form>
+                </div>
+                <input type="button" value="导出&nbsp;&nbsp;&gt;&gt;" class="btn btn_big" id="ddfsout"  onclick="licdaochu()"/>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+    jQuery(function () { 
+        var bar = jQuery('.bar'); 
+        var percent = jQuery('.percent'); 
+        var showimg = jQuery('#showimg'); 
+        var progress = jQuery(".progress"); 
+        var files = jQuery("#pN_info"); 
+        var btn = jQuery(".btn span"); 
+        //jQuery("#fileupload").wrap('<form id="myupload" action="__URL__/uploadFile"  method="post" enctype="multipart/form-data">.</form>');
+        jQuery("#fileupload").change(function(){ //选择文件 
+        	closeCover();
+            createCorage();
+            jQuery("#myupload").ajaxSubmit({ 
+                dataType:  'json', //数据格式为json 
+                beforeSend: function() { //开始上传 
+                    showimg.empty(); //清空显示的图片 
+                    progress.show(); //显示进度条 
+                    var percentVal = '0%'; //开始进度为0% 
+                    bar.width(percentVal); //进度条的宽度 
+                    percent.html(percentVal); //显示进度为0% 
+                    btn.html("上传中..."); //上传按钮显示上传中 
+                }, 
+                uploadProgress: function(event, position, total, percentComplete) { 
+                    var percentVal = percentComplete + '%'; //获得进度 
+                    bar.width(percentVal); //上传进度条宽度变宽 
+                    percent.html(percentVal); //显示上传进度百分比 
+                }, 
+                success: function(data) { //成功 
+                    //获得后台返回的json数据，显示文件名，大小，以及删除按钮 
+                    files.css({"display":"block","color":"blue"});
+                    //files.html("<b>文件"+data.name+"("+data.size+"k)导入成功!</b>");
+                    files.html("<b>文件"+data.name+"导入成功!</b>");
+                    setTimeout("window.location = 'index.php?s=/License/index';removeCorage()",2000);
+                }, 
+                error:function(xhr){ //上传失败 
+                    files.css({"display":"block","color":"#F92325"});
+                    files.html("导入失败!"); 
+                    //bar.width('0'); 
+                    files.html(xhr.responseText); //返回失败信息 
+                    removeCorage();
+                } 
+            }); 
+        });
+    }); 
+    function fileClick()
+    {
+        var _i = document.getElementById("fileupload");
+        _i.click();
+    }
+    function fileChange()
+    {
+        var _i = document.getElementById("fileupload");
+        _i.change();
+    }
+    </script>
+    <script type="text/javascript">
+    function licnodesel(index) 
+    {
+    	var name = jQuery(index).val();
+        //alert(name);
+        location.href = "index.php?s=/License/index/nodeIp/"+name;
+    }
+    function licdaochu()
+    {
+        var con = window.confirm('确定要导出license文件？');
+        if(con == 1){
+            closeCover();
+            //createCorage();
+            window.location = "index.php?s=/License/licexport/";
+            //ThinkAjax.send("index.php?s=/License/licexport/",'ajax=1',pwdHandle,"pN_info");
+        }
+    }
+    function licNode()
+    {
+       var  totalNode = jQuery("#totalNode").val() * 1;
+       if (totalNode < 1) {
+   	       document.getElementById("NodeNumber").style.display = "none"; 
+   	       // document.getElementById("CurNodeNumber").style.display = "none"; 
+       } else {
+    	   document.getElementById("NodeNumber").style.display = "block"; 
+           // document.getElementById("CurNodeNumber").style.display = "block";
+       }
+    }
+    </script>
+</body>
+</html>

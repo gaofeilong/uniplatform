@@ -1,0 +1,1045 @@
+<include file="Public:file"/>
+<body class="rightbody" onload = "stateDel()">
+    <div class="right_title">
+        <span>首页 </span> &raquo; 分布式消冗文件系统  &raquo; 配置管理
+    </div>
+    <div class="right_main">
+        <div class="right_fortable">
+            <!--页面操作成功与否提示-->
+            <div class="publicNotice pN_error" id="pN_info"></div>
+            <!--页面操作成功与否提示 over-->
+            <input type="hidden" value="{$indexId}" id="hdfsindexId" />
+            <input type="hidden" value="{$newIndex.state}" id="indexState" />
+            <input type="hidden" value="{$ign}" id="clusterign" />
+            <input type="hidden" value="{$countIndex}" id="countIndex" />
+            <input type="hidden" value="{$dataCount}" id="dataCount" />
+            <input type="hidden" value="{$newIndex.idxrootpath}" id="idxrootpath" /><!--集群配置索引存储目录-->
+            <input type="hidden" value="{$ddfscount}" id="ddfscount" />
+            <input type="hidden" value="{$archive}" id="archivecount" />
+            <div class="hide" id="nodearrIp">
+	            <volist name="nodearrIp" id="v">
+	                <span>{$v}</span>
+	            </volist>
+            </div>
+            <!--ISCSI target 设置-->
+            <fieldset class="indexFile marginSet">
+                <legend class="orange">集群设置</legend>
+                <div class="clearfix">
+                    <select name="is_sel" id="is_sel" class="s_widths ddfsel fleft" onchange="selIndex(this)">
+                    <volist name="indexArr" id="v">
+                        <option value="{$v}" <if condition="$indexName eq $v">selected</if>>{$v}</option>    
+                    </volist>
+                    </select>
+                    <div class="mr15 fright">
+                        <input type="button" value="启动集群" class="btn btn_big" id = "startCluster" onclick="startCluster()"/>
+                        <input type="button" value="停止集群" class="btn btn_big" id = "stopCluster" onclick="stopCluster()"/>
+                        <input type="button" value="配置" class="btn btn_big" id="editCluster" <if condition = "$newIndex.state eq 'lost'" >disabled</if> onclick="hdfsSet()"/>
+                    </div>
+                </div>
+                <div class="hdfs_span">
+                    <span>集群容量：</span>{$newIndex.capacity2}
+                    <span>集群消冗前数据量：</span>{$newIndex.total}
+                    <span>集群消冗后数据量：</span>{$newIndex.real}
+                    <span>集群消冗比：</span>{$newIndex.ratio} x
+                    <span>集群剩余容量：</span>{$newIndex.left2}
+                </div>
+            </fieldset>
+            <div>
+                <table class="table1" id="hdfs_tab">
+                    <tr class="top">
+                        <th width="6%" class="belongDel" title="批量删除节点"><input type="checkbox" name="fc_all" value="checkall" onclick="All(this, 'choice')" /></th>
+                        <th width="8%">IP</th>
+                        <th class="hide">id</th>
+                        <th width="8%">节点类型</th>
+                        <th width="8%">系统容量</th>
+	                    <th width="10%">消冗前数据量</th>
+	                    <th width="10%">消冗后数据量</th>
+	                    <th width="8%">消冗比</th>
+	                    <th width="8%">剩余容量</th>
+                        <th width="10%">状态</th>
+                        <th width="15%">操作</th>
+                    </tr>
+                    <if condition = '$countIndex gt 0' >
+                    <tr>
+                        <td><input type="checkbox" name="choice" id="choiceidx" title="索引节点为ready或当删除所有数据节点且索引节点为停止时可选" onclick="Item(this, 'fc_all')" /></td>
+                        <label for="choiceidx">
+                        <td class="dataIplist">{$newIndex.ip}</td>
+                        <td>索引节点</td>
+                        <td>{$newIndex.capacity1}</td>
+                        <td>----</td>
+                        <td>----</td>
+                        <td>----</td>
+                        <td>{$newIndex.left1}</td>
+                        <td>
+	                        <switch name = 'newIndex.state'>
+                            <case value="running"><span class="status_ok"></span></case>
+                            <case value="stopped"><span class="status_no"></span></case>
+                            <case value="error"><span class="status_warn"></span></case>
+                            <case value="lost"><span class="status_no"></span></case>
+                            <default /><span class="status_no"></span>
+	                        </switch>
+	                        <span class="status_con status_get">{$newIndex.state}</span>
+                        </td>
+                        <td>
+                            <switch name = 'newIndex.state'>
+                            <case value="stopped">
+                                <input type="button" value="启动" class="btn btn_middle" onclick="startNodes()"/>
+                            </case>
+                            <case value="running">
+                                <input type="button" value="停止" class="btn btn_middle" onclick="stopNodes()"/>
+                            </case>
+                            <case value="error">
+                                <input type="button" value="修复" class="btn btn_middle" onclick="repairIndex()"/>
+                            </case>
+                            <case value="lost">
+                                <input type="button" value="启动" class="btn btn_middle" disabled/>
+                            </case>
+                            <default /><input type="button" value="启动" class="btn btn_middle" disabled/>
+                            </switch>
+	                        <input type="button" value="配置" class="btn btn_middle" id="editidx" <switch name="newIndex.state"><case value="lost">disabled</case></switch> onclick="indexPerSet(this)" />
+                        </td>
+                        </label>
+                    </tr>
+                    </if>
+                    <volist name="dataArr" id="vo" key="k">
+                    <tr>
+                        <td><input type="checkbox" name="choice" id="choice{$k}" value="3"  title = "数据节点为ready或当索引节点启动且数据节点停止时可选" onclick="Item(this, 'fc_all')" <if condition = "$vo.state neq stopped">disabled</if> /></td>
+                        <label for="choice{$k}">
+                        <td class="dataIplist" id="nodeIp{$k}">{$vo.ip}</td>
+                        <td>数据节点</td>
+                        <td class="hide" id="nodeId{$k}">{$vo.id}</td>
+                        <td>{$vo.capacity}</td>
+                        <td>{$vo.total}</td>
+                        <td>{$vo.real}</td>
+                        <td>{$vo.ratio} x</td>
+                        <td>{$vo.left}</td>
+                        <td class="hide" id="idxpath{$k}">{$vo.idxpath}</td>
+                        <td class="hide" id="mtpath{$k}">{$vo.mtpath}</td>
+                        <td class="hide" id="datapath{$k}">{$vo.dbpath}</td>
+                        <td class="hide" id="imgDedup{$k}">{$vo.isphoto}</td>
+                        <td class="hdfs_status">
+                            <if condition="$vo.state eq running" >
+                                <span class="status_ok"></span>
+                            <elseif condition="$vo.state eq stopped" />
+                                <span class="status_no"></span>
+                            <elseif condition="$vo.state eq error" />
+                                <span class="status_warn"></span>
+                            <else />
+                                <span class="status_no"></span>
+                            </if>
+                            <span class="status_con status_get">{$vo.state}</span>
+                        </td>
+                        <td>
+                           <input type="hidden" value="{$vo.indexid}" id="hidIndexip" />
+                           <if condition = "$vo.state eq running" >
+                               <input type="button" value="停止" class="btn btn_middle" onclick="stopNodealone({$k})"/>  
+                           <elseif condition = "$vo.state eq ready" />
+                               <input type="button" value="启动" class="btn btn_middle" disabled/>
+                           <elseif condition = "$vo.state eq stopped" />
+                               <input type="button" value="启动" class="btn btn_middle" onclick="startNodealone({$k})"/>
+                           <elseif condition = "$vo.state eq unsetid" />
+                               <input type="button" value="删除" class="btn btn_middle" onclick="delNodealone({$k})"/>
+                           <elseif condition = "$vo.state eq error" />
+                               <input type="button" value="修复" class="btn btn_middle" onclick="repairData({$k})"/>
+                            <elseif condition = "$vo.state eq lost" />   
+                               <input type="button" value="启动" class="btn btn_middle" disabled/>
+                           </if>
+                           <input type="button" value="配置" class="btn btn_middle" <if condition = "$vo.state eq 'lost'" >disabled</if> onclick="dataSet(this,{$k})"/> 
+                        </td>
+                        </label>
+                    </tr>    
+                    </volist>
+                </table>
+                <div class="table_bottom"></div>
+                <!--分页条-->
+                <!--<div id="controls" class="controls">
+                    <div id="perpage" class="perpage">
+                        <span>跳转到</span>
+                        <input type="text" name="gopage" value="{$jump_page}" class="gopage" id="gopage" /> 页
+                        <a href="#" id="jump_img"><img src="__PUBLIC__/img/left_grey.png" alt="跳页" title="跳转到指定页" onclick="jumpPage('Share')"/></a>
+                    </div>
+                    <include file="Public:page" />
+                </div>-->
+                <!--over 分页条-->
+                
+                <hr class="hr_bottom" />
+                
+                <div class="tright bbb">
+                    <!--<input type="button" value="添加" class="btn btn_big" onclick="indexCreate()"/>--> 
+                    <input type="button" value="添加" class="btn btn_big" onclick="hdfsaddNode()"/>
+                    <input type="button" value="删除" class="btn btn_big" id = "delState" onclick="indexDelbtn()"/>
+                </div>
+            </div>
+            
+            <!-- 集群配置 -->
+            <div class="configcolony hide" id="configcolony" style="width:570px;max-height:550px">
+                <form name="indexconForm" id="indexconForm" action="__URL__/installNode" method="post">
+                <input type="hidden" value="" name="indexNodeIp" id="indexNodeIp" />
+                <div class="colony_shuju ptop10">
+                    <p class="hdfs_pnew">索引存储根目录:</p>
+                    <div class="fleft">
+                        <table id="dataindexTab" class="archive_table" > 
+                            <tr>
+                                <td>
+                                    <input type="text" name="indexRootPath[]" id="indexRootPath" class="s_width250new" value="" />
+                                </td>
+                                <td>
+                                    <img src="__PUBLIC__/img/clear.gif" class="hdfs_delete" align="" title="删除索引存储路径" onclick="hdfsindexdel_row()"/><br>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="hdfs_data">
+                        <input type="button" value="添加路径" class="btn btn_middle" title="添加路径" onclick="hdfsindex_row()"/>
+                    </div>
+                </div>
+                <div class="hdfs_s10">
+                    <span>配置数据节点：</span>
+                    <input type="checkbox" value="1" name="indexCbox" id="indexCbox" onclick="showhideData()" />
+                </div>
+                <div id="indexRootSet">
+                  <div id="hdfs_superDiv">
+                    <table class="margin10 mtop0">
+                        <tr>
+                            <td>索引路径:</td>
+                            <td>
+                                <input type="text" name="indexPath" id="indexPath" class="s_width250" value="" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="120px">元数据存储路径:</td>
+                            <td>
+                                <input type="text" name="metaPath" id="metaPath" class="s_width250" value="" />
+                            </td>
+                        </tr>
+                    </table>
+                  </div>
+                  <div class="colony_shuju">
+                    <p class="hdfs_pnew">数据存储路径:</p>
+                    <div class="fleft">
+                        <table id="dataconTab" class="archive_table" > 
+                            <tr>
+                                <td>
+                                    <input type="text" name="dataPath[]" id="dataPath" class="s_width250new" value=""/>
+                                </td>
+                                <td>
+                                    <img src="__PUBLIC__/img/clear.gif" class="hdfs_delete" align="absmiddle" title="删除数据存储路径" onclick="hdfsDatadel_row()"/><br>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="hdfs_data">
+                        <input type="button" value="添加路径" class="btn btn_middle" title="添加路径" onclick="hdfsData_row()"/>
+                    </div>
+                  </div>
+                  <div class="hdfs_s10">
+                    <span>支持消冗图片:</span>
+                    <input type="checkbox" value="1" name="isDedupPic" id="isDeldupPic" />
+                  </div>
+                </div>
+                <div class="tright bottom_bg">
+                    <input type="button" value="确定" class="btn btn_small" id="bondSetsum" onclick="indexConfig()"/>
+                    <input type="button" value="取消" class="btn btn_small cancel" />
+                </div>
+                </form>
+            </div>
+            <!-- 集群配置结束 -->
+            
+            <!--索引配置-->
+            <div class="indexPerSet hide" id="indexPerSet" style="width:570px;max-height:550px">
+                <form name="indexPerForm" id="indexPerForm" action="" method="post">
+                <input type="hidden" value="" name="indexaloneIp" id="indexaloneIp" />
+                <div class="colony_shuju ptop10">
+                    <p class="hdfs_pnew">索引存储根目录:</p>
+                    <div class="fleft">
+                        <table id="perindexTab" class="archive_table" > 
+                            <tr>
+                                <td>
+                                    <input type="text" name="indexNodePath[]" id="indexNodePath" class="s_width250new" value="" />
+                                </td>
+                                <td>
+                                    <img src="__PUBLIC__/img/clear.gif" class="hdfs_delete" align="" title="删除索引存储路径" onclick="hdfsindexPerdel_row(event)"/><br>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="hdfs_data">
+                        <input type="button" value="添加路径" class="btn btn_middle" title="添加路径" onclick="hdfsindexPer_row()"/>
+                    </div>
+                </div>
+                <!--<div class="hdfs_s10">
+                    <span>支持消冗图片:</span>
+                    <input type="checkbox" value="1" name="isDedupPicPer" id="isDedupPicPer" />
+                </div>-->
+                <div class="hide"><input type="text" value="hhh" name="hhh" id="hhh" /></div>
+                <div class="tright bottom_bg">
+                    <input type="button" value="确定" class="btn btn_small" onclick = "picidxconfig()"/>
+                    <input type="button" value="取消" class="btn btn_small cancel" />
+                </div>
+                </form>
+            </div>
+            <!--索引配置 over-->
+            
+            <!-- 节点配置 -->
+            <div class="configdata hide" id="configdata" style="width:570px;max-height:550px">
+                <form name="dataconForm" id="dataconForm" action="" method="post">
+                <input type="hidden" value="" name="idxaloneIp" id="idxaloneIp"/>
+                <input type="hidden" value="" name="datanodesIP" id="datanodesIP"/>
+                <div id="hdfs_superDiv">
+                    <table class="margin10">
+                        <tr>
+                            <td>索引路径:</td>
+                            <td>
+                                <input type="text" name="indexPath" value="" id="indexPathNode" class="s_width250" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="120px">元数据存储路径:</td>
+                            <td>
+                                <input type="text" name="metaPath" value="" id="datametaPath" class="s_width250" />
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="colony_shuju">
+                    <p class="hdfs_pnew">数据存储路径:</p>
+                    <div class="fleft">
+                        <table id="condata_tab" class="archive_table" > 
+                            <tr>
+                                <td>
+                                    <input type="text" name="dataPathNode[]" id="dataPathNode" class="s_width250new" value="" />
+                                </td>
+                                <td>
+                                    <img src="__PUBLIC__/img/clear.gif" class="hdfs_delete" align="absmiddle" title="删除数据存储路径" onclick="condatadel_row()"/><br>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="hdfs_data">
+                        <input type="button" value="添加路径" class="btn btn_middle" title="添加路径" onclick="dataAdd_row()"/>
+                    </div>
+                </div>
+                <div class="hdfs_s10 nodeDedupPic">
+                   <span>支持消冗图片:</span>
+                   <input type="checkbox" value="1" name="isDedupPicNode" id="isDedupPicNode" />
+                </div>
+                <div class="tright bottom_bg">
+                    <input type="button" value="确定" class="btn btn_small" id="bondSetsum" onclick="dataConfig()"/>
+                    <input type="button" value="取消" class="btn btn_small cancel" />
+                </div>
+                </form>
+            </div>
+            <!-- 节点配置结束 -->
+            
+            <!--新建-->
+            <!-- <div id="hdfscreate" class="new_vol hide hdfscreate">
+	            <form class="bg_s" action="" name="newvol" method="post" id="lvcreatefrm">
+		            <table class="hdfsTab">
+		                <tr>
+		                   <td width="27%">添加类型：</td>
+		                   <td>
+		                        <select name="newType" id="newType" class="ddfsel" onchange="hdfsType()">
+			                        <option value="index">索引节点</option>
+			                        <option value="data" selected>数据节点</option>
+			                    </select>
+		                   </td>
+		                </tr>
+		                <tr id="hdfsWay">
+                           <td width="27%">添加方式：</td>
+                           <td>
+                                <select name="newWay" id="newWay" class="ddfsel" onchange="hdfsneWay()">
+                                    <option value="single">单台添加</option>
+                                    <option value="multi">批量添加</option>
+                                </select>
+                           </td>
+                        </tr>
+                        <tr id="indexName" style="display:none">
+                           <td width="27%">索引名称：</td>
+                           <td>
+                                <input type="text" value="" class="s_width110"/>
+                           </td>
+                        </tr>
+                        <tr id="indexsinIp">
+                           <td width="27%">IP地址：</td>
+                           <td>
+                                <input type="text" value="" name="ipaddr" id="ipaddr" class="s_width110"/>
+                           </td>
+                        </tr>
+                    </table> -->
+                    <!--<div class="yu_shuju" id="singleIp">
+	                    <p class="hdfsIp">IP地址:</p>
+	                    <div class="fleft">
+	                        <table id="ipTab" class="hdfsTab"> 
+	                            <tr>
+	                                <td>
+	                                    <input type="text" value="" name="ipaddr[]" id="ipaddr" class="s_width110"/>
+	                                </td>
+	                                <td>
+	                                    <img src="__PUBLIC__/img/clear.gif" class="imgdelIp" align="删除IP" title="删除IP" onclick="hdfsdelIP()"/>
+	                                </td>
+	                            </tr>
+	                        </table>
+	                    </div>
+	                    <div class="ipbtn">
+	                        <input type="button" value="添加IP" class="btn btn_small " title="添加IP" onclick="hdfsnewIP()"/>
+	                    </div>
+                    </div>-->
+                    <!-- <table  class="hdfsTab">
+                        <tr id="startIp" class="indexHide hide">
+                           <td width="27%">起始IP地址：</td>
+                           <td>
+                                <input type="text" value="" class="s_width110"/>
+                           </td>
+                        </tr>
+                        <tr id="endIp" class="indexHide hide">
+                           <td width="27%">结束IP地址：</td>
+                           <td>
+                                <input type="text" value="" class="s_width110"/>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="27%">root密码：</td>
+                           <td>
+                                <input type="text" value="" id="rootPwd" class="s_width110"/>
+                           </td>
+                        </tr>
+		            </table>
+		            <div class="tright bottom_bg">
+		                <input type="button" value="确定" class="btn btn_small" onclick="lvCreate()"/>
+		                <input type="button" value="取消" class="btn btn_small cancel" />
+		            </div>
+	            </form>
+	        </div> -->
+            <!--删除节点-->
+            <!-- <div class="hide del_isU indexDel" id="indexDel">
+            <form name="indexDelfrm" id="indexDelfrm" action="" method="post">
+                <input type="hidden" value="" name="indexidName" id="index_ip" />
+                <input type="hidden" value="" name="datalistIp" id="datalist" />
+                <div class="del_div1">
+                    <table>
+                        <tr>
+	                        <td class="vtop" width="90px;"><img src="__PUBLIC__/img/warning.png" alt="警告" /></td>
+	                        <td>确定删除节点:<span class="del_list" id="del_hdfs"></span></td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="tright bottom_bg">
+                    <input type="submit" value="确定" class="btn btn_small" />
+                    <input type="button" value="取消" class="btn btn_small cancel" />
+                </div>
+            </form>    
+            </div> -->
+        </div>
+    </div>
+    <script>
+    function stateDel()
+    {
+        var countnode = parseInt(jQuery("#countIndex").val());
+        var datacount = parseInt(jQuery("#dataCount").val());
+        var ign       = jQuery("#clusterign").val();
+        var state     = jQuery("#indexState").val();
+        if (ign == 1) {
+        	document.getElementById("startCluster").disabled = true;
+        	document.getElementById("stopCluster").disabled = true;
+        } else {
+        	document.getElementById("startCluster").disabled = false;
+            document.getElementById("stopCluster").disabled = false;
+        }
+
+        //没有节点
+        if (countnode < 1) {
+        	document.getElementById("editCluster").disabled = true;
+        	document.getElementById("startCluster").disabled = true;
+            document.getElementById("stopCluster").disabled = true;
+        } else {
+            //有索引节点没有数据节点
+        	if (datacount < 1) {
+                if (state == 'stopped') {
+                    document.getElementById("choiceidx").disabled = false;
+                    document.getElementById("startCluster").disabled = false;
+                    document.getElementById("stopCluster").disabled = true;
+                } else if (state == 'running') {
+                	document.getElementById("choiceidx").disabled = true;
+                    document.getElementById("startCluster").disabled = true;
+                    document.getElementById("stopCluster").disabled = false;
+                } else if (state == 'lost') {
+                    document.getElementById("choiceidx").disabled = true;
+                } else if (state == 'ready') {
+                	document.getElementById("choiceidx").disabled = false;
+                    document.getElementById("startCluster").disabled = true;
+                    document.getElementById("stopCluster").disabled = true;
+                } else {
+                	document.getElementById("choiceidx").disabled = true;
+                	document.getElementById("startCluster").disabled = true;
+                    document.getElementById("stopCluster").disabled = true;
+                }
+            } else {
+                //既有索引节点又有数据节点
+                var status = jQuery(".status_get");
+                var a = jQuery("input[name='choice']");
+                for (var i = 0; i < status.length; i++){
+                    if(status.eq(i).html() == "ready"){
+                        a.eq(i).attr("disabled",false);    
+                    } else {
+                        if (status.eq(i).html() == "stopped" && state == 'running') {
+                            a.eq(i).attr("disabled",false);
+                        } else {
+                            a.eq(i).attr("disabled",true);
+                        }
+                    }
+                }
+                document.getElementById("choiceidx").disabled = true;
+            }
+        }
+        
+    }
+
+    //添加节点
+    function hdfsaddNode()
+    {
+        var ddfscount    = jQuery("#ddfscount").val() * 1;
+        var countIndex   = jQuery("#countIndex").val() * 1;
+        var archivecount = jQuery("#archivecount").val() * 1;
+        if (countIndex < 1 && archivecount > 0) {
+        	alert("无法添加节点，已经建立单机归档任务！");
+        } else if (ddfscount > 0) {
+            alert("无法添加节点，已经配置单机消冗系统！");
+        } else {
+        	window.location='__URL__/addNode';
+        }
+    }
+    function showhideData()
+    {
+        var indexCbox = document.getElementById("indexCbox");
+        if (!indexCbox.checked || indexCbox.disabled) {
+            jQuery("#indexRootSet").css({"display":"none"}).find("input").attr("disabled",true);
+            jQuery("#isDedupPic").attr("disabled",true);
+        } else {
+            jQuery("#indexRootSet").css({"display":"block"}).find("input").attr("disabled",false);
+            jQuery("#isDedupPic").attr("disabled",false);
+        }
+    }
+    function hdfsSet()
+    {
+        var indexIp = jQuery("#is_sel").val();
+        jQuery("#indexNodeIp").val(indexIp);
+        var isdisabled = document.getElementById("dataCount");
+        var stateIndex = document.getElementById("indexState").value;
+        //因弹框是隐藏不是消失，故每次显示归档路径时先删除之前点击按钮多显示的归档路径
+        while(dataindexTab.hasChildNodes()){
+            dataindexTab.removeChild(dataindexTab.lastChild);
+        }
+        //当已经配置过路径后，则在弹框中显示路径
+        var idxrootpath = jQuery("#idxrootpath").val();
+        var indexpath   = idxrootpath.split(";");
+        for(var i = 0;i < indexpath.length;i++)
+        {
+           //把获取到的已归档路径，显示在编辑框里
+           var new_row=dataindexTab.insertRow(dataindexTab.rows.length);
+           var new_col01=new_row.insertCell(0); 
+           var new_col02=new_row.insertCell(1);
+           new_col01.innerHTML='<input type="text" name="indexRootPath[]" id="indexRootPath" class="s_width250new" value="'+indexpath[i]+'" />';
+           new_col02.innerHTML='<img src="__PUBLIC__/img/clear.gif" class="hdfs_delete" align="" title="删除索引存储路径" onclick="hdfsindexdel_row()"/><br>';
+        }
+        
+        if (stateIndex != "ready") {
+            jQuery("input[name='indexRootPath[]']").attr("disabled",true);
+            jQuery("input[name='indexRootPath[]']").parent().siblings().find(".hdfs_delete").css("visibility","hidden");
+        } else {
+        	jQuery("input[name='indexRootPath[]']").attr("disabled",false);
+            jQuery("input[name='indexRootPath[]']").parent().siblings().find(".hdfs_delete").css("visibility","");
+        }
+        if (isdisabled.value == 0) {
+            document.getElementById("indexCbox").disabled = true;
+        } else {
+            var status = jQuery(".hdfs_status");
+            var num = 0;
+            for (var i = 0; i < status.length; i++) {
+                if (status.eq(i).children(".status_con").text() == "ready") {
+                    num++;
+                }
+            }
+            if (num !=0 && num == status.length) {
+                document.getElementById("indexCbox").disabled = false;
+            } else {
+                document.getElementById("indexCbox").disabled = true;
+            }
+        }
+        
+        showhideData();
+    	publicP("configcolony","configcolonyDiv","集群配置");
+    }
+    
+    //单个索引配置
+    function indexPerSet(e)
+    {
+    	var indexIp = jQuery("#is_sel").val();
+        jQuery("#indexaloneIp").val(indexIp);
+        //因弹框是隐藏不是消失，故每次显示归档路径时先删除之前点击按钮多显示的归档路径
+        while(perindexTab.hasChildNodes()){
+        	perindexTab.removeChild(perindexTab.lastChild);
+        }
+        //当已经配置过路径后，则在弹框中显示路径
+        var idxrootpath = jQuery("#idxrootpath").val();
+        var indexpath   = idxrootpath.split(";");
+        for(var i = 0;i < indexpath.length;i++)
+        {
+           //把获取到的已归档路径，显示在编辑框里
+           var new_row = perindexTab.insertRow(perindexTab.rows.length);
+           var new_col01 = new_row.insertCell(0); 
+           var new_col02 = new_row.insertCell(1);
+           new_col01.innerHTML='<input type="text" name="indexNodePath[]" id="indexNodePath" class="s_width250new" value="'+indexpath[i]+'" />';
+           new_col02.innerHTML='<img src="__PUBLIC__/img/clear.gif" class="hdfs_delete" align="" title="删除索引存储路径" onclick="hdfsindexPerdel_row(event)"/><br>';
+        }
+        
+        var status = jQuery(e).parent("td").siblings().find(".status_con");
+        publicP("indexPerSet","indexPerSetDiv","索引配置");
+        if (status.text() != "ready") {
+            jQuery("#isDedupPicPer,input[name='indexNodePath[]']").attr("disabled",true);
+            jQuery("#indexPerSet").find(".hdfs_delete").css("visibility","hidden");
+        } else {
+            jQuery("#isDedupPicPer,input[name='indexNodePath[]']").attr("disabled",false);
+            jQuery("#indexPerSet").find(".hdfs_delete").css("visibility","");
+        }
+    }
+    
+    //单个索引添加索引根目录
+    function hdfsindexPer_row(e)
+    {
+        var dataPath = document.getElementsByName("indexNodePath[]");
+        for(var i = 0;i < dataPath.length; i++){
+            if(dataPath[i].value == ""){
+                alert("索引存储根目录不能为空！");
+                dataPath[i].focus();
+                return false;
+            }
+        }
+        var len       = perindexTab.rows.length;
+        var new_row   = perindexTab.insertRow(len);
+        var new_col01 = new_row.insertCell(0);
+        var new_col02 = new_row.insertCell(1);
+        new_col01.innerHTML='<input type="text" name="indexNodePath[]" id="indexNodePath" class="s_width250new" value="" />';
+        new_col02.innerHTML='<img src="__PUBLIC__/img/clear.gif" class="hdfs_delete" align="" title="删除索引存储路径" onclick="hdfsindexPerdel_row(event)"/>';
+
+        var j = dataPath.length - 1; //得到新增的input，以便获得焦点
+        dataPath[j].focus();
+    }
+    
+    //索引配置文件，删除索引存储路径
+    function hdfsindexPerdel_row()
+    {
+        publicdel_row("indexNodePath[]",perindexTab);
+    }
+    
+    function dataSet(e,id)
+    {
+        //把索引节点IP加入
+    	var indexIp = jQuery("#is_sel").val();
+        jQuery("#idxaloneIp").val(indexIp);
+        
+        var dataIP = jQuery(e).parent().siblings(".dataIplist").text();
+        jQuery("#datanodesIP").val(dataIP);
+        var status = jQuery(e).parent().siblings(".hdfs_status");
+
+        //因弹框是隐藏不是消失，故每次显示归档路径时先删除之前点击按钮多显示的归档路径
+        while(condata_tab.hasChildNodes()){
+            condata_tab.removeChild(condata_tab.lastChild);
+        }
+        //页面返回数据在弹框中
+        var idxpath    = jQuery("#idxpath"+id).text();
+        var mtpath     = jQuery("#mtpath"+id).text();
+        jQuery("#indexPathNode").val(idxpath);
+        jQuery("#datametaPath").val(mtpath);
+        var imgDedup   = jQuery("#imgDedup"+id).text();
+        if (imgDedup == 'yes') {
+        	document.getElementById("isDedupPicNode").checked = "checked";
+        } else {
+        	document.getElementById("isDedupPicNode").checked = false;
+        }
+        
+        var dbpathlist = jQuery("#datapath"+id).text();
+        dbpath = dbpathlist.split(";");
+
+        for(var i = 0;i < dbpath.length;i++)
+        {
+           //把获取到的已归档路径，显示在编辑框里
+           var new_row=condata_tab.insertRow(condata_tab.rows.length);
+           var new_col01=new_row.insertCell(0); 
+           var new_col02=new_row.insertCell(1);
+           new_col01.innerHTML='<input type="text" name="dataPathNode[]" id="dataPathNode" class="s_width250new" value="'+dbpath[i]+'" />';
+           new_col02.innerHTML='<img src="__PUBLIC__/img/clear.gif" class="hdfs_delete" align="absmiddle" title="删除数据存储路径" onclick="condatadel_row()"/><br>';
+        }
+        
+        if (status.children(".status_con").text() == "ready") {
+            jQuery("#datametaPath,#indexPathNode").attr("disabled",false).removeClass("iptreadonly");
+            jQuery("#configdata").find("input[name='dataPathNode[]']").attr("disabled",false).removeClass("iptreadonly");
+            jQuery("#configdata").find(".hdfs_delete").css("visibility","");
+            jQuery("#isDedupPicNode").attr("disabled",false);
+            //jQuery(".nodeDedupPic").css("display","block");
+        } else {
+            jQuery("#datametaPath,#indexPathNode").attr("disabled",true).addClass("iptreadonly");
+            jQuery("#datametaPath,#indexPathNode").focus(function(){
+                jQuery(this).css("background","#F5F7FC");
+            });
+            jQuery("#configdata").find("input[name='dataPathNode[]']").attr("disabled",true).addClass("iptreadonly");
+            jQuery("#configdata").find(".hdfs_delete").css("visibility","hidden");
+            jQuery("#isDedupPicNode").attr("disabled",true);
+            //jQuery(".nodeDedupPic").css("display","none");
+        }
+        
+    	publicP("configdata","configData","节点配置");
+    }
+    function configNode()
+    {
+        var identify = jQuery("#identify").val();
+        if (identify == "index") {
+            document.getElementById("indexConfig").style.display = "";
+            document.getElementById("dataConfig").style.display = "none";
+            document.getElementById("hdfs_superDiv").style.display = "none";
+        } else {
+            document.getElementById("indexConfig").style.display = "none";
+            document.getElementById("dataConfig").style.display = "";
+        }
+    }
+
+    //单独配置添加路径
+    function dataAdd_row()
+    {
+    	var dataPath = document.getElementsByName("dataPathNode[]");
+        for(var i = 0;i < dataPath.length; i++){
+            if(dataPath[i].value == ""){
+                alert("数据存储路径不能为空！");
+                dataPath[i].focus();
+                return false;
+            }
+        }
+        var e = event.srcElement ? event.srcElement.parentNode : event.target.parentNode;//js三目运算
+        //表格图片片段
+        var row = e.parentNode.sectionRowIndex;
+         // alert(row);
+          //return;
+        //图片判断结束
+        var len       = condata_tab.rows.length;
+        var new_row   = condata_tab.insertRow(len);
+        var new_col01 = new_row.insertCell(0);
+        var new_col02 = new_row.insertCell(1);
+        new_col01.innerHTML='<input type="text" name="dataPathNode[]" id="dataPathNode" class="s_width250new"/>';
+        new_col02.innerHTML='<img src="/scistor/Public/img/clear.gif" align="absmiddle" class="img_delete1" onclick = "condatadel_row()" title="删除数据存储路径"/>';
+
+        var j = dataPath.length - 1; //得到新增的input，以便获得焦点
+        dataPath[j].focus();
+    }
+    //单独配置删除
+    function condatadel_row()
+    {
+    	publicdel_row("dataPathNode[]",condata_tab);
+    }
+    //索引配置文件，添加索引存储路径
+    function hdfsindex_row()
+    {
+        var dataPath = document.getElementsByName("indexRootPath[]");
+        for(var i = 0;i < dataPath.length; i++){
+            if(dataPath[i].value == ""){
+                alert("索引存储根目录不能为空！");
+                dataPath[i].focus();
+                return false;
+            }
+        }
+        var e = event.srcElement ? event.srcElement.parentNode : event.target.parentNode;//js三目运算
+        //表格图片片段
+        var row = e.parentNode.sectionRowIndex;
+         // alert(row);
+          //return;
+        //图片判断结束
+        var len       = dataindexTab.rows.length;
+        var new_row   = dataindexTab.insertRow(len);
+        var new_col01 = new_row.insertCell(0);
+        var new_col02 = new_row.insertCell(1);
+        new_col01.innerHTML='<input type="text" name="indexRootPath[]" id="indexRootPath" class="s_width250new"/>';
+        new_col02.innerHTML='<img src="/scistor/Public/img/clear.gif" align="absmiddle" class="img_delete1" onclick = "hdfsindexdel_row()" title="删除索引存储路径"/>';
+
+        var j = dataPath.length - 1; //得到新增的input，以便获得焦点
+        dataPath[j].focus();
+    }
+
+    function hdfsindexdel_row()
+    {
+    	publicdel_row("indexRootPath[]",dataindexTab);
+    }
+
+
+    
+    //数据配置文件，添加数据存储路径
+    function hdfsData_row()
+    {
+        var dataPath = document.getElementsByName("dataPath[]");
+        for(var i = 0;i < dataPath.length; i++){
+            if(dataPath[i].value == ""){
+                alert("数据存储路径不能为空！");
+                dataPath[i].focus();
+                return false;
+            }
+        }
+        var e = event.srcElement ? event.srcElement.parentNode : event.target.parentNode;//js三目运算
+        //表格图片片段
+        var row = e.parentNode.sectionRowIndex;
+         // alert(row);
+          //return;
+        //图片判断结束
+        var len       = dataconTab.rows.length;
+        var new_row   = dataconTab.insertRow(len);
+        var new_col01 = new_row.insertCell(0);
+        var new_col02 = new_row.insertCell(1);
+        new_col01.innerHTML='<input type="text" name="dataPath[]" id="dataPath" class="s_width250new"/>';
+        new_col02.innerHTML='<img src="/scistor/Public/img/clear.gif" align="absmiddle" class="img_delete1" onclick = "hdfsDatadel_row()" title="删除数据存储路径"/>';
+
+        var j = dataPath.length - 1; //得到新增的input，以便获得焦点
+        dataPath[j].focus();
+    }
+
+    function hdfsDatadel_row()
+    {
+    	publicdel_row("dataPath[]",dataconTab);
+    }
+
+    /*function publicAdd_row(name,text,pubTab,pathName,pathId,className,del_row)
+    {
+        var addPath = document.getElementsByName(name);
+        for(var i = 0;i < addPath.length; i++){
+            if(addPath[i].value == ""){
+                alert(text);
+                addPath[i].focus();
+                return false;
+            }
+        }
+        var e = event.srcElement ? event.srcElement.parentNode : event.target.parentNode;//js三目运算
+        //表格图片片段
+        var row = e.parentNode.sectionRowIndex;
+         // alert(row);
+          //return;
+        //图片判断结束
+        var len       = pubTab.rows.length;
+        var new_row   = pubTab.insertRow(len);
+        var new_col01 = new_row.insertCell(0);
+        var new_col02 = new_row.insertCell(1);
+        new_col01.innerHTML='<input type="text" name="'+pathName+'" id="'+pathId+'" class="'+className+'"/>';
+        new_col02.innerHTML='<img src="/scistor/Public/img/clear.gif" align="absmiddle" class="img_delete1" onclick = "'+del_row+'" title="删除数据存储路径"/>';
+
+        var j = addPath.length - 1; //得到新增的input，以便获得焦点
+        addPath[j].focus();
+    }*/
+    function publicdel_row(name,delconTab)
+    {
+        var delPath=document.getElementsByName(name);
+        var e = event.srcElement ? event.srcElement.parentNode : event.target.parentNode;//js三目运算
+        if(delPath.length > 1){
+            var row  = e.parentNode.sectionRowIndex;
+            var cell = e.cellIndex;
+            if(row < 0){
+                  alert("操作无效");
+                return;
+            }
+            //如果为空并且count>1删除该编辑框时不需要提示
+            var con = 1;
+            if(con == 1){
+                if(e.tagName == "TD"){
+                    delconTab.deleteRow(row - 0);    
+                }
+            }
+        } else {
+            alert("不能全部删除");
+        }
+    }
+    </script>
+    <script type="text/javascript">
+    function startNodes()
+    {
+        var dataCount = jQuery("#dataCount").val();
+        var delnodes = jQuery("#is_sel").val();
+    	closeCover();
+        createCorage();
+        //window.location = "index.php?s=/Hdfs/startIndex/nodes/"+delnodes;
+        ThinkAjax.send("index.php?s=/Hdfs/startIndex/",'ajax=1&nodes='+delnodes,pwdHandle,"pN_info");
+    }
+    function startNodealone(id)
+    {
+        var delnodes = jQuery("#nodeIp"+id).text();
+        var idxnode  = jQuery("#is_sel").val();
+        closeCover();
+        createCorage();
+        //window.location = "index.php?s=/Hdfs/startData/nodes/"+delnodes+"/idxnode/"+idxnode;
+        ThinkAjax.send("index.php?s=/Hdfs/startData/",'ajax=1&nodes='+delnodes+'&idxnode='+idxnode,pwdHandle,"pN_info");
+    }
+    function stopNodes()
+    {
+    	var delnodes = jQuery("#is_sel").val();
+        closeCover();
+        createCorage();
+        //window.location = "index.php?s=/Hdfs/stopIndex/nodes/"+delnodes;
+        ThinkAjax.send("index.php?s=/Hdfs/stopIndex/",'ajax=1&nodes='+delnodes,pwdHandle,"pN_info");
+    }
+    function stopNodealone(id)
+    {
+        var delnodes = jQuery("#nodeIp"+id).text();
+        var idxnode  = jQuery("#is_sel").val();
+        closeCover();
+        createCorage();
+        //window.location = "index.php?s=/Hdfs/stopData/nodes/"+delnodes+"/idxnode/"+idxnode;
+        ThinkAjax.send("index.php?s=/Hdfs/stopData/",'ajax=1&nodes='+delnodes+'&idxnode='+idxnode,pwdHandle,"pN_info");
+    }
+    //删除剩余的数据Id
+    function delNodealone(id)
+    {
+        var is_sel = jQuery("#is_sel").val();
+    	var nodeId = jQuery("#nodeId"+id).text();
+    	//alert(is_sel);alert(nodeId);
+        closeCover();
+        createCorage();
+        //window.location = "index.php?s=/Hdfs/delId/nodeId/"+nodeId+"/nodeIp/"+nodeIp;
+        ThinkAjax.send("index.php?s=/Hdfs/delId/",'ajax=1&nodeId='+nodeId+'&nodeIp='+is_sel,pwdHandle,"pN_info");
+    }
+    function repairData(id)
+    {
+    	var repairNode = jQuery("#nodeIp"+id).text();
+    	var idxnode    = jQuery("#is_sel").val();
+        closeCover();
+        createCorage();
+        //window.location = "index.php?s=/Hdfs/repairData/nodes/"+repairNode+"/idxnode/"+idxnode;
+        ThinkAjax.send("index.php?s=/Hdfs/repairData/",'ajax=1&nodes='+repairNode+'&idxnode='+idxnode,pwdHandle,"pN_info");
+    }
+    function repairIndex()
+    {
+    	var repairNode = jQuery("#is_sel").val();
+        closeCover();
+        createCorage();
+        //window.location = "index.php?s=/Hdfs/repairIndex/nodes/"+repairNode;
+        ThinkAjax.send("index.php?s=/Hdfs/repairIndex/",'ajax=1&nodes='+repairNode,pwdHandle,"pN_info");
+    }
+    function dataConfig()
+    {
+        var indexPath     = document.getElementById("indexPathNode");//索引路径
+        var metaPath      = document.getElementById("datametaPath");//源数据存储路径
+        var dataPath      = document.getElementsByName("dataPathNode[]");//数据存储路径
+        
+        if (indexPath.value == "") {
+            alert("索引路径输入为空或不合法！");
+            indexPath.select();
+            return false;
+        }
+        if (metaPath.value == "" || IsDirRepeat(metaPath.value, indexPath.value)){
+            alert("元数据存储路径输入为空或不合法！");
+            metaPath.select();
+            return false;
+        }
+        if (!isPathRepeat("dataPathNode[]", indexPath.value, metaPath.value,"数据存储路径")) {
+            return false;
+        }
+    	//document.getElementById("dataconForm").action = "index.php?s=/Hdfs/configData";
+        //document.getElementById("dataconForm").submit();
+        closeCover();
+        createCorage();
+        set_ajax('dataconForm','index.php?s=/Hdfs/configData',pwdHandle,"pN_info");
+    }
+    function indexConfig()
+    {
+        var indexRootPath = document.getElementsByName("indexRootPath[]");//索引存储根目录
+        var indexCbox     = document.getElementById("indexCbox");//配置路径复选框
+        var indexPath     = document.getElementById("indexPath");//索引路径
+        var metaPath      = document.getElementById("metaPath");//元数据存储路径
+        var dataPath      = document.getElementsByName("dataPath[]");//数据存储路径
+        
+        //与自身比较是否相同 索引存储根目录
+        if(!isPathRepeat("indexRootPath[]" ," "," ", "索引存储根目录")) { 
+            return false;
+        }
+        if (indexCbox.checked) {
+            if (indexPath.value == "") {
+                alert("索引路径输入为空或不合法！");
+                indexPath.select();
+                return false;
+            }
+            if (metaPath.value == "" || IsDirRepeat(metaPath.value, indexPath.value)) {
+                alert("元数据存储路径输入为空或不合法！");
+                metaPath.select();
+                return false;
+            }
+            //与自身比较是否相同 数据存储路径
+            if (!isPathRepeat("dataPath[]", indexPath.value, metaPath.value, "数据存储路径")) {
+                return false;
+            }
+        }
+        //document.getElementById("indexconForm").action = "index.php?s=/Hdfs/configIndex";
+        //document.getElementById("indexconForm").submit();
+        closeCover();
+        createCorage();
+        set_ajax('indexconForm','index.php?s=/Hdfs/configIndex',pwdHandle,"pN_info");
+    }
+    //公共判断多个路径不能为空或不能重复
+    function isPathRepeat(objVal, idxPathVal, metaPathVal, tips)
+    {
+        var a = true;
+        var idxPath = document.getElementsByName(objVal);//索引存储根目录
+        
+        for (var i = 0; i < idxPath.length; i++) {
+            if (idxPath[i].value == "" || IsDirRepeat(idxPath[i].value, idxPathVal) || IsDirRepeat(idxPath[i].value, metaPathVal)) {
+                alert(tips+"输入为空或不合法!");//判断是否为空
+                idxPath[i].select();
+                a = false;
+                return false;
+            } else {
+                //与自身比较是否相同 路径
+                for (var j = i+1; j < idxPath.length; j++) {
+                    if (IsDirRepeat(idxPath[i].value, idxPath[j].value)) {
+                        alert(tips+"输入为空或不合法! ");
+                        idxPath[j].select();
+                        idxPath[j].focus();
+                        a = false;
+                        return false;
+                    }
+                }
+            }
+        }
+        return a;
+    }
+
+    function picidxconfig()
+    {
+        //与自身比较是否相同 索引存储根目录
+        if (!isPathRepeat("indexNodePath[]", " ", " ", "索引存储根目录")) {
+            return false;
+        }
+    	//document.getElementById("indexPerForm").action = "index.php?s=/Hdfs/indexPerconfig";
+        //document.getElementById("indexPerForm").submit();
+        closeCover();
+        createCorage();
+        set_ajax('indexPerForm','index.php?s=/Hdfs/indexPerconfig',pwdHandle,"pN_info");
+    }
+    function startCluster() 
+    {
+    	var indexIp = jQuery("#is_sel").val(); 
+    	var dataIp  = jQuery(".dataIplist");
+    	var dataIplist = new Array();
+    	for (var i = 0; i < dataIp.length; i++) {
+    		dataIplist.push(dataIp.eq(i).text());
+        }
+    	closeCover();
+        createCorage();
+        //window.location = "index.php?s=/Hdfs/startCluster/indexIp/"+indexIp+"/nodes/"+dataIplist;
+        ThinkAjax.send("index.php?s=/Hdfs/startCluster/",'ajax=1&indexIp='+indexIp+'&nodes='+dataIplist,pwdHandle,"pN_info");
+    }
+    function stopCluster()
+    {
+    	var indexIp = jQuery("#is_sel").val(); 
+        var dataIp  = jQuery(".dataIplist");
+        var dataIplist = new Array();
+        for (var i = 0; i < dataIp.length; i++) {
+            dataIplist.push(dataIp.eq(i).text());
+        }
+        closeCover();
+        createCorage();
+        //window.location = "index.php?s=/Hdfs/stopCluster/indexIp/"+indexIp+"/nodes/"+dataIplist;
+        ThinkAjax.send("index.php?s=/Hdfs/stopCluster/",'ajax=1&indexIp='+indexIp+'&nodes='+dataIplist,pwdHandle,"pN_info"); 
+    }
+
+    </script>
+</body>

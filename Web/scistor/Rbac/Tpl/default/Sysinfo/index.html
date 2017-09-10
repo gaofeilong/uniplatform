@@ -1,0 +1,175 @@
+<include file="Public:file"/>
+<body class="rightbody">
+    <div class="right_title" style="">
+        <span>首页 </span> &raquo; 系统设置  &raquo; 系统信息
+    </div>
+    <div class="right_main">
+        <div class="right_fortable">
+            <hr class="hr_top" />
+            <!--<div class="conbtn">
+                <input type="button" value="展开全部" class="btn btn_big showAll" />
+                <input type="button" value="收起全部" class="btn btn_big hideAll" />
+            </div>-->
+            <form name="SysFrm" id="SysFrm" action="" method="post">
+            <div class="license_left">
+	            <div class="sys">
+	                <div class="s_title" id="sysinfo" title="收起" onclick="show_hide(this,'sysinfo_t')">
+	                    <h4 class="systitle">系统信息</h4>
+	                    <span class="show_hide">︽</span>
+	                </div>
+	                <div id="sysinfo_t" class="sysmodel">
+	                    <table class="lic" id="" border="1">
+	                        <tr>
+	                            <td class="t1">操作系统发行版</td>
+	                            <td>Scistor<span style="font-size:14px;">&reg;</span> OS</td>
+	                        </tr>
+	                        <!-- <tr>
+	                            <td class="t1">内核版本</td>
+	                            <td>{$sysInfo[os][kernel]}</td>
+	                        </tr> -->
+	                        <tr>
+	                            <td class="t1">软件版本</td>
+	                            <td>{$sysInfo[os][scigw]}</td>
+	                        </tr>
+	                    </table>
+	                </div>
+	            </div>
+            
+	            <div class="sys cpu">
+	                <div class="s_title" id="cpuinfo" title="收起" onclick="show_hide(this,'cpuinfo_t')">
+	                    <h4 class="cputitle">处理器信息</h4>
+	                    <span class="show_hide">︽</span>
+	                </div>
+	                <div id="cpuinfo_t" class="sysmodel">
+	                    <table class="lic" id="">
+	                        <tr class="t_save">
+	                            <th width="20%">处理器</th>
+	                            <th width="42%">型号</th>
+	                            <th>主频</th>
+	                            <th>缓存</th>
+	                        </tr>
+	                        <volist name="sysInfo[cpu]" id="vo">
+	                        <tr>
+	                            <td class="t2">CPU {$vo[name]}</td>
+	                            <td class="hideMore_syslog" title="{$vo[vendor]}">{$vo[vendor]}</td>
+	                            <td>{$vo[hz]}MHz</td>
+	                            <td>{$vo[cache]}</td>
+	                        </tr>
+	                        </volist>
+	                    </table>
+	                </div>
+	            </div>
+            
+	            <div class="sys ram">
+	                <div class="s_title" id="raminfo" title="收起" onclick="show_hide(this,'raminfo_t')">
+	                    <h4 class="ramtitle">内存信息</h4>
+	                    <span class="show_hide">︽</span>
+	                </div>
+	                <div id="raminfo_t" class="sysmodel">
+	                    <table class="lic" id="">
+	                        <tr>
+	                            <td class="t1">总内存大小</td>
+	                            <td>{$sysInfo[mem][size]}</td>
+	                        </tr>
+	                    </table>
+	                </div>
+	            </div>
+            
+	            <div class="sys storage">
+	                <div class="s_title" id="storageinfo" title="收起" onclick="show_hide(this,'storageinfo_t')">
+	                <h4 class="storagetitle">存储信息</h4>
+	                    <span class="show_hide">︽</span>
+	                </div>
+	                <div id="storageinfo_t" class="sysmodel">
+	                    <table class="lic" id="">
+	                        <tr class="t_save">
+	                            <th width="20%">可用物理卷</th>
+	                            <!-- <th width="25%">物理卷型号</th> -->
+	                            <th>物理卷大小</th>
+	                        </tr>
+	                        <volist name="sysInfo[disk]" id="vo">
+	                        <tr>
+	                            <td>{$vo.name}</td>
+	                            <!-- <td>{$vo.vendor}</td> -->
+	                            <td>{$vo.size}</td>
+	                        </tr>
+	                        </volist>
+	                    </table>
+	                </div>
+	            </div>
+            
+	            <div class="sys net">
+	                <div class="s_title" id="netinfo" title="收起" onclick="show_hide(this,'netinfo_t')">
+	                <h4 class="nettitle">网络信息</h4>
+	                    <span class="show_hide">︽</span>
+	                </div>
+	                <div id="netinfo_t" class="sysmodel">
+	                    <table class="lic" id="">
+	                        <tr class="t_save">
+	                            <th width="20%">设备名</th>
+	                            <th width="42%">设备型号</th>
+	                            <th>设备状态</th>
+	                        </tr>
+	                        <volist name="sysInfo[net]" id="v">
+	                        <tr>
+	                            <td>{$v[name]}</td>
+	                            <td class="hideMore_syslog" title="{$v[vendor]}">{$v[vendor]}</td>
+	                            <td>{$v[state]}</td>
+	                        </tr>
+	                        </volist>
+	                    </table>
+	                </div>
+	            </div>
+            
+	            <!--<div class="sys env">
+	                <div class="s_title" id="envinfo" title="收起" onclick="show_hide(this,'envinfo_t')">
+	                <h4 class="envtitle">环境监测</h4>
+	                    <span class="show_hide">︽</span>
+	                </div>
+	                <div id="envinfo_t" class="sysmodel">
+	                    <table class="lic">
+	                        <tr class="t_save">
+	                            <th width="20%">风扇</th>
+	                            <th width="25%">风扇转速</th>
+	                            <th>风扇状态</th>
+	                        </tr>
+	                        <volist name="sysInfo[fan]" id="vo">
+	                        <tr>
+	                            <td>{$vo[name]}</td>
+	                            <td>{$vo[rpm]}</td>
+	                            <td>{$vo[state]}</td>
+	                        </tr>
+	                        </volist>
+	                    </table>
+	                </div>
+	            </div>-->
+	            
+	            <!--<div class="sys tem">
+                    <div class="s_title" id="teminfo" title="收起" onclick="show_hide(this,'teminfo_t')">
+                    <h4 class="temtitle">温度监测</h4>
+                        <span class="show_hide">︽</span>
+                    </div>
+                    <div id="teminfo_t" class="sysmodel">
+                        <table class="lic">
+                            <tr class="t_save">
+                                <th width="20%">名称</th>
+                                <th width="25%">温度</th>
+                                <th>状态</th>
+                            </tr>
+                            <volist name="sysInfo[temp]" id="vo">
+                            <tr>
+                                <td>{$vo[name]}</td>
+                                <td>{$vo[temperature]}</td>
+                                <td>{$vo[state]}</td>
+                            </tr>
+                            </volist>
+                        </table>
+                    </div>
+                </div>-->
+            </div>
+            </form>
+            <div style="clear:both"></div>
+            <hr class="hr_bottom3" />
+        </div>
+    </div>
+</body>

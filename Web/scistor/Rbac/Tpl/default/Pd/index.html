@@ -1,0 +1,57 @@
+<include file="Public:file"/>
+<body class="rightbody">
+    <div class="right_title">
+        <span>首页 </span> &raquo; 存储管理  &raquo; 物理磁盘
+    </div>
+    <div class="right_main">
+        <div class="right_fortable">
+            <hr class="hr_top" />
+            <table class="table1" border="0">
+                <tr class="top">
+                    <th width="5%">槽位</th>
+                    <th width="15%">型号</th>
+                    <th width="15%">WWN</th>
+                    <th width="15%">大小</th>
+                    <th width="15%">VG</th>
+                    <th width="15%">RAID</th>
+                    <th width="10%">速率</th>
+                    <th  width="10%">状态</th>
+                </tr>
+                <volist name="data" id="vo" >
+                <tr class="bbb">
+                    <td>{$vo[caowei]}</td>
+                    <td>{$vo[model]}</td>
+                    <td>{$vo[wwn]}</td>
+                    <td>{$vo[size]}</td>
+                    <td>{$vo[vg]}</td>
+                    <td>{$vo[raid]}</td>
+                    <td>{$vo[speed]}</td>
+                    <td>
+                        <if condition="$vo[status] eq 1">
+                            <span class="status_ok"></span>
+                            <span class="status_con1">在线</span>
+                        </if>
+                        <if condition="$vo[status] eq 0">
+                            <span class="status_no"></span>
+                            <span class="status_con1">离线</span>
+                        </if>
+                    </td>
+                </tr>
+                </volist>
+            </table>
+            <div class="table_bottom"></div>
+            <!--分页条-->
+            <!--<div id="controls" class="controls">
+	            <div id="perpage" class="perpage">
+			        <span>跳转到</span>
+			        <input type="text" name="gopage" value="{$jump_page}" class="gopage" id="gopage" /> 页
+			        <a href="#" id="jump_img"><img src="__PUBLIC__/img/left_grey.png" alt="跳页" title="跳转到指定页" onclick="jumpPage('Pd')"/></a>
+			    </div>
+                <include file="Public:page" />
+            </div>-->
+            <div style="clear:both"></div>
+            <hr class="hr_bottom" />
+        </div>
+        
+    </div>
+</body>

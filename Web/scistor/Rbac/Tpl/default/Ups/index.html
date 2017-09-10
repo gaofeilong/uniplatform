@@ -1,0 +1,52 @@
+<include file="Public:file"/>
+<body class="rightbody">
+    <div class="right_title" style="">
+        <span>首页 </span> &raquo; 系统设置  &raquo; UPS管理
+    </div>
+    <div class="right_main">
+        <div class="right_fortable">
+            <hr class="hr_top" />
+            
+            <!--页面操作成功与否提示-->
+            <div class="publicNotice pN_error" id="pN_info"></div>
+            <!--页面操作成功与否提示 over-->
+            
+            <!--<p class="notice notice1">提示：UPS提供断电延迟关机功能，仅支持single模式，断电时，ups自动为服务器供电，并发送报警邮件</p>-->
+            
+            <form name="upsForm" id="upsForm" action="">
+                <p class="mail_choice">启用UPS：
+                    <input type="checkbox" name="upsmodel" class="upsmodel refuseCover" id="upsCheck" value="1" onclick="checkNeedMail(this,'coverUps')" />
+                    <input type="hidden" id="isUps" name="isUps" value="{$isUps}" />
+                </p>
+                <fieldset class="d_lightblue mailSet">
+                    <legend class="orange">UPS配置</legend>
+                    <div class="forCover">
+                        <div class="coverMail" id="coverUps">.</div>
+                        <table class="table3">
+                            <tr>
+                                <td width="120px">剩余电量关机：</td>
+                                <td>
+                                    <div class="bigb">
+                                        <input type="text" name="leftpower" value="{$leftpower}" class="letter s_width250" name="electric_left" id="letter" title="剩余电量为1-100" onkeyup="checkDisabled(this,'minus','letter','0')" />
+                                        <input type="button" value="" class="plus" id="plus" onclick="plusSelf('minus','letter','0')" />
+                                        <input type="button" value="" class="minus" id="minus" onclick="minusSelf('minus','letter','0')" />
+                                    </div><b class="b1">%</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>剩余时间关机：</td>
+                                <td>
+                                    <input type="text" name="lefttime" id="lefttime" value="{$lefttime}" class="s_width2" title="剩余时间为0-9999"/><b class="b1">min</b>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="btndiv">
+                        <input type="button" value="确认" id="submitUps" class="btn btn_big refuseCover" onclick="Ups_set()"/>
+                    </div>
+                </fieldset>
+            </form>
+            <hr class="hr_bottom" />
+        </div>
+    </div>
+</body>

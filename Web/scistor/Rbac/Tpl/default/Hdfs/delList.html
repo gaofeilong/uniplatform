@@ -1,0 +1,45 @@
+<include file="Public:file"/>
+<body class="rightbody">
+    <div class="right_title" style="">
+        <span>首页 </span> &raquo; 分布式消冗文件系统  &raquo; 删除节点页面
+    </div>
+    <div class="right_main">
+        <div class="right_fortable">
+            <hr class="hr_top" />
+            
+            <!--页面操作成功与否提示-->
+            <div class="publicNotice pN_error" id="pN_info">{$errorInfo}</div>
+            <!--页面操作成功与否提示 over-->
+            <input type="hidden" id="idsig" value="{$id}"/>
+            
+             <!--删除数据节点-->
+            <div id="dataDel">
+                <form name="dataDelForm" id="dataDelForm" action="__URL__/removetest" method="post">
+	                <fieldset class="d_lightblue">
+	                <legend class="orange">节点删除</legend><br />
+                        <div class="warn_notice">该操作将清除istri节点的所有数据和配置</div>
+	                    <table class="table3">
+	                        <volist name="datalist" id="v" key="k">
+	                        <tr>
+	                            <td width="130px">节点IP</td>
+	                            <td class="nodeIp">{$v}</td>
+	                        </tr>
+	                        </volist>
+	                        <tr>
+	                           <td width="130px">root密码：</td>
+	                           <td>
+	                                <input name="password" type="password" value="" id="rootPwd" class="s_width2"/>
+	                           </td>
+	                        </tr>
+	                    </table>
+	                </fieldset>
+	                <hr class="hr_bottom" />
+	                <div class="tright bbb">
+	                    <input type="button" value="上一步" id="test_pre" class="btn btn_big" onclick="window.location = '__URL__/index'" />
+	                    <input type="submit" value="下一步" id="text_config" class="btn btn_big"/>
+	                </div>
+	            </form> 
+            </div>
+        </div>
+    </div>
+</body>

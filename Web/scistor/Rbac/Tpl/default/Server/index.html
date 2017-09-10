@@ -1,0 +1,97 @@
+<include file="Public:file"/>
+<body class="rightbody">
+    <div class="right_title" style="">
+        <span>首页 </span> &raquo; NAS管理  &raquo; 服务
+    </div>
+    <div class="right_main">
+        <div class="right_fortable">
+            <hr class="hr_top" />
+            
+            <!--页面操作成功与否提示-->
+            <div class="publicNotice pN_error" id="pN_info"></div>
+            <!--页面操作成功与否提示 over-->
+            
+            <div class="notice">
+                提示：服务配置
+            </div>
+            <!-- <div class="img_notice">
+                <p class="pbottom"><span class="gray">运行状态/开机启动</span>
+                    <img src="__PUBLIC__/img/statue.png" alt="" />:运行中/已启动
+                    <img src="__PUBLIC__/img/status_no.png" alt="" />:已停止/未启动
+                    <img src="__PUBLIC__/img/status_warning.png" alt="" />:无法识别服务
+                </p>
+            </div> -->
+            
+            <table class="table1" id="serviceTable">
+                <tr class="top">
+                    <th>服务名称</th>
+                    <th>运行状态</th>
+                    <th>运行状态操作</th>
+                    <th>开机启动</th>
+                    <th>开机启动操作</th>
+                </tr>
+                <tr>
+                    <td>the service1</td>
+                    <td>
+                        <span class="status_ok"></span>
+                        <span class="status_con">运行中</span>
+                    </td>
+                    <td>
+                        <input type="button" value="停止" class="btn btn_small" />
+                    </td>
+                    <td>
+                        <span class="status_ok"></span>
+                        <span class="status_con">已启动</span>
+                    </td>
+                    <td>
+                        <input type="button" value="不启动" class="btn btn_small" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>the service3</td>
+                    <td>
+                        <span class="status_warn"></span>
+                        <span class="status_con">无法识别服务</span>
+                    </td>
+                    <td>因无法识别服务而拒绝操作</td>
+                    <td>
+                        <span class="status_warn"></span>
+                        <span class="status_con">无法识别服务</span>
+                    </td>
+                    <td>因无法识别服务而拒绝操作</td>
+                </tr>
+                <tr>
+                    <td>the service2</td>
+                    <td>
+                        <span class="status_no"></span>
+                        <span class="status_con">已停止</span>
+                    </td>
+                    <td>
+                        <!-- <img src="__PUBLIC__/img/litter/play.png" alt="运行" title="运行" class="imgBtn" /> -->
+                        <input type="button" value="运行" class="btn btn_small" />
+                    </td>
+                    <td>
+                        <span class="status_no"></span>
+                        <span class="status_con">未启用</span>
+                    </td>
+                    <td>
+                        <!-- <img src="__PUBLIC__/img/litter/play.png" alt="启动" title="启动" class="imgBtn" /> -->
+                        <input type="button" value="启动" class="btn btn_small" />
+                    </td>
+                </tr>
+            </table>
+            <!--分页条-->
+            <div id="controls" class="controls">
+                <div id="perpage" class="perpage">
+                    <span>跳转到</span>
+                    <input type="text" name="gopage" value="{$jump_page}" class="gopage" id="gopage" /> 页
+                    <a href="#" id="jump_img"><img src="__PUBLIC__/img/left_grey.png" alt="跳页" title="跳转到指定页" onclick="jumpPage('Server')"/></a>
+                </div>
+                <include file="Public:page" />
+            </div>
+            <!--over 分页条-->
+            <div style="clear:both"></div>
+            <hr class="hr_bottom" />
+        </div>
+    </div>
+</body>

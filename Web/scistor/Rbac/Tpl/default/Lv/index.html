@@ -1,0 +1,169 @@
+<include file="Public:file"/>
+<body class="rightbody" >
+    <div class="right_title">
+        <span>首页 </span> &raquo; 存储管理  &raquo; 卷管理
+    </div>
+    <div class="right_main">
+        <div class="right_fortable">
+            <hr class="hr_top"/>
+
+            <!--页面操作成功与否提示-->
+            <div class="publicNotice pN_error" id="pN_info"></div>
+            <!--页面操作成功与否提示 over-->
+
+            <form action="" name="lvListForm" id="lvListForm" method="post">
+            <table id="tablevol" class="table1" border="0">
+                <tr class="top">
+                    <th width="5%"><input type="checkbox" value="checkall" name="ddfs" class="chek" onclick="All(this, 'choice[]')"/></th>
+                    <th width="15%">名称</th>
+                    <th width="15%">所在卷组</th>
+                    <th width="15%">大小(MB)</th>
+                    <th width="10%">用途</th>
+                    <th width="10%">文件系统</th>
+                    <th width="15%">挂载/映射</th>
+                    <th width="10%">状态</th>
+                    <th width="10%">操作</th>
+                </tr>
+                <volist name='lvInfo' id ='i' key='k'>
+                <tr class="bbb">
+                    <td>
+                        <input type="checkbox" name="choice[]" id="choice{$k}" value="{$i['lvpath']}" class="chek" onclick="Item(this, 'ddfs')"/>
+                    </td>
+                    <label for="choice{$k}">
+                    <td class="volname" title="{$i['lvpath']}">{$i['name']}</td>
+                    <td>{$i['vgname']}</td>
+                    <td>{$i['size']}</td>
+                    <td><if condition="$i['isused'] neq 0 AND $i['isused'] neq 3">{$i['type']}</if><if condition="$i['isused'] eq 3">share</if><if condition="$i['isused'] eq 0">空闲</if></td>
+                    <td><if condition="$i['isused'] eq 0 OR $i['isused'] eq 3">{$i['type']}</if></td>
+                    <td>{$i['mount']}</td>
+                    <td><img src="__PUBLIC__/img/statue.png" title="在线" align="absmiddle"/></td>
+                    <td>
+                        <input type="button" value="扩容" class="btn btn_small" name="" id="kr{$k-1}" onclick="popupExtendLv(\'{$i['lvpath']}\',{$i['vgfree']})"/>
+                        <if condition="$i['isused'] eq 0">
+                        <input type="button" value="格式化" class="btn btn_small" name="" id="btnFmt{$k-1}" onclick="popupFormat(\'{$i['lvpath']}\',{$i['vgfree']})"/>
+                        </if>
+                    </td></label>
+                </tr>
+                </volist>
+            </table>
+            </form>
+            <div class="table_bottom"></div>
+            <!--分页条-->
+            <!-- <div id="controls" class="controls">
+                <div id="perpage" class="perpage">
+                    <span>跳转到</span>
+                    <input type="text" name="gopage" value="{$jump_page}" class="gopage" id="gopage" /> 页
+                    <a href="#" id="jump_img"><img src="__PUBLIC__/img/left_grey.png" alt="跳页" title="跳转到指定页" onclick="jumpPage('Lv')"/></a>
+                </div>
+                <include file="Public:page" />
+            </div> -->
+            <div style="clear:both"></div>
+            <hr class="hr_bottom" />
+            <div style="clear:both"></div>
+            <div class="tright bbb">
+                <input type="button" value="新建卷" class="btn btn_big build_newvol" />
+                <input type="button" value="删除卷" class="btn btn_big delvol" />
+            </div>
+        </div>
+        
+        <!--卷扩容弹出层-->
+        <div id="extend_div" class="extend_div hide" style="width:405px">
+            <form class="bg_s" id="lvExtendfrm" action="" method="post">
+            <table class="margin10">
+                <tr>
+                    <td>卷名称：</td>
+                    <td>
+                        <input type="text" id="lv_name" name="lv_name" class="s_width2" disabled />
+                    </td>
+                </tr>
+                <tr>
+                    <td>可用扩容空间：</td>
+                    <td><input type="text" id="usable_space" value="" name="usable_space" class="s_width2" readonly /> MB</td>
+                </tr>
+                <tr>
+                    <td>扩充容量：</td>
+                    <td><div class="bigb">
+                        <input type="text" value="2" name="extendspace" class="letter s_width250" id="letter" onkeyup="checkDisabled('minus','letter')" />
+                        <input type="button" value="" class="plus" id="plus" onclick="plusSelf('minus','letter')" />
+                        <input type="button" value="" class="minus" id="minus" onclick="minusSelf('minus','letter')" />
+                    </div><b class="b1"> MB</b></td>
+                </tr>
+            </table>
+            <!-- <hr border="2" color="#cccccc" style="margin-top:15px;"/>-->
+            <div class="tright bottom_bg">
+                <input type="button" value="确定" class="btn btn_small" onclick="lvExtend()"/>
+                <input type="button" value="取消" class="btn btn_small cancel" />
+            </div>
+            </form>
+        </div>
+        
+        <!--新建卷弹出层-->
+        <div id="new_vol" class="new_vol hide">
+            <form class="bg_s" action="" name="newvol" method="post" id="lvcreatefrm">
+            <table class="margin10">
+                <tr>
+                    <td class="s_width80">卷组：</td>
+                    <td><select name="lvgroup" id="voltitle" class="s_widths">
+                        <volist name='vgInfo' id ='vo0' key='k'>
+                        <option value="{$vo0['name']}">{$vo0['name']}&nbsp;&nbsp;(总 {$vo0['size']}MB / {$vo0['free']}MB 可用)</option>
+                        </volist>
+                    </select></td>
+                </tr>
+                <tr>
+                    <td class="s_width80">名称：</td>
+                    <td title="逻辑卷名称唯一"><input type="text" id="lvnewname" name="lvnewname" class="s_width2" /></td>
+                </tr>
+                <tr>
+                    <td class="s_width80">容量：</td>
+                     <td><div class="bigb">
+                        <input type="text" value="2" name="lvolume" class="letter s_width250" id="letter_new" onkeyup="checkDisabled('minus_new','letter_new')" />
+                        <input type="button" value="" class="plus" id="plus_new" onclick="plusSelf('minus_new','letter_new')" />
+                        <input type="button" value="" class="minus" id="minus_new" onclick="minusSelf('minus_new','letter_new')" />
+                    </div><b class="b1">MB</b></td>
+                </tr>
+                <tr>
+                    <td class="vtop s_width80">格式化：</td>
+                    <td class="vtop">
+                        <!--<input type="radio" id="geyes" name="fomatvol" value="1" onclick="showFomat()" />
+                        <label for="geyes">是</label>
+                        <input type="radio" id="geno" name="fomatvol" value="0" onclick="hideFomat()" checked="checked" />
+                        <label for="geno">否</label>-->
+                        <div class="" id="formatDiv">
+                            <select name="format" id="formatSel" class="s_widths">
+                                <option value="NONE">不格式化</option>
+                                <option value="EXT2">EXT2</option>
+                                <option value="EXT3">EXT3</option>
+                                <option value="EXT4" selected>EXT4</option>
+                                <option value="DDFS" >DDFS</option>
+                            </select>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            <!-- <hr border="2" color="#cccccc" style="margin-top:15px" />-->
+            <div class="tright bottom_bg">
+                <input type="button" value="确定" class="btn btn_small" onclick="lvCreate()"/>
+                <input type="button" value="取消" class="btn btn_small cancel" />
+            </div>
+            </form>
+        </div>
+        
+        <!--删除逻辑卷弹出层-->
+        <div id="del_vol" class="del_vol hide">
+        <form name="delvol" id="delLvfrm" action="" method="post">
+            <input type="hidden" name="lvDelname" id="lvDelname" value=""/>
+            <div class="del_div1">
+                <table>
+                    <tr><td class="vtop" width="90px;"><img src="__PUBLIC__/img/warning.png" alt="警告" /></td>
+                    <td>&nbsp;确定删除逻辑卷:<span class="del_list" id="volv_del"></span></td></tr>
+                </table>
+            </div>
+            <!--<hr border="2" color="#cccccc" style="margin-top:15px" />-->
+            <div class="tright bottom_bg">
+                <input type="button" value="确定" class="btn btn_small" onclick="delLv()"/>
+                <input type="button" value="取消" class="btn btn_small cancel" />
+            </div>
+        </form>
+        </div>
+    </div><pre>{$lvInfo}
+</body>

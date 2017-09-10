@@ -1,0 +1,98 @@
+<include file="Public:file"/>
+<script type="text/javascript">
+/*setInterval(
+    function(){
+     location.href="index.php?s=/Hdfs/delrefreshData";
+    },2000
+);*/
+</script>
+<body class="rightbody" onload="test_del()">
+    <div class="right_title" style="">
+        <span>首页 </span> &raquo; 分布式消冗文件系统  &raquo; 连接测试页面
+    </div>
+    <div class="right_main">
+        <div class="right_fortable">
+            <hr class="hr_top" />
+            
+            <!--页面操作成功与否提示-->
+            <div class="publicNotice pN_error" id="pN_info">{$errorInfo}</div>
+            <input type="hidden" value="{$ign}" id="removeIgn"/>
+            <!--页面操作成功与否提示 over-->
+            <input type="hidden" id="testlastdel" value="{$testlastData}"/>
+            
+            <form name="testNodeForm" id="testNodeForm" action="__URL__/removeNode" method="post">
+                <fieldset class="d_lightblue">
+                <legend class="orange">节点连接测试</legend><br />
+                    <table class="hdfstab">
+                        <volist name="test_data" id="v" key="k">
+                        <tr>
+                           <td width="100px"><if condition = "$v.state neq waiting">connect to </if></td>
+                           <td width="110px">{$v.ip}</td>
+                           <td class="nodeStatus">{$v.state}</td>
+                        </tr>
+                        </volist>
+                    </table>
+                </fieldset>
+                <hr class="hr_bottom" />
+                <div class="tright bbb">
+                    <input type="button" value="上一步" id="test_pre" class="btn btn_big" onclick="window.location = '__URL__/delList';" />
+                    <input type="submit" value="删除" id="text_config" class="btn btn_big"/>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script type="text/javascript">
+    //测试页面
+    /*function test_del()
+    {
+        var testlastData = jQuery("#testlastdel").val();
+        var ign = jQuery("#removeIgn").val();
+        if (ign == 1) {
+            //document.getElementById("text_config").disabled = false;
+            if (testlastData == "waiting" || testlastData == "testing") {
+                document.getElementById("test_pre").disabled = true;
+                document.getElementById("text_config").disabled = true;
+            } else if (testlastData == "ok" || testlastData == "error") {
+                document.getElementById("test_pre").disabled = false;
+                document.getElementById("text_config").disabled = false;
+            } else {
+            	document.getElementById("test_pre").disabled = false;
+                document.getElementById("text_config").disabled = true;
+            }
+        } else {
+            document.getElementById("test_pre").disabled = false;
+            document.getElementById("text_config").disabled = true;
+        }
+    }*/
+function test_del()
+{
+    var nodes = jQuery(".nodeStatus");
+    var refresh = false;
+    document.getElementById("test_pre").disabled = true;
+    document.getElementById("text_config").disabled = true;
+    
+    if (nodes.length == 0) {
+        refresh = true;
+    } else {
+        for (var i = 0; i < nodes.length; i++) {
+            if ( nodes.eq(i).html() == "testing" || nodes.eq(i).html() == "waiting") {
+                refresh = true;
+            }
+        }
+    }
+    if (refresh == true) {
+        setTimeout("reflashPage()",2000);
+    } else {
+        document.getElementById("test_pre").disabled = false;;
+        for (var i = 0; i < nodes.length; i++) {
+            if (nodes.eq(i).html() == "ok") {
+                document.getElementById("text_config").disabled = false;
+            }
+        }
+    }
+}
+function reflashPage(){
+    location.href="index.php?s=/Hdfs/delrefreshData";
+}
+    </script>
+</body>

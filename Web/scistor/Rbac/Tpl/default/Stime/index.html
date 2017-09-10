@@ -1,0 +1,149 @@
+<include file="Public:file"/>
+<script type="text/javascript" src="__PUBLIC__/js/dateSelect.js"></script>
+<body class="rightbody" onload="setTime()">
+    <div class="right_title" style="">
+        <span>首页 </span> &raquo; 系统设置  &raquo; 系统时间
+    </div>
+    <div class="right_main">
+        <div class="right_fortable">
+            <hr class="hr_top" />
+            
+            <!--页面操作成功与否提示-->
+            <div class="publicNotice pN_error" id="pN_info"></div>
+            <!--页面操作成功与否提示 over-->
+            
+            <div class="sysTime">
+                <input type="hidden" value="{$webHour[0]}" id="webHour"/>
+                <input type="hidden" value="{$webHour[1]}" id="webMin"/>
+                <input type="hidden" value="{$webHour[2]}" id="webSec"/>
+                <span class="green">当前服务器时间：</span>
+                <span id="nowTime"></span>{$webDate[0]}年{$webDate[1]}月{$webDate[2]}日&nbsp;{$webHour[0]}:{$webHour[1]}
+                <span id="nowTimeZone">
+                    <if condition = "$timeInfo['zone'] eq 'GMT-1'"> （GMT +01:00）</if>
+					<if condition = "$timeInfo['zone'] eq 'GMT-2'"> （GMT +02:00）</if>
+					<if condition = "$timeInfo['zone'] eq 'GMT-3'"> （GMT +03:00）</if>
+					<if condition = "$timeInfo['zone'] eq 'GMT-4'"> （GMT +04:00）</if>
+					<if condition = "$timeInfo['zone'] eq 'GMT-5'"> （GMT +05:00）</if>
+					<if condition = "$timeInfo['zone'] eq 'GMT-6'"> （GMT +06:00）</if>
+					<if condition = "$timeInfo['zone'] eq 'GMT-7'"> （GMT +07:00）</if>
+					<if condition = "$timeInfo['zone'] eq 'GMT-8'"> （GMT +08:00）</if>
+					<if condition = "$timeInfo['zone'] eq 'GMT-9'"> （GMT +09:00）</if>
+					<if condition = "$timeInfo['zone'] eq 'GMT-10'">（GMT +10:00）</if>
+					<if condition = "$timeInfo['zone'] eq 'GMT-11'">（GMT +11:00）</if>
+					<if condition = "$timeInfo['zone'] eq 'GMT-12'">（GMT +12:00）</if>
+					<if condition = "$timeInfo['zone'] eq 'GMT-0'"> （GMT  00:00）</if>
+					<if condition = "$timeInfo['zone'] eq 'GMT+1'"> （GMT -01:00）</if>
+					<if condition = "$timeInfo['zone'] eq 'GMT+2'"> （GMT -02:00）</if>
+					<if condition = "$timeInfo['zone'] eq 'GMT+3'"> （GMT -03:00）</if>
+					<if condition = "$timeInfo['zone'] eq 'GMT+4'"> （GMT -04:00）</if>
+					<if condition = "$timeInfo['zone'] eq 'GMT+5'"> （GMT -05:00）</if>
+					<if condition = "$timeInfo['zone'] eq 'GMT+6'"> （GMT -06:00）</if>
+					<if condition = "$timeInfo['zone'] eq 'GMT+7'"> （GMT -07:00）</if>
+					<if condition = "$timeInfo['zone'] eq 'GMT+8'"> （GMT -08:00）</if>
+					<if condition = "$timeInfo['zone'] eq 'GMT+9'"> （GMT -09:00）</if>
+					<if condition = "$timeInfo['zone'] eq 'GMT+10'">（GMT -10:00）</if>
+					<if condition = "$timeInfo['zone'] eq 'GMT+11'">（GMT -11:00）</if>
+					<if condition = "$timeInfo['zone'] eq 'GMT+12'">（GMT -12:00）</if>
+                 </span>
+                <br /><br />
+            </div>
+            
+            <fieldset class="d_lightblue">
+            <legend class="orange">系统时间设置</legend><br />
+            <form name="setSysTime" id="setSysTime" action="" method="post">
+                <table class="table3" border="0">
+                    <tr>
+                        <td width="150px">日期:</td>
+                        <td>
+                            <input type="hidden" id="sYear" value="{$webDate[0]}" />
+                            <input type="hidden" id="sMonth" value="{$webDate[1]}" />
+                            <input type="hidden" id="sDay" value="{$webDate[2]}" />
+                            <select name="year" id="year" class="sTime" onchange="YYYYDD(this.value)">
+                            </select>年
+                            <select name="month" id="month" class="sTime" onchange="MMDD(this.value)">
+                            </select>月
+                            <select name="day" id="day" class="sTime">
+                                <option value="01">01</option>
+                            </select>日
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>时间:</td>
+                        <td>
+                            <select name="hour" id="hour" class="sTime">
+                                <volist name="time_hour" id="vo" >
+                                    <option value="{$vo}">{$vo}</option>
+                                </volist>
+                            </select>时
+                            <select name="minute" id="minute" class="sTime">
+                                <volist name="time_sel" id="vo" >
+                                    <option value="{$vo}">{$vo}</option>
+                                </volist>
+                            </select>分
+                            <select name="second" id="second" class="sTime">
+                                <volist name="time_sel" id="vo" >
+                                    <option value="{$vo}">{$vo}</option>
+                                </volist>
+                            </select>秒
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>时区:</td>
+                        <td>
+                            <select name="timezone" id="timezone">
+                                <option value="GMT-1"  <if condition = "$timeInfo['zone'] eq 'GMT-1'"> selected</if> >（GMT +01:00）柏林, 布鲁塞尔, 哥本哈根, 马德里, 巴黎, 罗马</option>           
+                                <option value="GMT-2"  <if condition = "$timeInfo['zone'] eq 'GMT-2'"> selected</if> >（GMT +02:00）开罗, 赫尔辛基, 加里宁格勒, 南非, 华沙</option>           
+                                <option value="GMT-3"  <if condition = "$timeInfo['zone'] eq 'GMT-3'"> selected</if> >（GMT +03:00）巴格达, 利雅得, 莫斯科, 奈洛比</option>               
+                                <option value="GMT-4"  <if condition = "$timeInfo['zone'] eq 'GMT-4'"> selected</if> >（GMT +04:00）阿布扎比, 巴库, 马斯喀特, 特比利斯</option>             
+                                <option value="GMT-5"  <if condition = "$timeInfo['zone'] eq 'GMT-5'"> selected</if> >（GMT +05:00）叶卡特琳堡, 伊斯兰堡, 卡拉奇, 塔什干</option>               
+                                <option value="GMT-6"  <if condition = "$timeInfo['zone'] eq 'GMT-6'"> selected</if> >（GMT +06:00）阿拉木图, 科伦坡, 达卡, 新西伯利亚</option>               
+                                <option value="GMT-7"  <if condition = "$timeInfo['zone'] eq 'GMT-7'"> selected</if> >（GMT +07:00）曼谷, 河内, 雅加达</option>        
+                                <option value="GMT-8"  <if condition = "$timeInfo['zone'] eq 'GMT-8'"> selected</if> >（GMT +08:00）北京, 香港, 帕斯, 新加坡, 台北</option>   
+                                <option value="GMT-9"  <if condition = "$timeInfo['zone'] eq 'GMT-9'"> selected</if> >（GMT +09:00）大阪, 札幌, 汉城, 东京, 雅库茨克</option>           
+                                <option value="GMT-10" <if condition = "$timeInfo['zone'] eq 'GMT-10'">selected</if> >（GMT +10:00）堪培拉, 关岛, 墨尔本, 悉尼, 海参崴</option>           
+                                <option value="GMT-11" <if condition = "$timeInfo['zone'] eq 'GMT-11'">selected</if> >（GMT +11:00）马加丹, 新喀里多尼亚, 所罗门群岛</option>           
+                                <option value="GMT-12" <if condition = "$timeInfo['zone'] eq 'GMT-12'">selected</if> >（GMT +12:00）奥克兰, 惠灵顿, 斐济, 马绍尔群岛</option>               
+                                <option value="GMT-0"  <if condition = "$timeInfo['zone'] eq 'GMT-0'"> selected</if> >（GMT  00:00）都柏林, 伦敦, 里斯本, 卡萨布兰卡</option>         
+                                <option value="GMT+1"  <if condition = "$timeInfo['zone'] eq 'GMT+1'"> selected</if> >（GMT -01:00）亚速群岛, 佛得角群岛 </option>           
+                                <option value="GMT+2"  <if condition = "$timeInfo['zone'] eq 'GMT+2'"> selected</if> >（GMT -02:00）中大西洋, 阿森松群岛, 圣赫勒拿岛</option>           
+                                <option value="GMT+3"  <if condition = "$timeInfo['zone'] eq 'GMT+3'"> selected</if> >（GMT -03:00）巴西利亚, 布宜诺斯艾利斯, 乔治敦, 福克兰群岛</option>       
+                                <option value="GMT+4"  <if condition = "$timeInfo['zone'] eq 'GMT+4'"> selected</if> >（GMT -04:00）大西洋时间(加拿大), 加拉加斯, 拉巴斯</option>           
+                                <option value="GMT+5"  <if condition = "$timeInfo['zone'] eq 'GMT+5'"> selected</if> >（GMT -05:00）东部时间(美国和加拿大), 波哥大, 利马, 基多 </option>         
+                                <option value="GMT+6"  <if condition = "$timeInfo['zone'] eq 'GMT+6'"> selected</if> >（GMT -06:00）中部时间(美国和加拿大), 墨西哥城 </option>             
+                                <option value="GMT+7"  <if condition = "$timeInfo['zone'] eq 'GMT+7'"> selected</if> >（GMT -07:00）山区时间(美国和加拿大), 亚利桑那</option>             
+                                <option value="GMT+8"  <if condition = "$timeInfo['zone'] eq 'GMT+8'"> selected</if> >（GMT -08:00）太平洋时间(美国和加拿大), 提华纳</option>               
+                                <option value="GMT+9"  <if condition = "$timeInfo['zone'] eq 'GMT+9'"> selected</if> >（GMT -09:00）阿拉斯加</option>             
+                                <option value="GMT+10" <if condition = "$timeInfo['zone'] eq 'GMT+10'">selected</if> >（GMT -10:00）夏威夷</option>           
+                                <option value="GMT+11" <if condition = "$timeInfo['zone'] eq 'GMT+11'">selected</if> >（GMT -11:00）中途岛, 萨摩亚群岛</option>         
+                                <option value="GMT+12" <if condition = "$timeInfo['zone'] eq 'GMT+12'">selected</if> >（GMT -12:00）埃尼威托克岛, 夸贾林环礁</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>NTP时间服务器:</td>
+                        <td><input type="text" name="ntp_serve" class="s_width350" id="setNTP" value="{$timeInfo.ntp}" disabled="disabled" /></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <input type="checkbox" name="synchro" value="1" id="nowSyn" onclick="synchroNow(this)" /><label for="nowSyn">立即同步</label><br />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td><input type="button" value="确认" class="btn btn_big" id="submitSyn" onclick="checkTime()" /></td>
+                    </tr>
+                </table>
+            </form>
+            </fieldset>
+            <hr class="hr_bottom" />
+        </div>
+    </div>
+    <script> 
+	    setInterval(
+	    	    function(){
+	    	     location.href="__URL__/index";
+	    	    },60000
+	    	);
+    </script>
+</body>

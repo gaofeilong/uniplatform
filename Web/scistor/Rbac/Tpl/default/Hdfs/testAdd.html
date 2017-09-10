@@ -1,0 +1,44 @@
+<include file="Public:file"/>
+<script type="text/javascript">
+/*setInterval(
+    function(){
+     location.href="index.php?s=/Hdfs/displayData";
+    },2000
+);*/
+</script>
+<body class="rightbody" onload="test_over()">
+    <div class="right_title" style="">
+        <span>首页 </span> &raquo; 分布式消冗文件系统  &raquo; 连接测试页面
+    </div>
+    <div class="right_main">
+        <div class="right_fortable">
+            <hr class="hr_top" />
+            
+            <!--页面操作成功与否提示-->
+            <div class="publicNotice pN_error" id="pN_info">{$errorInfo}</div>
+            <input type="hidden" value="{$ign}" id="dataIgn"/>
+            <!--页面操作成功与否提示 over-->
+            <input type="hidden" id="testlastData" value="{$testlastData}"/>
+            
+            <form name="testNodeForm" id="testNodeForm" action="__URL__/installNode" method="post">
+	            <fieldset class="d_lightblue">
+	            <legend class="orange">节点连接测试</legend><br />
+	                <table class="hdfstab">
+	                    <volist name="test_data" id="v" key="k">
+	                    <tr>
+	                       <td width="100px"><if condition = "$v.state neq waiting">connect to </if></td>
+	                       <td  width="110px">{$v.ip}</td>
+	                       <td class="nodeStatus">{$v.state}</td>
+	                    </tr>
+	                    </volist>
+	                </table>
+	            </fieldset>
+	            <hr class="hr_bottom" />
+	            <div class="tright bbb">
+	                <input type="button" value="上一步" id="test_pre" class="btn btn_big" onclick="window.location = '__URL__/addNode';" />
+	                <input type="submit" value="安装" id="text_config" class="btn btn_big"/>
+	            </div>
+            </form>
+        </div>
+    </div>
+</body>

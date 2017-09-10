@@ -1,0 +1,30 @@
+<script type="text/javascript" src="__PUBLIC__/js/tablecss.js"></script>
+<style>
+.hideMore_syslog{
+   text-overflow:ellipsis;
+   overflow:hidden;
+   text-align:left;
+}
+</style>
+<table class="table1 table5">
+    <empty name="dateInfo">
+        <tr><td>没有符合条件的查询结果</td></tr>
+    </empty>
+    <volist name="dateInfo" id="vo" key="k">
+	 <tr>
+	     <td width="5%">{$vo.arvname}</td>
+	     <td width="8%">{$vo.ip}</td>
+	     <td width="11%">{$vo.arvtime}</td>
+	     <td width="20%" title="{$vo.src}"><p class="hideMore_syslog">{$vo.src}</p></td>
+	     <td width="26%" title="{$vo.dest}"><p class="hideMore_syslog">{$vo.dest}</p></td>
+	     <td width="5%">{$vo.size}</td>
+	     <td width="5%">
+	       <if condition="$vo.state eq 'link'">成功
+	       <else /> 失败
+           </if>
+	     </td>
+	 </tr>
+	</volist>
+</table>
+<input type='hidden'  id='currentpage' name='currentpage' value='{$currentPage}'>
+<input type='hidden'  id='totalPage' name='totalPage' value='{$totalPage}'>

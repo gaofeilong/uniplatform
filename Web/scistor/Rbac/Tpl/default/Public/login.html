@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+    <link rel="stylesheet" href="__PUBLIC__/css/login.css" type="text/css" />
+    <script type="text/javascript" src="__PUBLIC__/js/login.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/Base.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/prototype.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/mootools.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/ThinkAjax.js"></script>
+    <title>赛思信安·登录系统</title>
+</head>
+<body class="loginbody" onload="Userfocus()">
+    <div id="header">
+        <div class="header_bg">
+            <a href="http://www.scistor.com" target="_blank" ><img src="__PUBLIC__/img/logo_touming.png" alt="赛思信安" title="赛思信安" /></a>
+            <h3><span>|</span>存储管理平台</h3>
+        </div>
+    </div>
+    <div id="content">
+        <div id="logo">
+            <a href="#">
+                <img src="__PUBLIC__/img/cunchu.png" width="425px" height="300px" alt="赛思信安" title="赛思信安" />
+            </a>
+        </div>
+        <div class="contentmain">
+            <div id="errorMsg">提交表单时是否有出错信息</div>
+            <form name="loginfrm" id="loginfrm" action="" method="post">
+                <table>
+                    <tr class="subform">
+                        <td><span>*</span>用户：</td>
+                        <td colspan="2"><input type="text" name="user" id="user" class="textcss test" /></td>
+                    </tr>
+                    <tr class="subform">
+                        <td><span>*</span>密码：</td>
+                        <td colspan="2"><input type="password" name="password" id="password" class="textcss" /></td>
+                    </tr>
+                    <tr class="subform">
+                        <td width="60px"><span>*</span>验证码：</td>
+                        <td width="196px">
+                            <input type="text" name="verifycode" id="verifycode" class="textcss short" onkeydown="keydown(event)" />
+                        </td>
+                        <td width="75px">
+                            <img id="imgId" src="__URL__/verify/" onclick="fleshVerify()" alt="点击刷新验证码" title="点击刷新验证码"  align="absmiddle" />
+                        </td>
+                    </tr>
+                    <tr class="subform">
+                        <td></td>
+                        <td colspan="2">
+                            <input type="button" value="登 录" class="submit_bt" onclick="checkForm()"/>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
+    <div id="footer">
+        <a title="www.scistor.com" href="http://www.scistor.com/" target="_blank"> 北京赛思信安技术有限公司 版权所有 京ICP备11004889号.</a>
+    </div>
+</body>
+</html>

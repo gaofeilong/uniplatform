@@ -1,0 +1,135 @@
+
+/*DateCSS样式*/
+#calendar a{
+    font-size:12px;
+}
+.header {
+    font-weight: bold !important;
+    font-weight: bold;
+    color: #154BA0;
+    background:#C2DEED;
+    height: 25px;
+}
+.header td {
+    padding:0px;
+}
+.header a {
+    color: #154BA0;
+}
+.header input {
+    background:none;
+    vertical-align: middle;
+    height: 16px;
+}
+.category {
+    font: 12px Arial, Tahoma !important;
+    font: 11px Arial, Tahoma;
+    color: #92A05A;
+    height:20px;
+    background-color: #FFFFD9;
+}
+.category td {
+    border-bottom: 1px solid #DEDEB8;
+}
+.altbg2 td{
+    border:1px solid #fff;
+}
+.altbg2 td:hover{
+    background:#D0F4FF;
+    border:1px solid #86B9D6;
+}
+.expire, .expire a:link, .expire a:visited {
+    color: #333;
+}
+.default, .default a:link, .default a:visited {
+    color: #000000;
+}
+.checked, .checked a:link, .checked a:visited {
+    color: #fff;
+    background:#3399FF;
+}
+.forShowMsg a{
+    background:none;
+    display:block;
+    width:25px;
+    height:18px;
+    line-height:20px;
+}
+.forShowMsg a:hover{
+    background:none;
+    color:#333;
+}
+#calendar_year {
+    display: none;
+    line-height: 130%;
+    background: #FFFFFF;
+    position: absolute;
+    z-index: 10;
+}
+#calendar_year .col {
+    float: left;
+    width:50px;
+    max-height:295px;
+    background: #FFFFFF;
+    border: 1px solid #86B9D6;
+    padding:1px 0 1px 2px;
+    overflow-y:auto;
+    line-height:1;
+    font-size:12px;
+}
+#calendar_year .col a,#calendar_month a{
+    color:#333;
+    font-size:12px;
+}
+#calendar_year .col a:hover,#calendar_month a:hover{
+    background:#3399FF;
+    color:#fff;
+}
+#calendar_month {
+    display: none;
+    width:35px;
+    background: #FFFFFF;
+    border: 1px solid #86B9D6;
+    padding:1px 2px 1px 2px;
+    position: absolute;
+    z-index: 11;
+}
+.tableborder {
+    background: white;
+    text-align: center;
+}
+/* #year,#month{
+    padding-right:10px;
+} */
+a.sel_date{
+    padding:1px 18px 1px 1px;
+    background:#fff url(../img/litter/sel_date.png) scroll 100% 50% no-repeat;
+    border-top:1px solid #999;
+    border-right:1px solid #ccc;
+    border-bottom:1px solid #ccc;
+    border-left:1px solid #999;
+}
+.sel_date:hover{
+    background:#fff url(../img/litter/sel_date_hover.png) scroll 100% 50% no-repeat;
+}
+
+#calendar{
+    display:none;
+    position:absolute;
+    outline: 1px solid #999;
+    z-index:9;
+    font-size:12px;
+}
+iframe{
+    position: absolute;
+    z-index:-1;
+}
+.red_c{
+    color:red;
+}
+#d1 a,#d7 a,#d8 a,#d14 a,#d15 a,#d21 a,#d22 a,#d28 a,#d29 a,#d35 a,#d36 a,#d42 a{
+    color:c60a00;
+}
+#calendar iframe{
+    width:200px;
+}

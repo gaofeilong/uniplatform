@@ -1,0 +1,59 @@
+#!/bin/bash
+# chkconfig: - 85 15
+# description: scidata gateway agent daemon
+# processname: gwengine 
+# config: 
+# pidfile: /etc/ddfs/ServerMain.pid
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+#---------
+#HTTPD_LANG=${HTTPD_LANG-"CC"}
+#---------------
+agentprog=gwagent
+agent=/usr/local/bin/AgentMain
+RETVAL=0
+
+#---------------- 
+start() {
+        agentpid=`pidof -o $$ -o $PPID -o %PPID -x $1 || \
+                        pidof -o $$ -o $PPID -o %PPID -x $agent`
+        if [ -n "$agentpid" ]; then
+                agentname=${agent##*/}
+                echo $"$agentname (pid $pid) is already running..."
+        else
+                echo -n $"Starting $agentprog: "
+                daemon --user=root $agent
+                echo
+        fi
+}
+
+#--------------------
+stop() {
+	echo -n $"Stopping $agentprog: "
+	killproc $agent 9
+	echo
+}
+
+# See how we were called.
+case "$1" in
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  status)
+        status $agent
+	;;
+  restart)
+	stop
+	start
+	;;
+  *)
+	echo $"Usage: $prog {start|stop|restart|status}"
+	RETVAL=3
+esac
+
+exit $RETVAL

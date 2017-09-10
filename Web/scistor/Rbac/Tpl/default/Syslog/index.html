@@ -1,0 +1,237 @@
+<include file="Public:file"/>
+<body class="rightbody" onload="loadcalendar();timeCss();">
+    <div class="right_title" style="">
+        <span>首页 </span> &raquo; 系统设置  &raquo; 系统日志
+    </div>
+    <div class="right_main">
+        <div class="right_fortable">
+            <hr class="hr_top" />
+            
+            <!--页面操作成功与否提示-->
+            <div class="publicNotice pN_error" id="pN_info"></div>
+            <!--页面操作成功与否提示 over-->
+            
+        <!--    <p class="notice notice1">提示：查询时如果不指定过滤条件，则为系统默认的过滤条件。默认过滤条件为所有时间、所有模块、所有级别和无关键字</p>-->
+            <form name="searchForm" id="searchForm" action="" method="post">
+            <fieldset class="l_lightblue" id="logSearch">
+                <legend class="orange">过滤条件</legend>
+                <div class="fleft">
+                <div class="filter">
+                    <span class="green">时间:</span>
+                    <input type="radio" name="logTime" id="logTime" value="allTime" checked="checked" onclick="timeCss()" /><label for="logTime">所有时间 </label>
+                    <input type="radio" name="logTime" value="fixTime" id="fixTime" onclick="timeCss()" /><label for="fixTime">指定时间</label>
+                    <input type="text" class="s_width80" name="startDate" id="fromLogTime" readonly onclick="showcalendar(event,this);" onfocus="showcalendar(event, this);if(this.value=='0000-00-00')this.value=''" />
+                    <span class="divideSpan">-</span>
+                    <input type="text" class="s_width80" name="endDate" id="toLogTime" readonly onclick="showcalendar(event,this);" onfocus="showcalendar(event, this);if(this.value=='0000-00-00')this.value=''"/>
+                    <span class="gray clear">|</span>
+                </div>
+                <div class="filter">
+                    <span class="green">级别:</span>
+                    <input type="checkbox" name="levelinfo" value="info" id="levelinfo" checked/><label for="levelinfo">info </label>
+                    <input type="checkbox" name="levelwarning" value="warning" id="levelwarning" checked/><label for="levelwarning">warning </label>
+                    <input type="checkbox" name="levelerror" value="error" id="levelerror" checked/>
+                    <label for="levelerror">error </label>
+                    <span class="gray">|</span>
+                </div>
+                </div>
+                <div class="fleft">
+                <div class="filter marginT3">
+                    <span class="green">模块:</span>
+                    <select name="logModel" class="" id="logModel">
+                        <option value="all">所有信息</option>
+                        <option value="SYSTEM">系统信息</option>
+                        <option value="NETWORK">网络管理</option>
+                        <option value="ARCHIVE">归档管理</option>
+                        <option value="DDFS">消冗管理</option>
+                        <!--<option value="NAS">NAS管理</option>-->
+                        <option value="ISTRI">分布式管理</option>
+                    </select>
+                    <span class="gray">|</span>
+                </div>
+                <div class="filter marginT3">
+                    <span class="green">类型:</span>
+                    <select name="logType" class="" id="logType">
+                        <!--<option value="trace">trace</option>-->
+                        <option value="log">log</option>
+                    </select>
+                    <span class="gray">|</span>
+                </div>
+                <div class="filter marginT3">
+                    <span class="green">关键字:</span>
+                    <input type="text" name="logkeyword" class="s_width120" id="logkeyword" />
+                </div>
+                </div>
+                <div style="clear:both"></div>
+                <div class="trightnew mtop10">
+                    <input type="button" value="查询" class="btn btn_big" id="searchLog" />
+                </div>
+            </fieldset>
+            </form>
+            
+            <h4 class="sysh3">-系统日志-</h4>
+            <form name="logForm" id="logForm" action="" method="post">
+            <table class="table1 table5" id="logTable">
+                <tr class="top">
+                    <th width="20%">时间</th>
+                    <th width="15%">级别</th>
+                    <th width="12%">模块</th>
+                    <th>内容</th>
+                </tr>
+            </table>
+            <table style="width:100%">
+	            <tr>
+	                <td id="content"></td>
+	            </tr>
+            </table>
+            <!-- <div id="content"></div> -->
+            <!--分页条-->
+            <div id="controls" class="controls">
+	            <div id="perpage" class="perpage">
+			        <span>跳转到</span>
+			        <input type="text" name="gopage" value="" class="gopage" id="gopage" /> 页
+			        <a href="#" id="jump_img"><img src="__PUBLIC__/img/left_grey.png" alt="跳页" title="跳转到指定页" /></a>
+			    </div>
+	            <div id="navigation" class="navigation">
+			        <a href="#" id="one"><img src="__PUBLIC__/img/first.gif" title="首页" alt="首页" /></a>
+			        <a href="#" id="pre"><img src="__PUBLIC__/img/previous.gif" title="上一页" alt="上一页" /></a>
+			        <a href="#" id='next'><img src="__PUBLIC__/img/next.gif" title="下一页" alt="下一页" /></a>
+			        <a href="#" id="total"><img src="__PUBLIC__/img/last.gif" title="尾页" alt="尾页"/></a>
+				</div>
+                <div id="text" class="page">当前第 <span id="currentp"></span> 页 &nbsp; 共 <span id="pagelimit"></span> 页</div>
+	            <input type="text" id="totalPage" value="{$lastPage}" class="hide" />
+	        </div>
+            <!--over 分页条-->
+            </form>
+            <hr class="hr_bottom" />
+            <div class="tright_new bbb">
+                <input type="button" value="导出" id="exportAll" class="btn btn_big" onclick="window.location='__URL__/down_log'"/>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+    var pageIndex = 1;
+    var isSearch = false;
+    jQuery(function(){
+    	jQuery('#one').click(function(){
+            pageIndex = 1;
+            getData();
+        });
+        
+    	jQuery('#pre').click(function(){
+            pageIndex = pageIndex-1 ;
+            getData();
+        });
+        
+        jQuery('#next').click(function(){
+            pageIndex = pageIndex +1;
+            getData();
+        });
+        
+        jQuery('#jump_img').click(function(){
+            var jumpPage = jQuery('#gopage').val();
+            var jump     = jumpPage * 1;
+            var total    = parseInt(jQuery('#pagelimit').html());
+            if(jump.length == 0 || jump > total || jump < 1 || isNaN(jump)){
+                alert("跳转页输入不合法！")
+                jQuery('#gopage').focus();
+                jQuery('#gopage').val("");
+                return false;
+            }
+           	pageIndex = jump;
+            getData();
+        });
+        
+        jQuery('#total').click(function(){
+        	var totalP = jQuery('#pagelimit').html();
+        	var pTotal = parseInt(totalP);
+            pageIndex  =  pTotal;
+            getData();
+        });
+
+        jQuery('#searchLog').click(function(){
+            var fixTime  = document.getElementById("fixTime");
+            var fromTime = document.getElementById("fromLogTime");
+            var toTime   = document.getElementById("toLogTime");
+            var ftimeArr = fromTime.value.split("-");
+            var ttimeArr = toTime.value.split("-");
+            var ftime    = "";
+            var ttime    = "";
+
+            for (var i = 0; i < ftimeArr.length; i++){
+                ftime += ftimeArr[i];
+                ttime += ttimeArr[i];
+            }
+            if (fixTime.checked) {
+                if(fromTime.value == ""){
+                    alert("指定时间输入为空或不合法！");
+                    fromTime.focus();
+                } else if (toTime.value == "" || ftime*1 > ttime*1) {
+                    alert("指定时间输入为空或不合法！");
+                    toTime.value = "";
+                    toTime.focus();
+                } else {
+                    pageIndex = 1;
+                    isSearch = true;
+                    getData();
+                }
+            } else {
+                pageIndex = 1;
+                isSearch = true;
+                getData();
+            }
+        });
+    });
+    
+    function getData(){
+    	jQuery('#content').html('');
+    	var total = parseInt(jQuery('#pagelimit').html());
+        if (pageIndex <= 0){
+            pageIndex = 1;
+        }
+        if (pageIndex >= total){
+            pageIndex = total;
+        }
+        params = {'page':pageIndex};
+        var model        = jQuery("#logModel").val();
+        var logModel     = model == "all" ? "" : model;
+        var start        = jQuery("#fromLogTime").val();
+        var end          = jQuery("#toLogTime").val();
+        var startDate    = start == "" ? '2000-01-01 00:00:00' : start + ' 00:00:00';
+        var endDate      = end == "" ? '2150-01-01 00:00:00' : end + ' 23:59:59';
+        var levelinfo    = jQuery("#levelinfo").is(":checked") ? jQuery("#levelinfo").val() : "none";
+        var levelwarning = jQuery("#levelwarning").is(":checked") ? jQuery("#levelwarning").val() : "none";
+        var levelerror   = jQuery("#levelerror").is(":checked") ? jQuery("#levelerror").val() : "none";
+        //进入搜索功能
+        if (isSearch == true){
+            params['search']       = 'true';
+            params['startDate']    = startDate;
+            params['endDate']      = endDate;
+            params['logModel']     = logModel;
+            params['logType']      = jQuery("#logType").val();
+            params['levelinfo']    = levelinfo;
+            params['levelwarning'] = levelwarning;
+            params['levelerror']   = levelerror;
+            params['logkeyword']   = jQuery("#logkeyword").val();
+        }
+        jQuery.ajax({
+                type:'get',
+                data:params,
+                url:'index.php?s=/Syslog/templates',
+                success:function(html){
+        	        jQuery('#content').html(html);
+                    getcurrentPage();
+                }
+        })  
+    }
+    //获得当前页数
+    function getcurrentPage(){
+        var page = jQuery('#currentpage').val();
+        var totalPage = jQuery('#totalPage').val();
+        var pageIndex = parseInt(page);
+        jQuery('#currentp').html(pageIndex);
+        jQuery('#pagelimit').html(totalPage);
+        jQuery('#gopage').val("");
+    }
+    getData();
+    </script>
+</body>

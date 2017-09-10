@@ -1,0 +1,46 @@
+<include file="Public:file"/>
+<body class="rightbody">
+    <div class="right_title" style="">
+        <span>首页 </span> &raquo; 网络管理  &raquo; ISCSI设置
+    </div>
+    <div class="right_main">
+        <div class="right_fortable">
+            <hr class="hr_top" />
+			
+			<!--页面操作成功与否提示-->
+            <div class="publicNotice pN_error" id="pN_info"></div>
+            <!--页面操作成功与否提示 over-->
+			
+            <form  id="iscsiForm" action="" method="post">
+            <fieldset class="d_lightblue">
+                <legend class="orange">ISCSI设置</legend>
+                <table class="table3">
+                    <tr>
+                        <td width="150px">Target:</td>
+                        <td>
+                            <input type="radio" name="Target_check" id="Target1" value="abled" class="chek" checked/>
+                            <label for="Target1">
+                                Enabled
+                            </label>
+                        </td>
+                        <td>&nbsp;&nbsp;</td>
+                        <td>
+                            <input type="radio" name="Target_check" id="Target2" value="disabled" class="chek"/>
+                            <label for="Target2">
+                                Disabled
+                            </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4" align="right">
+                            <input type="button" value="确认" class="btn btn_small" onclick="setIscsi()"/>
+                            <input type="reset" value="取消" name="cancel" id="cancel" class="btn btn_small" />
+                        </td>
+                    </tr>
+                </table>
+            </fieldset>
+            </form>
+            <hr class="hr_bottom" />
+        </div>
+    </div>
+</body>

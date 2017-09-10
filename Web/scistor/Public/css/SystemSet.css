@@ -1,0 +1,388 @@
+/***
+    系统设置
+    **************/
+
+/*系统设置》系统信息模块*/
+.sys{
+    /*margin:15px auto;*/
+    /*margin:15px 0;*/
+    margin-top:2px;
+    padding:0;
+    background-color:#D6E3ED;
+    /*border:1px solid #ccc;*/
+}
+.forcenter{
+    width:700px;margin:0 auto;
+}
+
+/*全部展开和收缩模块*/
+.conbtn{
+    height:25px;
+    line-height:20px;
+    padding-left:10px;
+}
+.conbtn input{
+    margin:0 10px 0 0;
+}
+.s_title{
+    position:relative;
+    height:25px;
+    line-height:25px;
+    font-size:13px;
+    color:#36556F;
+    font-weight:bold;
+    background:#CBD6E8;
+    border-bottom:1px solid #999;
+    cursor:pointer;
+    *position:auto;
+}
+.systitle{
+    background:url(../img/icons/sysMsg_20.png) no-repeat scroll 5px 50%;
+}
+.cputitle{
+    background:url(../img/icons/cpuMsg_20.png) no-repeat scroll 5px 50%;
+}
+.ramtitle{
+    background:url(../img/icons/disk_20.png) no-repeat scroll 5px 50%;
+}
+.storagetitle{
+    background:url(../img/icons/storage_20.png) no-repeat scroll 5px 50%;
+}
+.nettitle{
+    background:url(../img/icons/network1_20.png) no-repeat scroll 5px 50%;
+}
+.envtitle{
+    padding-left:30px;
+    background:url(../img/icons/env_20.png) no-repeat scroll 5px 50%;
+}
+.temtitle{
+    background:url(../img/icons/tem.png) no-repeat scroll 5px 50%;
+}
+.systitle, .cputitle, .ramtitle, .storagetitle, .nettitle, .envtitle, .temtitle{
+    padding-left:30px;
+    *float:left;
+}
+.s_title .show_hide{
+    position:absolute;
+    *position:auto;
+    *float:right;
+    top:0px;
+    right:5px;
+    padding:3px 10px;
+    cursor:pointer;
+}
+.t_save{
+    background-color:#E0E5F0;
+    text-align:left;
+}
+
+/*系统设置》系统时间样式*/
+.sysTime{
+    margin:0 0 20px 0;
+    padding:15px 20px;
+    border:1px solid #ccc;
+    background-color:#D6E3ED;
+}
+select#timezone{
+    width:380px;
+    background:#fff;
+    border-top:1px solid #486A83;
+    border-left:1px solid #486A83;
+    border-right:1px solid #8BAFC6;
+    border-bottom:1px solid #8BAFC6;
+}
+.synradio{
+    margin:10px 0;
+    padding-left:30px;
+    display:none;
+}
+.sTime{
+    width:50px;
+}
+.forradio{
+    display:inline;
+}
+.fortime{
+    width:15px;
+    height:18px;
+    line-height:18px;
+    padding:0 5px;
+}
+.fortime:focus{
+    background-color:#FFF7ED;
+}
+#submitSyn,#submitEvent,#submitUps{
+    margin-top:20px;
+}
+.table3 select{
+    font-size:12px;
+    height:20px;
+}
+.mlll{
+    margin-left:19px;
+}
+
+/*系统设置》事件通知*/
+.notice{
+    margin-bottom:15px;
+    padding:15px 10px 15px 40px;
+    border:1px solid #83A5BC;
+    background:#D6E3ED url(../img/icons/information.png) no-repeat scroll 10px 50%;
+    color:#36556F;
+}
+.notice1{
+    margin-bottom:20px;
+}
+.mail_choice{
+    margin:10px 0 15px 0;
+    padding-left:40px;
+}
+.forCover{
+    position:relative;
+    width:100%;height:100%;
+}
+.legend{
+    position:absolute;
+    top:-7px;
+    left:30px;
+    padding:0 10px;
+    background:#D6E3ED;
+    z-index:190;
+}
+.confirmDiv{
+    width:255px;
+    margin-bottom:10px;
+    padding:10px 0px 10px 20px;
+    background:#CBD6E8;
+    border:1px solid #eee;
+}
+.mail_to{
+    border:1px solid #eee;
+    padding:0px 0;
+}
+.mail_to th{
+    color:#36556F;
+}
+.s_width193{
+    width:193px;
+    height:18px;
+    line-height:18px;
+    padding:0 3px;
+}
+.mailDiv{
+    background-color:#f5f7fc;
+    /* min-height:80px; */
+    height:142px;
+    overflow-y:auto;
+    border:1px solid #999;
+}
+.mailtool{
+    padding:0 10px;
+    border:1px solid #999;
+    font-size:12px;
+}
+.mailtool input{
+    vertical-align:middle;
+}
+.theight td{
+    height:18px;
+}
+td.l_b_none{
+    border-left:none;
+}
+td.r_b_none{
+    border-right:none;
+}
+.bg_white{
+    background:#F5F7FC;
+    padding:3px 5px;
+}
+.coverMail{
+    position:absolute;
+    width:101%;
+    height:105%;
+    top:-8px;
+    left:-5px;
+    background:#264259;
+    opacity:0.2;
+    filter:alpha(opacity=20);
+/*    filter:progid:DXImageTransform.Microsoft.Blur(makeshadow=makeshadow,kpixelradius=pixelradius,shadowopacity=shadowopacity);*/
+    display:none;
+    z-index:200;
+}
+.bottom10{
+    margin:0 0 15px 10px;
+    font-weight:bold;
+}
+.nobg_input{
+    width:280px;
+    background:none;
+    border:none;
+}
+.nobg_ipt{
+    background:none;
+    border:none;
+}
+td.wrap{
+    white-space:normal;
+}
+.emailVal,.levelVal{
+    padding:2px 0;
+    line-height:18px;
+    text-align:left;
+    /* color:#000; */
+    word-break:break-all;
+    work-wrap:break-word;
+}
+td.vmiddle{
+    vertical-align:middle;
+}
+
+/*管理口令*/
+
+/*ups运行状态*/
+.upsStatus{
+    width:430px;
+    height:30px;
+    line-height:30px;
+    margin:10px 0px 10px 10px;
+    padding-left:10px;
+    border:1px solid #ccc;
+    background:#eee;
+    color:green;
+}
+.td_top{
+    padding-top:20px;
+}
+.btndiv{
+    padding-left:140px;
+}
+
+/*LICENSE*/
+/*LICENSE*/
+.license_left{
+    /* border:2px solid #ccc; */
+    border-top:1px solid #ccc;
+    overflow-x:hidden;
+}
+.licenseModel{
+    margin-top:10px;
+    background-color:#D6E3ED;
+}
+.l_title{
+    height:25px;
+    line-height:25px;
+    padding-left:10px;
+    background:#CBD6E8;
+    border-bottom:1px solid #999;
+    font-size:13px;
+    color:#D1780D;
+    font-weight:bold;
+}
+.lic{
+    width:100%;
+    table-layout:fixed;
+}
+.bobo{
+    width:280px;
+    height:150px;
+    margin:10px 10px 0 0;
+    float:left;
+}
+.lic th{
+    text-align:left;
+    color:#36556F;
+}
+.lic td,.lic th{
+    height:25px;
+    border:1px solid #ccc;
+    padding:0 5px;
+    white-space:nowrap;
+    overflow:hidden;
+}
+.lic2 td, .lic2 th{
+    padding-left:10px;
+}
+.daoruchu{
+    text-align:center;
+}
+.l_btn{
+    margin:50px 0px 0px 30px;
+    height:100px;
+    line-height:2;
+}
+.l_btn input{
+    display:block;
+    margin:20px 0
+}
+
+/*系统设置》维护与更新*/
+.bao{
+    height:40px;
+    line-height:40px;
+    background:#EDF2F5;
+    padding:10px;
+    margin:20px 0 10px 0;
+    border:1px solid #ccc;
+}
+.bao input{
+    vertical-align:middle;
+}
+.tcenter{
+    text-align:center;
+}
+.sysh3{
+    height:25px;
+    line-height:25px;
+    margin:0 1px 0 0;
+    padding-left:25px;
+    border:1px solid #999;
+    background:#CBD6E8 url(img/icons/setPaper_20.png) no-repeat scroll 5px 50%;
+    font-size:12px;
+    color:#244056;
+}
+
+/*系统设置》系统日志*/
+.l_lightblue{
+    background:#D6E3ED;
+    padding:0 10px 10px 10px;
+}
+.filter{
+    padding:0 2px;
+    margin:3px 0;
+    float:left;
+}
+.filter span.gray{
+    margin:0 5px;
+}
+.d_w1,.d_w2{
+    margin:3px 15px 3px 15px;
+}
+.d_w1{
+    width:400px;
+}
+.d_w2{
+    width:200px;
+}
+.mright10{
+    margin-right:11px;
+}
+.mleft10{
+    margin-left:10px;
+}
+.mtb10{
+    margin:8px 0 15px 0;
+}
+#logModel{
+    vertical-align:baseline;
+}
+.divideSpan{
+    margin:0 2px 0 3px;
+}
+#logSearch{
+    font-size:12px;
+    margin-bottom:15px;
+}
+#fromLogTime,#toLogTime{
+    color:#333;
+}

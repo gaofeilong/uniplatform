@@ -1,0 +1,136 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+    <title></title>
+<link rel="stylesheet" href="__PUBLIC__/css/index.css" type="text/css" />
+<link rel="stylesheet" href="__PUBLIC__/css/SystemSet.css" type="text/css" />
+<link rel="stylesheet" href="__PUBLIC__/css/bond.css" type="text/css" />
+<script type="text/javascript" src="__PUBLIC__/js/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/js/jquery.form.js"></script>
+</head>
+<body class="rightbody">
+    <div class="right_title" style="">
+        <span>首页 </span> &raquo; 系统设置  &raquo; 维护与更新
+    </div>
+    <div class="right_main">
+        <div class="right_fortable">
+            <hr class="hr_top" />
+            
+            <!--页面操作成功与否提示-->
+            <div class="publicNotice pN_error" id="pN_info"></div>
+            <div class="progress"> 
+                <span class="bar"></span><span class="percent">0%</span > 
+            </div> 
+            <div id="showimg"></div>
+            <!--页面操作成功与否提示 over-->
+            
+            <p class="notice">提示：维护与更新功能用于升级系统后台的库文件，导入的升级包能提供版本的库文件</p>
+            
+            <!--<input type="text" class="s_width250" name="updateBao" id="updateBao" />-->
+            <!--<form id="myupload" action="__URL__/updateFile"  method="post" enctype="multipart/form-data">
+            <div class="import_inline">
+              <div class="bttn btn_big">
+                <span>导入升级包</span>
+                <input type="file" name="update" id="update" onchange="realPath(this)" />
+              </div>
+            </div>
+            <input type="button" value="确认导入" class="btn btn_big" id="fileupdate" />
+            </form>-->
+            
+            <form id="myupload" action="__URL__/updateFile"  method="post" enctype="multipart/form-data">
+               <div class="bttn btn_big">
+                <span>导入升级包</span>
+                <input id="fileupload" type="file" name="mypic">
+               </div> 
+            </form>
+            
+            <hr class="hr_bottom" />
+            
+            
+            <h4 class="sysh3">-系统升级日志-</h4>
+            <div class="log_list">
+                <table class="table1">
+                    <tr class="top">
+                        <th width="50px">序号</th>
+                        <th>升级包名称</th>
+                        <th width="150px">时间</th>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>fsdkf/dsfjklsdjf/sdfhdksj</td>
+                        <td>2013-04-03</td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>fsdkf/dsfjklsdjf/sdfhdksj</td>
+                        <td>2013-04-03</td>
+                    </tr>
+                </table>
+            </div>
+            <!--分页条-->
+            <div id="controls" class="controls">
+                <div id="perpage" class="perpage">
+                    <span>跳转到</span>
+                    <input type="text" name="gopage" value="{$jump_page}" class="gopage" id="gopage" /> 页
+                    <a href="#" id="jump_img"><img src="__PUBLIC__/img/left_grey.png" alt="跳页" title="跳转到指定页" onclick="jumpPage('Update')"/></a>
+                </div>
+                <include file="Public:page" />
+            </div>
+            <!--over 分页条-->
+        </div>
+    </div>
+    
+    <script type="text/javascript">
+    jQuery(function () { 
+        var bar = jQuery('.bar'); 
+        var percent = jQuery('.percent'); 
+        var showimg = jQuery('#showimg'); 
+        var progress = jQuery(".progress"); 
+        var files = jQuery("#pN_info"); 
+        var btn = jQuery(".btn span"); 
+        //jQuery("#fileupload").wrap('<form id="myupload" action="__URL__/uploadFile"  method="post" enctype="multipart/form-data">.</form>');
+        jQuery("#fileupload").change(function(){ //选择文件 
+            jQuery("#myupload").ajaxSubmit({ 
+                dataType:  'json', //数据格式为json 
+                beforeSend: function() { //开始上传 
+                    showimg.empty(); //清空显示的图片 
+                    progress.show(); //显示进度条 
+                    var percentVal = '0%'; //开始进度为0% 
+                    bar.width(percentVal); //进度条的宽度 
+                    percent.html(percentVal); //显示进度为0% 
+                    btn.html("上传中..."); //上传按钮显示上传中 
+                }, 
+                uploadProgress: function(event, position, total, percentComplete) { 
+                    var percentVal = percentComplete + '%'; //获得进度 
+                    bar.width(percentVal); //上传进度条宽度变宽 
+                    percent.html(percentVal); //显示上传进度百分比 
+                }, 
+                success: function(data) { //成功 
+                    //获得后台返回的json数据，显示文件名，大小，以及删除按钮 
+                    files.css({"display":"block","color":"blue"});
+                    files.html("<b>文件"+data.name+"("+data.size+"k)导入成功!</b>");
+                    setTimeout("window.location = 'index.php?s=/Update/index'",2000);
+                }, 
+                error:function(xhr){ //上传失败 
+                    files.css({"display":"block","color":"#F92325"});
+                    files.html("导入失败!"); 
+                    //bar.width('0'); 
+                    files.html(xhr.responseText); //返回失败信息 
+                } 
+            }); 
+        });
+    });
+    function realPath(e)
+    {
+        if (navigator.appName == "Microsoft Internet Explorer") {
+            e.select();
+            var real_path = document.selection.createRange().text;
+            document.getElementById("updateBao").value = real_path;
+        } else {
+            document.getElementById("updateBao").value = e.value;
+        }
+    }
+    </script>
+</body>
+</html>

@@ -1,0 +1,303 @@
+/***
+    NAS管理模块样式*
+    ****/
+/*nas > 共享管理 > nas共享*/
+
+.shareNav a{
+    color:#555;
+    display:block;
+    /* width:100px; */
+    height:22px;
+    line-height:23px;
+    text-align:center;
+}
+.shareNav a:hover{
+    /* background:url(../img/litter/tab_hover.png) repeat-x; */
+    font-weight:bold;
+}
+.shareNav{
+    position:relative;
+    margin:5px 0 10px 0;
+    /* overflow:hidden; */
+}
+.shareNav ul{
+    position:relative;
+    height:23px;
+    padding-left:10px;
+    border-bottom:2px solid #ccc;
+    z-index:100;
+}
+.navson{
+    position:relative;
+    float:left;
+    width:100px;
+    height:23px;
+    line-height:23px;
+    margin-right:3px;
+    text-align:center;
+    /* background:url(../img/litter/tab.png) repeat-x; */
+    z-index:101;
+}
+.select{
+    /* background:#DFE8F7 url(../img/litter/tab_sel1.png) repeat-x scroll 0 0; */
+    background:#DFE8F7;
+    border:2px solid #ccc;
+    border-radius:5px 5px 0 0;
+    border-bottom:none;
+    color:#244056;
+    font-weight:bold;
+    
+}
+.select a{
+    color:#244056;
+    border:1px solid #fff;
+    border-bottom:none;
+    border-radius:5px 5px 0 0;
+}
+.gggg:focus{
+    background:red;
+}
+.cUser{
+    width:100px;
+    height:100px;
+    border:1px solid #888;
+    background:#fff;
+    text-align:left;
+}
+
+.search{
+    position:relative;
+    font-size:11px;
+}
+.nas_search{
+    position:absolute;
+    right:0px;
+    width:18px;
+    height:17px;
+    background:url(../img/litter/search1.png) no-repeat;
+    border:1px solid #999;
+    border-left:1px solid #fff;;
+    cursor:pointer;
+}/*搜索按钮*/
+.nas_search:hover{
+    background:url(../img/litter/search_hover.png) no-repeat;
+}
+.margin5{
+    margin:5px 5px 5px 0;
+    overflow:hidden;
+}
+.ns_model{
+    margin:0 0 10px 0;
+    padding:10px 0;
+    border:1px solid #ccc;
+    background-color:#D4DFE7;
+    overflow:hidden;
+    display:none;
+}
+.linep{
+    line-height:1.5;
+}
+/*0403改 共享方式tab切换*/
+.tab{
+    margin-top:5px;
+}
+.gxway{
+    float:left;
+    min-width:58px;
+    height:25px;
+    line-height:25px;
+    margin-right:1px;
+    PADDING:0 5px;
+    border:1px solid #999;
+    cursor:pointer;
+}
+.nas_select{
+    background:url(../img/tab_bg.png) repeat-x;
+    border:1px solid #ccc;
+    border-bottom:1px solid #D4DFE7;
+}
+/*0403 over*/
+.allow{
+    float:left;
+    width:150px;
+    height:120px;
+    margin:0 15px 0 10px;
+    background-color:#fff;
+    border:2px solid #ccc;
+    overflow-x:auto;
+}
+.nfstable{
+    background-color:#fff;
+}
+.nfstable td,.nfstable th{
+    border-bottom:1px solid #ccc;
+    padding:0px 3px;
+    text-align:center;
+}
+.allowset{
+    float:left;
+    width:170px;
+    height:120px;
+    margin:0 5px 0 0;
+    overflow:hidden;
+    
+}
+.ptop5{
+    margin:10px 0 0 5px;
+}
+.ns_p{
+    height:25px;
+    line-height:25px;
+    padding-left:10px;
+}
+.allow_bt{
+    margin:10px 0 0 0;
+    *clear:both;
+}
+#allowlimit, #editallowlimit{
+    *float:left;
+}
+
+/***NAS共享管理 》ISCSI共享******/
+.is_targetl{
+    width:20%;
+    margin:20px 0px 10px 10px;
+    float:left;
+}
+.is_target{
+    height:430px;
+    background-color:#EDF2F5;
+}
+.ish3{
+    height:25px;
+    line-height:25px;
+    margin:0 1px 0 0;
+    padding-left:25px;
+    border:1px solid #999;
+    background:#CBD6E8 url(img/icons/setPaper_20.png) no-repeat scroll 5px 50%;
+    font-size:12px;
+    color:#244056;
+}
+.is_sel{
+    width:100%;
+    margin-top:10px;
+    padding:0 10px;
+    line-height:30px;
+    border:none;
+    background:none;
+}
+.is_right{
+    float:right;
+    width:77%;
+    margin:20px 0px 10px 0px;
+}
+.n_p{
+    line-height:1.5;
+    margin:10px 0 20px 10px;
+    padding:0 10px;
+}
+
+.marginSet{
+    /* margin:10px; */
+    margin:15px 0 10px 0;
+}
+.isMgr{
+    height:300px;
+    background-color:#EDF2F5;
+    overflow:auto;
+}
+.isUserL{
+    width:35%;
+    margin:10px 0px 10px 0px;
+    float:left;
+}
+.isVolR{
+    float:right;
+    width:62%;
+    margin:10px 0px 10px 0px;
+}
+.limitT1{
+    height:auto;
+    margin:0 0 10px 0;
+    overflow:auto;
+}/*以上为后期改0410*/
+
+#uboxstyle .select_box{
+    width:100%;height:24px;
+}
+#macstyle .select_box{
+    width:100%;height:24px;
+}
+#tm2008style .select_box{
+    width:100%;height:24px;
+}
+#uboxstyle div.tag_select{
+    display:none;
+    width:100%;
+    height:24px;
+    background:#fff url(img/nodeSel.png) no-repeat scroll 95% 50%;
+    border:1px solid #ccc;
+    padding:0 10px;
+    line-height:24px;
+}
+#uboxstyle ul.tag_options{
+/*    position:absolute;*/
+    max-height:400px;
+    padding:0;
+    margin:0;
+    list-style:none;
+    background:none;
+    width:100%;padding:0 0 5px;margin:0;
+    overflow-y:auto;
+    overflow-x:hidden;
+}
+#uboxstyle ul.tag_options li{
+    background:none;
+    display:block;
+    width:100%;
+    padding:0 10px;
+    height:24px;
+    text-decoration:none;
+    line-height:24px;
+}
+#uboxstyle ul.tag_options li.open_hover{
+    background:#CBD6E8;
+}
+#uboxstyle ul.tag_options li.open_selected{
+    background:#CBD6E8;
+}
+
+/*NAS管理 》服务*/
+.img_notice{
+    padding:10px;
+    background:#f5f5f5;
+    border:1px solid #ccc;
+    overflow:hidden;
+}
+.img_notice img{
+    width:16px;
+    height:16px;
+    margin-left:20px;
+    vertical-align:bottom;
+}
+.img_notice p{
+    padding:3px 0;
+}
+.s1{
+    margin:0 36px 0 50px;
+}
+.s2{
+    margin:0 10px 0 50px;
+}
+#service img{
+    width:20px;
+    height:20px;
+}
+.imgBtn{
+    cursor:pointer;
+}
+
+.wwn_newP{
+    margin:0 0 10px 0;
+    padding:5px 10px;
+}

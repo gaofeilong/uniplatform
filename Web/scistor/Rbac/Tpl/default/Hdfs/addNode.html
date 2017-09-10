@@ -1,0 +1,238 @@
+<include file="Public:file"/>
+<body class="rightbody" onload = "nodeHave()">
+    <div class="right_title" style="">
+        <span>首页 </span> &raquo; 分布式消冗文件系统  &raquo; 新建节点
+    </div>
+    <div class="right_main">
+        <div class="right_fortable">
+            <hr class="hr_top" />
+            
+            <!--页面操作成功与否提示-->
+            <div class="publicNotice pN_error" id="pN_info"></div>
+            <input type="hidden" value="{$countIndex}" id="countIndex" />
+            <input type="hidden" value="{$serverAdd}" id="serverAdd" />
+            <div class="hide" id="NodeIpList">
+                <volist name="arrcount" id="v">
+	                <span>{$v}</span>
+	            </volist>
+            </div>
+            <!--页面操作成功与否提示 over-->
+            
+            <form name="addNodeForm" id="addNodeForm" action="__URL__/testAdd" method="post" onsubmit="return checkNodeIp()">
+	            <div id="haveNode">
+		            <fieldset class="d_lightblue">
+		            <legend class="orange">新建节点</legend><br />
+		                <table class="table3">
+		                    <tr>
+		                       <td width="150px">添加类型：</td>
+		                       <td>
+		                            <select name="newType" id="newType" class="s_widths ddfselnew" onchange="hdfsType()">
+		                                <option value="data" <if condition = "$data.data eq 'data'">selected</if> >数据节点</option>
+		                                <option value="index" <if condition = "$data.newType eq 'index'">selected</if> >索引节点</option>
+		                            </select>
+		                       </td>
+		                    </tr>
+		                    <tr id="hdfsWay">
+		                       <td width="27%">添加方式：</td>
+		                       <td>
+		                            <select name="newWay" id="newWay" class="s_widths ddfselnew" onchange="hdfsneWay()">
+		                                <option value="single" <if condition = "$data.newWay eq 'single'">selected</if> >单台添加</option>
+		                                <option value="multi" <if condition = "$data.newWay eq 'multi'">selected</if>  >批量添加</option>
+		                            </select>
+		                       </td>
+		                    </tr>
+		                    <!--<tr id="indexName" style="display:none">
+		                       <td width="27%">索引名称：</td>
+		                       <td>
+		                            <input name="typeName" type="text" value="" class="s_width2"/>
+		                       </td>
+		                    </tr>-->
+		                    <tr id="indexsinIp">
+		                       <td width="27%">IP地址：</td>
+		                       <td>
+		                            <input type="text" value="{$data.ipaddr}" name="ipaddr" id="ipaddr" class="s_width2"/>
+		                       </td>
+		                    </tr>
+		                </table>
+		                <table class="table3" border="0">
+		                    <tr id="startIp" style="display:none">
+		                       <td width="150PX">起始IP地址：</td>
+		                       <td>
+		                            <input name="strtIp" id="startIpVal" type="text" value="{$data.strtIp}" class="s_width2"/>
+		                       </td>
+		                    </tr>
+		                    <tr id="endIp" style="display:none">
+		                       <td width="27%">结束IP地址：</td>
+		                       <td>
+		                            <input name="endIp" id="endIpVal" type="text" value="{$data.endIp}" class="s_width2"/>
+		                       </td>
+		                    </tr>
+		                    <tr>
+		                       <td width="150px">root密码：</td>
+		                       <td>
+		                            <input name="password" type="password" value="" id="rootPwd" class="s_width2"/>
+		                       </td>
+		                    </tr>
+		                </table>
+		            </fieldset>
+	            </div>
+	            <hr class="hr_bottom" />
+	            <div class="tright bbb">
+	                <input type="button" value="上一步" class="btn btn_big" onclick="window.location = '__URL__/index';" />
+	                <input type="submit" value="下一步" class="btn btn_big" />
+	            </div>
+            </form>
+        </div>
+    </div>
+    <script><!--
+    //根据节点数判断是否能添加数据节点
+    function nodeHave()
+    {
+        var countnode  = parseInt(jQuery("#countIndex").val());
+        var typeSelect = document.getElementById("newType");
+        
+        if (countnode < 1) {
+            //typeSelect.remove(typeSelect.selectedIndex);
+            jQuery("#newType option:contains(数据节点)").remove();
+            jQuery("#hdfsWay,#startIp,#endIp").remove();
+        }
+        var newType = document.getElementById("newType");
+        var newWay = document.getElementById("newWay");
+        //选中索引节点
+        if(newType.selectedIndex == 1){
+            jQuery("#hdfsWay,#startIp,#endIp").css("display","none");
+            document.getElementById("indexsinIp").style.display = "";
+        } else if(newType.selectedIndex == 0){
+        	//选中数据节点
+        	jQuery("#hdfsWay").css("display","");
+            document.getElementById("indexsinIp").style.display = "";
+            jQuery("#startIp,#endIp").css("display","none");
+            //从测试页面返回上一步
+            if(newWay) {
+                if(newWay.selectedIndex == 0){
+                    document.getElementById("indexsinIp").style.display = "";
+                    jQuery("#startIp,#endIp").css("display","none");
+                }
+                if(newWay.selectedIndex == 1){
+                    document.getElementById("indexsinIp").style.display = "none";
+                    jQuery("#startIp,#endIp").css("display","");
+                }
+            }
+        }
+    }
+    //新建节点提交
+    function checkNodeIp()
+    {
+        var nodeIpList = jQuery("#NodeIpList").children("span");
+        var nodeType   = jQuery("#newType").val();//添加类型
+        var nodeWay    = jQuery("#newWay").val();//添加方式
+        var ipaddr     = jQuery("#ipaddr");//索引IP
+        var startIp    = jQuery("#startIpVal");//起始IP
+        var endIp      = jQuery("#endIpVal");//结束IP
+        var password   = jQuery("#rootPwd").val();//密码
+        var pwd_patt   = /^(\w){6,20}$/;//密码匹配
+        
+        if (nodeType == "index") {
+            if (!limitIp(ipaddr.val(),"ipaddr","输入索引IP不合法！")) {  //判断IP输入是否合法
+                return false;
+            } else {
+                for (var i = 0; i < nodeIpList.length; i++) {
+                    if (ipaddr.val() == nodeIpList.eq(i).text()) {  //判断IP输入是否重复
+                        showNoticeMsg("ipaddr","该IP已经存在!");
+                        return false;
+                    }
+                }
+            }
+        } else {
+            if (nodeWay == "single") {
+                if (!limitIp(ipaddr.val(),"ipaddr","输入数据节点IP不合法！")) {  //判断IP输入是否合法
+                    return false;
+                } else {
+                    if (ipaddr.val() == document.getElementById("serverAdd").value) {
+                        showNoticeMsg("ipaddr","服务器IP不能作为数据节点!");
+                        return false;
+                    } 
+                    for (var i = 0; i < nodeIpList.length; i++) {
+                        if (ipaddr.val() == nodeIpList.eq(i).text()) {  //判断IP输入是否重复
+                            showNoticeMsg("ipaddr","该IP已经存在!");
+                            return false;
+                        }
+                    }
+                } 
+            } else {
+                if (!limitIp(startIp.val(),"startIpVal","起始IP不合法！") || !limitIp(endIp.val(),"endIpVal","结束IP不合法！")) {
+                    return false;
+                } else {
+                    if (!limitIpRange()) {
+                        return false;
+                    }
+                    if (delIpDot(startIp.val())*1 >= delIpDot(endIp.val())*1) { //起始IP不得大于或等于结束IP
+                        showNoticeMsg("startIpVal","起始IP不能大于或等于结束IP！");
+                        return false;
+                    } else {
+                        // *1 的目的是将其转换成数字，避免for循环出问题
+                        var startNum = startIp.val().split(".")[3]*1;
+                        var endNum   = endIp.val().split(".")[3]*1;
+                        for (var i = startNum; i <= endNum; i++) {
+                            if (concatIp(startIp.val(),i) == document.getElementById("serverAdd").value) {
+                                showNoticeMsg("startIpVal","服务器IP不能作为数据节点!");
+                                return false;
+                            } else {
+                                for (var j = 0; j < nodeIpList.length; j++) {
+                                    if (concatIp(startIp.val(),i) == nodeIpList.eq(j).text()) {
+                                        showNoticeMsg("startIpVal","该批IP地址中与已有IP地址重复！");
+                                        return false;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        /*if (!pwd_patt.exec(password)) {
+            showNoticeMsg("rootPwd","密码输入不合法");
+            return false;
+        }*/
+    }
+    
+    //处理IP，去除“.”
+    function delIpDot(ipVal)
+    {
+        var newIp  = ipVal.split(".");
+        var lastIp = "";
+        
+        for (var i = 0;i < newIp.length; i++) {
+            lastIp += newIp[i];
+        }
+        return lastIp;
+    }
+    //限制起始IP和结束IP的范围
+    function limitIpRange()
+    {
+        var startIp    = document.getElementById("startIpVal").value.split(".");
+        var endIp      = document.getElementById("endIpVal").value.split(".");
+        var flag = true;
+        
+        for (var i = 0;i < startIp.length - 1; i++) {
+            if (startIp[i] != endIp[i]) {
+                showNoticeMsg("startIpVal","起始IP与结束IP前三个字段必须保持一致！");
+                flag = false;
+            }
+        }
+        return flag;
+    }
+    //得到ip前面三个的字段 和最后一个字段，并将之拼接起来
+    function concatIp(ipVal, lastField)
+    {
+        var newIp = ipVal.split(".");
+        var ipField3 = "";
+        
+        for (var i = 0;i < newIp.length - 1; i++) {
+            ipField3 += newIp[i] + ".";
+        }
+        lastIp = ipField3 + lastField;
+        return lastIp;
+    }
+    --></script>
+</body>

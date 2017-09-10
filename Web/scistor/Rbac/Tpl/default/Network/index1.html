@@ -1,0 +1,212 @@
+<include file="Public:file"/>
+<body class="rightbody">
+    <div class="right_title" style="">
+        <span>首页 </span> &raquo; 网络管理  &raquo; 网卡配置
+    </div>
+    <div class="right_main">
+        <div class="right_fortable">
+            <hr class="hr_top" />
+            <div class="insetTable">
+                <table border="0" id="tablevols" class="table1 thin sortable">
+                    <tr class="top">
+                        <th width="5%"></th>
+                        <th width="5%">编号</th>
+                        <th width="10%">网口号</th>
+                        <th width="10%">设备名</th>
+                        <th width="10%">连接状态</th>
+                        <th width="10%">速率</th>
+                        <th width="10%">备注</th>
+                    </tr>
+                    <tr class="bbb">
+                        <td><input type="radio" name="radio_cho" id="choice1" value="1" class="chek" onclick="card_show()" /></td>
+                        <label for="choice1">
+                        <td>1</td>
+                        <td class="volsname">1254</td>
+                        <td>eth0</td>
+                        <td><img src="__PUBLIC__/img/statue.png" title="连接" align="absmiddle"/></td>
+                        <td>60MB/s</td>
+                        <td></td></label>
+                    </tr>
+                    <tr class="bbb">
+                        <td><input type="radio" name="radio_cho" id="choice2" value="2" class="chek" disabled onclick="card_show()"/></td>
+                        <label for="choice2">
+                        <td>2</td>
+                        <td class="volsname">1254</td>
+                        <td>eth1</td>
+                        <td>已绑定</td>
+                        <td></td>
+                        <td></td></label>
+                    </tr>
+                    <tr class="bbb">
+                        <td><input type="radio" name="radio_cho" id="choice3" value="3" class="chek" disabled onclick="card_show()"/></td>
+                        <label for="choice3">
+                        <td>3</td>
+                        <td class="volsname">1254</td>
+                        <td>eth2</td>
+                        <td><img src="__PUBLIC__/img/status_no.png" title="未连接" align="absmiddle"/></td>
+                        <td></td>
+                        <td></td></label>
+                    </tr>
+                    <tr class="bbb">
+                        <td><input type="radio" name="radio_cho" id="choice4" value="4" class="chek" onclick="card_show()"/></td>
+                        <label for="choice4">
+                        <td>4</td>
+                        <td class="volsname">1254</td>
+                        <td>eth3</td>
+                        <td><img src="__PUBLIC__/img/statue.png" title="连接" align="absmiddle"/></td>
+                        <td>70MB/s</td>
+                        <td></td></label>
+                    </tr>
+                    <tr class="bbb">
+                        <td><input type="radio" name="radio_cho" id="choice5" value="5" class="chek" disabled onclick="card_show()"/></td>
+                        <label for="choice5">
+                        <td>5</td>
+                        <td class="volsname">1254</td>
+                        <td>eth4</td>
+                        <td>已绑定</td>
+                        <td></td>
+                        <td></td></label>
+                    </tr>
+                    <tr class="bbb">
+                        <td><input type="radio" name="radio_cho" id="choice6" value="5" class="chek" onclick="band_info()"/></td>
+                        <label for="choice6">
+                        <td>6</td>
+                        <td class="volsname">1254</td>
+                        <td>band1</td>
+                        <td></td>
+                        <td></td>
+                        <td>mode1：eth1，eth4</td></label>
+                    </tr>
+                </table>
+            </div>
+            <!--分页条-->
+            <div id="controls" class="controls">
+                <div id="perpage" class="perpage">
+                    <span>跳转到</span>
+                    <input type="text" name="gopage" value="1" class="gopage" id="gopage" /> 页
+                    <img src="__PUBLIC__/img/left_grey.png" alt="跳页" title="跳转到指定页" />
+                </div>
+                <div id="navigation" class="navigation">
+                    <img src="__PUBLIC__/img/first.gif" title="首页" alt="首页" onclick="sorter.move(-1,true)" />
+                    <img src="__PUBLIC__/img/previous.gif" title="上一页" alt="上一页" onclick="sorter.move(-1)" />
+                    <img src="__PUBLIC__/img/next.gif" title="下一页" alt="下一页" onclick="sorter.move(1)" />
+                    <img src="__PUBLIC__/img/last.gif" title="尾页" alt="尾页" onclick="sorter.move(1,true)" />
+                </div>
+                <div id="text" class="page">当前第 <span id="currentpage">1</span> 页 &nbsp; 共 <span id="pagelimit">1</span> 页</div>
+            </div>
+            <div style="clear:both"></div>
+            <hr class="hr_bottom" />
+        </div>
+        <div class="card_info"> 
+            <form name="frm" action="" method="post">
+                <table class="table3"> 
+                    <tr class="band_info">
+                        <td>绑定模式：</td>
+                        <td>
+                            <select name="bondmode" id="bondmode" class="bandsel" >
+                                <option value="0">0 - 轮询模式</option>
+                                <option value="1">1 - 高可用模式（主备模式）</option>
+                                <option value="2">2 - 基于hash的负载均衡模式</option>
+                                <option value="3">3 - 广播模式</option>
+                                <option value="4">4 - 802.3ab负载均衡模式</option>
+                                <option value="5">5 - 适配器输出负载均衡模式</option>
+                                <option value="6" selected>6 - 适配器输入/输出负载均衡模式</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr class="noband_info"> 
+                        <td width="70px">MTU:</td>
+                        <td><input class="s_width220" name="mtu_set" type="text" value="1500" /></td>
+                    </tr>
+                </table>
+                <div class="noband_info"> 
+                    <fieldset class="fieldset">
+                        <legend>
+                            <input type="radio" name="ip_set" id="hand_set" value="2" checked/>
+                            <label for="hand_set">使用以下IP地址</label>
+                        </legend>
+                        <table class="tab_ip" cellspacing="0" cellpadding="0" border="0"> 
+                            <tr> 
+                                <td>IP地址：</td>
+                                <td><input name="ipAdd" class="s_width200" type="text" value="192.168.0.1" /></td>
+                            </tr>
+                            <tr> 
+                                <td>子网掩码：</td>
+                                <td><input name="mask" class="s_width200" type="text" value="255.255.255.0" /></td>
+                            </tr>
+                            <tr> 
+                                <td>默认网关：</td>
+                                <td><input name="geteWay" class="s_width200" type="text" value="192.168.0.1"/></td>
+                            </tr>
+                        </table>
+                    </fieldset>
+                    <div class="set_sub">
+                        <input type="button" value="确定" class="btn btn_small" />
+                        <input type="button" value="取消" class="btn btn_small cancel" />
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <style tpye="css/text">
+        .card_info{
+            width:36%;
+            padding:5px 10px 10px 10px;
+            overflow-x:auto;
+            height:280px;
+            margin:0px 0px 0px 20px;
+            font-size:13px;
+        }
+        .fieldset{
+            border:1px solid #ccc;
+            width:80%;
+            height:60%;
+            padding:0px 5px 5px 30px;
+        }
+        
+        .tab_ip{
+            margin-top:15px;
+            margin-left:30px;
+        }
+        .tab_ip td{
+            padding-top:8px;
+        }
+        .s_width220{
+            width:210px;
+            height:18px;
+            line-height:18px;    
+        }
+        .set_sub{
+            text-align:right;
+            margin-right:45px;
+            margin-top:10px;
+        }
+        .noband_info{
+            display:none;            
+        }
+        .band_info{
+            margin-bottom:10px;
+            display:none;
+        }
+        .bandsel{
+            width:215px;
+            outline:none;
+            height:25px;
+            line-height:25px;
+            padding-bottom:0px;
+        }
+    </style>
+    <script type="text/javascript" language="javascript">
+        function card_show()
+        {
+            $(".noband_info").css("display","block");
+            $(".band_info").css("display","none");    
+        }
+        function band_info()
+        {
+            $(".band_info").css("display","block");    
+            $(".noband_info").css("display","block");
+        }
+        //当改变单选按钮时，用ajax于后台php交互数据
+    </script>
+</body>

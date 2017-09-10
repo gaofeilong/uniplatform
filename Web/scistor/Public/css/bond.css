@@ -1,0 +1,346 @@
+/******
+    **网络管理****/
+.set_sub{
+    text-align:right;
+    margin:10px 15px 8px 0px;
+}
+.bandsel{
+    width:240px;
+    height:22px;
+    margin:5px 0px 3px 3px;
+    background:#F5F7FC;
+    border-top:1px solid #486A83;
+    border-left:1px solid #486A83;
+    border-right:1px solid #8BAFC6;
+    border-bottom:1px solid #8BAFC6;
+}
+
+.bondright{
+    text-align:right;
+    margin:15px 10px 0px 0px;
+}
+.auto_IP{
+    margin:10px 0px 10px 15px;
+}
+.name_card{
+    color:orange;
+}
+.FC_frm{
+    width:40%;
+    margin:auto;
+}
+.FC_fieldset{
+    border:1px solid #ccc;
+    width:80%;
+    height:60%;
+    padding:10px 5px 5px 30px;
+    margin-left:20px;
+}
+.Fc_tab{
+    margin:auto;
+}
+.Fc_tab td{
+    padding:5px;
+}
+/******
+    **归档样式****/
+.yu_shuju{
+    overflow:hidden;
+    margin:3px 0px 5px 0px;
+    padding:0 0 10px 5px;
+}
+.detail_shuju{
+    overflow:hidden;
+    margin:10px 0px 30px 0px;
+    padding:0 0 10px 5px;
+}
+.detail_but{
+    padding:5px 10px 0px 0px;
+}
+.hide{
+	display:none;
+}
+
+/******
+    **用户和组***/
+.share_top{
+    margin-top:10px;    
+}
+.tab_gp{
+    height:40px;
+    margin:5px 0px 10px 15px;
+}
+fieldset legend{
+    color:#D1780D;
+    margin-left:10px;
+}
+.select_group{
+    padding:3px;
+    width:100px;
+}
+.tab_vali{
+    margin-left:60px;
+    width:500px;
+}
+.cursor_set{
+    font-weight:bold;
+    cursor:default;
+}
+table.tab_show{
+    margin:0px 0px 0px 30px;    
+}
+.user_pe{
+    background-color:#E8F0FA;
+    margin-top:10px;
+}
+.user_pwe{
+    background-color:#EDF2F5;
+}
+.cre_btu{
+    margin:10px 0px 0px 450px;
+}
+.l_besidenew{
+    width:800px;
+    padding:0px 0px 10px 10px;
+    overflow:hidden;
+}
+.validata_set{
+    /* border:2px solid #ccc; */
+    border-top:1px solid #ccc;
+}
+
+.licenseModel1{
+    width:100%;
+    margin-top:2px;
+    background-color:#D6E3ED;
+}
+.lic1{
+    width:100%;
+}
+.lic1 th{
+    text-align:left;
+    color:#36556F;
+}
+.lic1 td,.lic1 th{
+    height:25px;
+    border:1px solid #ccc;
+    padding:0 5px;
+    background:#;
+}
+
+/***数据归档***/
+.archive_p{
+    /* float:left; */margin:5px 0px 0px 6px;
+    width:143px;
+}
+.archive_pnew{
+	float:left;margin:5px 0px 0px 1px;
+    width:118px;
+}
+.archive_table{
+    height:auto;margin-left:4px;
+}
+.img_delete{
+    cursor:pointer;margin:5px 0px 0px 3px;
+    vertical-align:top;
+}
+.img_delete1{
+    cursor:pointer;margin:0px 0px 5px 3px;
+    vertical-align:top;
+}
+.preRoad_content1{
+    float:left;
+    margin:0 0 0 25px;
+}
+.preRoad_content{
+    text-align:right;
+    margin:10px 18px 0 0;
+}
+#dataPath{
+    margin-bottom:5px;
+}
+
+.ddfsel{
+    height:18px;
+    margin:3px 0px 3px 3px;
+    background:#F5F7FC;
+    border-top:1px solid #486A83;
+    border-left:1px solid #486A83;
+    border-right:1px solid #8BAFC6;
+    border-bottom:1px solid #8BAFC6;
+}
+.ddfselnew{
+    height:18px;
+    margin:3px 0px 3px 0px;
+    background:#F5F7FC;
+    border-top:1px solid #486A83;
+    border-left:1px solid #486A83;
+    border-right:1px solid #8BAFC6;
+    border-bottom:1px solid #8BAFC6;
+}
+.ddfsHide{
+   text-overflow:ellipsis;
+   overflow:hidden;
+   text-align:left;
+}
+/***
+   *HDFS 分布式消冗文件系统**
+   ****************************/
+
+/*集群概况*/
+
+.hdfs_status{
+    background:url(../img/icons/fbs_20x.png) no-repeat scroll 5px 50%;
+}
+.hdfs_rate{
+    background:url(../img/icons/chart_pie_20x.png) no-repeat scroll 5px 50%;
+}
+#hdfs_rate{
+	border-bottom:1px solid #ccc;
+}
+.hdfs_ctrl{
+    background:url(../img/icons/setPaper1_20x.png) no-repeat scroll 5px 50%;
+}
+.hdfs_rate, .hdfs_status, .hdfs_ctrl{
+    padding-left:15px;
+    *float:left;
+}
+.hdfsModel{
+    padding:10px 20px;
+    border-right:1px solid #ccc;
+    border-left:1px solid #ccc;
+}
+.rateInfo{
+    margin:100px 30px 0 0px;
+    width:200px;
+    float:left;
+}
+.rateInfo1{
+    text-align:center;
+    font-weight:bold;
+    color:#777;
+}
+.rateImg{
+    float:left;
+}
+.clearfix:after {
+    content:".";
+    display:block;
+    height:0;
+    line-height:0;
+    font-size:0;
+    clear:both;
+    visibility:hidden;
+}
+.clearfix {
+    zoom:1;
+}
+.indexNode{
+    float:left;
+    width:49%;
+    border-right:1px dotted #bbb;
+}
+.dataNode{
+    float:right;
+    width:50%;
+}
+.statusNotice{
+    margin:10px 0 10px 0px;
+    padding-top:10px;
+    border-top:1px dashed #ccc;
+}
+.statusNotice b{
+    margin:0 30px 0 10px;
+    font-weight:normal;
+}
+.hdfs1, .hdfs2, .hdfs3, .hdfs4{
+    display:inline-block;
+    width:15px;
+    height:8px;
+    border:1px solid #999;
+}
+.hdfs1{background:green;}
+.hdfs2{background:red;}
+.hdfs3{background:yellow;}
+.hdfs4{background:gray;}
+.bottomB{border-bottom:1px solid #ccc;}
+
+/*配置管理*/
+.colony_shuju{
+    overflow:hidden;
+    margin:3px 0 5px 0;/*2013-08-21*/
+}
+.hdfs_s10{
+    margin:8px;
+}
+.hdfs_s10 span{
+    display:inline-block;
+    width:109px;
+}
+.hdfschek{
+	height:32px;
+	line-height:32px;
+}
+.hdfstab{
+    border-collapse:collapse;
+    margin-left:20px;
+}
+.hdfstab td{
+    height:32px;
+    line-height:20px;
+}
+.hdfs_pnew{
+    float:left;
+    margin:5px 0px 0px 8px;
+    width:116px;
+}
+.hdfs_data{
+    float:left;
+    margin:4px 0px 0px 25px;
+}
+.hdfs_delete{
+    cursor:pointer;
+    margin:3px 0px 5px 3px;
+    vertical-align:top;
+}
+.d_lightbluenew{
+    background-color:#d6e3ed;/*由原来的edf2f5改为稍微深一点的蓝*/
+    padding:0 20px 20px 20px;
+    height:245px;
+}
+#idxRootPath, #dataconPath, #condata_path{
+   margin-bottom:5px;
+}
+input.iptreadonly{
+    color:#a0a0a0;
+    text-shadow:0 1px 1px #FFFFFF;
+}
+input.iptreadonly:focus{
+    background:#F5F7FC;
+}
+.mr15{
+    margin-right:15px;
+}
+.hdfs_span{
+   /*float:left;
+   margin:6px 0 0px 5px;*/
+   margin:10px 15px 0 -15px;
+   padding:10px 10px 10px 0;
+   /*border:1px solid #ccc;*/
+}
+.hdfs_span span{
+   margin-left:15px;
+   color:green;
+   font-weight:bold;
+}
+.belongDel{
+    background:url(../img/delete_2.png) no-repeat scroll 85% 60%;
+}
+/*删除节点*/
+.bg_jindu{
+    margin-left:10px;
+    height:10px;
+    line-height:10px;
+    border:1px;
+    background:url(../img/icons/jindu_bg.png) no-repeat scroll 0 0px;
+}

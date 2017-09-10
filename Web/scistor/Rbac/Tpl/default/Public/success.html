@@ -1,0 +1,22 @@
+<include file="Public:file"/>
+<meta http-equiv='Refresh' content='{$waitSecond};URL={$jumpUrl}'>
+<body class="rightbody">
+    <div class="right_title">
+        <span>加载页面失败</span>
+    </div>
+    <div class="right_main">
+        <div class="right_fortable">
+            <hr class="hr_top" />
+			
+			<fieldset class="d_lightblue loadfail_div">
+				<h1 class="loadfail_h1">· 提示信息！</h1>
+				<div class="loadfail_notice">
+					<h3>提示: </h3>
+					<p>{$message}</p>
+				</div><!--
+			                  系统将在 <span style="color:blue;font-weight:bold">{$waitSecond}</span> 秒后自动关闭，若不跳转,直接点击 <a href="{$jumpUrl}" target="_top">这里</a> 关闭</td>
+			--></fieldset>
+            <hr class="hr_bottom" />
+        </div>
+    </div>
+</body>

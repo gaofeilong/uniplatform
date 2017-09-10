@@ -1,0 +1,143 @@
+<include file="Public:file"/>
+<body class="rightbody">
+    <div class="right_title" style="">
+        <span>首页 </span> &raquo; NAS管理  &raquo; 用户和组 &raquo; 用户组
+    </div>
+    <div class="right_main">
+        <div class="right_fortable">
+            <div class="shareNav share_top" style="overflow:hidden">
+                <ul>
+                    <li class="navson"><a href="__URL__/index">用户验证</a></li>
+                    <li class="navson select"><a href="__URL__/grouplist">用户组</a></li>
+                    <li class="navson"><a href="__URL__/userlist">用户</a></li>
+                    <li class="navson"><a href="__URL__/groupquota">用户组配额</a></li>
+                    <li class="navson"><a href="__URL__/userquota">用户配额 </a></li>
+                </ul>
+            </div>
+
+            <!--页面操作成功与否提示-->
+            <div class="publicNotice pN_error" id="pN_info"></div>
+            <!--页面操作成功与否提示 over-->
+
+            <div class="insetTable">
+                <form action="" name="glistForm" id="glistForm" method="post">
+                <table border="0" id="tab_group" class="table1 thin sortable">
+                    <tr class="top">
+                        <th width="5%"><input type="checkbox" value="0" name="ddfs" class="chek" onclick="All(this, 'gcheck[]')"/></th>
+                        <th width="15%">名称</th>
+                        <th width="15%">类型</th>
+                        <th width="15%">配额</th>
+                        <th width="10%">已使用</th>
+                        <th width="15%">操作</th>
+                    </tr>
+                    <volist name='glist' id='i' key='k'>
+                    <tr class="bbb">
+                        <td><input type="checkbox" name="gcheck[]" id="choice{$k-1}" value="{$i['gname']}" class="chek" onclick="Item(this, 'ddfs')"/></td>
+                        <label for="choice{$k-1}">
+                        <td class="groupname">{$i['gname']},{$i['gid']}</td>
+                        <td>{$usertype}</td>
+                        <td>lv1:800MB</td>
+                        <td>lv1:200MB</td>
+                        <td class="t_center"><input type="button" value="编辑" class="btn btn_small quota_edit" name="" id="qe{$k-1}"></td></label>
+                    </tr>
+                    </volist>
+                </table>
+                </form>
+            </div>
+            <!--分页条-->
+            <div id="controls" class="controls">
+                <div id="perpage" class="perpage">
+                    <span>跳转到</span>
+                    <input type="text" name="gopage" value="1" class="gopage" id="gopage" /> 页
+                    <img src="__PUBLIC__/img/left_grey.png" alt="跳页" title="跳转到指定页" />
+                </div>
+                <div id="navigation" class="navigation">
+                    <img src="__PUBLIC__/img/first.gif" title="首页" alt="首页" onclick="sorter.move(-1,true)" />
+                    <img src="__PUBLIC__/img/previous.gif" title="上一页" alt="上一页" onclick="sorter.move(-1)" />
+                    <img src="__PUBLIC__/img/next.gif" title="下一页" alt="下一页" onclick="sorter.move(1)" />
+                    <img src="__PUBLIC__/img/last.gif" title="尾页" alt="尾页" onclick="sorter.move(1,true)" />
+                </div>
+                <div id="text" class="page">当前第 <span id="currentpage">1</span> 页 &nbsp; 共 <span id="pagelimit">1</span> 页</div>
+            </div>
+            <div style="clear:both"></div>
+            <!--分页条结束-->
+            
+            <hr class="hr_bottom" />
+            <div style="clear:both"></div>
+            <div class="tright">
+                <input type="button" value="新建组" class="btn btn_big cre_group" />
+                <input type="button" value="删除组" class="btn btn_big " onclick="popupGroupDel()"/>
+            </div>
+        </div>
+        
+        <!--新建组-->
+        <div class="new_group hide">
+            <form class="bg_s" action="" name="" id="groupAddForm">
+                <table class="tab_gp">
+                    <tr>
+                        <td class="s_width80">名称：</td>
+                        <td><input type="text" name="glist[][gname]" id="volname" class="s_width2" /></td>
+                    </tr>
+                </table>
+                <div class="tright bottom_bg">
+                    <input type="button" value="确定" class="btn btn_small" onclick="GroupAdd()"/>
+                    <input type="button" value="取消" class="btn btn_small cancel" />
+                </div>
+            </form>
+        </div>
+        <!--新建组结束-->    
+        
+        <!--编辑配额-->
+        <div class="quo_edit hide" style="width:567px;"> 
+            <form class="bg_s" action="" name="">
+                <table class="margin10" style="margin-bottom:10px;">
+                    <tr>
+                        <td width="75px">　名称：</td>
+                        <td><input type="text" id="group_name" class="s_width220" value="" disabled/></td>
+                    </tr>
+                </table>
+                <fieldset class="lightblue">
+                    <legend class="card_ge">配额</legend>
+                    <div class="yu_shuju">
+                        <div class="fleft">
+                            <table id="Table_group" class="archive_table">
+                                <tr>
+                                    <td>
+                                        共享名称：<input class="s_width220"  type="text" name="gshare_name[]" id="gshare_name" value="" />&nbsp;&nbsp;配额量：<input type="text" name="gkuota[]" id="gkuota" value=""  class="s_width110" />
+                                    </td>
+                                    <td>
+                                        <img src="__PUBLIC__/img/clear.gif" class="delete_img" id="del_img{$k}" align="absmiddle" title="删除源数据存放路径" onclick="groupdelete_row()"/><br>
+                                    </td>
+                                </tr>
+                            </table>
+                            <div class="preRoad_content">
+                                <input type="button" value="添加" class="btn btn_small" title="添加配额" onclick="groupbuild_row()"/>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+                <div class="tright bottom_bg">
+                    <input type="button" value="确定" class="btn btn_small" />
+                    <input type="button" value="取消" class="btn btn_small cancel" />
+                </div>
+            </form>
+        </div>
+        <!--编辑配额结束-->
+        
+        <!--删除组-->
+        <div class="del_grp hide"> 
+            <div class="del_div1">
+                <table>
+                    <tr><td valign="top" width="90px;"><img src="__PUBLIC__/img/warning.png" alt="警告" /></td>
+                    <td>&nbsp;确定删除用户组:<span class="del_list" id="del_group"></span></td></tr>
+                </table>
+            </div>
+            <div class="tright bottom_bg">
+                <input type="button" value="确定" class="btn btn_small" onclick="GroupDel()"/>
+                <input type="button" value="取消" class="btn btn_small cancel" />
+            </div>
+        </div>
+        
+        <!--删除组结束-->
+    </div>
+</body>

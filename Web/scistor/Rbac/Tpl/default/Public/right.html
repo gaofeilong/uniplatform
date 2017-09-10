@@ -1,0 +1,217 @@
+<include file="Public:file"/>
+<body class="rightbody">
+    <div class="right_title" style="">
+        <span>首页 </span> 
+    </div>
+    <div class="right_main">
+        <div class="right_fortable">
+            <hr class="hr_top" />
+            <div class="insetTable">
+                <table border="0" id="tablevols" class="table1 thin sortable">
+                    <tr class="top">
+                        <th width="5%"><input type="checkbox" value="0" name="ddfs" class="chek" onclick="All(this, 'choice')"/></th>
+                        <th width="5%">编号</th>
+                        <th width="10%">名称</th>
+                        <th width="10%">总空间</th>
+                        <th width="10%">剩余空间</th>
+                        <th width="15%">物理卷</th>
+                        <th width="10%">逻辑卷</th>
+                        <th width="10%">RAID</th>
+                        <th width="10%">状态</th>
+                        <th  width="10%">操作</th>
+                    </tr>
+                    <tr class="bbb">
+                        <td><input type="checkbox" name="choice" id="choice" value="1" class="chek" onclick="Item(this, 'ddfs')"/></td>
+                        <label for="choice"><td>1</td>
+                        <td class="volsname">test</td>
+                        <td>1125MB</td>
+                        <td>800MB</td>
+                        <td>Physical Volume</td>
+                        <td>lv1</td>
+                        <td>RAID0</td>
+                        <td><img src="__PUBLIC__/img/statue.png" title="在线" align="absmiddle"/></td>
+                        <td><input type="button" value="扩容" class="btn btn_small extends" name="" id="k1"></td></label>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" name="choice" id="choice1" value="2" class="chek" onclick="Item(this, 'ddfs')"/></td>
+                        <label for="choice1"><td>2</td>
+                        <td class="volsname">abs</td>
+                        <td>154GB</td>
+                        <td>80GB</td>
+                        <td>Physical Volume</td>
+                        <td>lv2</td>
+                        <td>RAID1</td>
+                        <td><img src="__PUBLIC__/img/status_no.png" title="离线" align="absmiddle"/></td>
+                        <td class="t_center"><input type="button" value="扩容" class="btn btn_small extends" name="" id="k1"></td></label>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" name="choice" id="choice2"  value="3" class="chek" onclick="Item(this, 'ddfs')"/></td>
+                        <label for="choice2"><td>3</td>
+                        <td class="volsname">lvlnam</td>
+                        <td>20GB</td>
+                        <td>800MB</td>
+                        <td>Physical Volume</td>
+                        <td>lv3</td>
+                        <td>RAID0</td>
+                        <td><img src="__PUBLIC__/img/statue.png" title="在线" align="absmiddle"/></td>
+                        <td class="t_center"><input type="button" value="扩容" class="btn btn_small extends" name="" id="k1"></td></label>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" name="choice" id="choice3"  value="4" class="chek" onclick="Item(this, 'ddfs')"/></td>
+                        <label for="choice3"><td>4</td>
+                        <td class="volsname">速度</td>
+                        <td>15MB</td>
+                        <td>8MB</td>
+                        <td>Physical Volume</td>
+                        <td>lv1</td>
+                        <td>RAID0</td>
+                        <td><img src="__PUBLIC__/img/status_no.png" title="离线" align="absmiddle"/></td>
+                        <td class="t_center"><input type="button" value="扩容" class="btn btn_small extends" name="" id="k1" /></td></label>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" name="choice" id="choice4"  value="5" class="chek" onclick="Item(this, 'ddfs')"/></td>
+                        <label for="choice4"><td>5</td>
+                        <td class="volsname">test</td>
+                        <td>1125MB</td>
+                        <td>800MB</td>
+                        <td>Physical Volume</td>
+                        <td>lv2</td>
+                        <td>RAID0</td>
+                        <td><img src="__PUBLIC__/img/statue.png" title="在线" align="absmiddle"/></td>
+                        <td class="t_center"><input type="button" value="扩容" class="btn btn_small extends" name="" id="k1"></td></label>
+                    </tr>
+                </table>
+            </div>
+            <!--分页条-->
+            <div id="controls" class="controls">
+                <div id="perpage" class="perpage">
+                    <span>跳转到</span>
+                    <input type="text" name="gopage" value="1" class="gopage" id="gopage" /> 页
+                    <img src="__PUBLIC__/img/left_grey.png" alt="跳页" title="跳转到指定页" />
+                </div>
+                <div id="navigation" class="navigation">
+                    <img src="__PUBLIC__/img/first.gif" title="首页" alt="首页" onclick="sorter.move(-1,true)" />
+                    <img src="__PUBLIC__/img/previous.gif" title="上一页" alt="上一页" onclick="sorter.move(-1)" />
+                    <img src="__PUBLIC__/img/next.gif" title="下一页" alt="下一页" onclick="sorter.move(1)" />
+                    <img src="__PUBLIC__/img/last.gif" title="尾页" alt="尾页" onclick="sorter.move(1,true)" />
+                </div>
+                <div id="text" class="page">当前第 <span id="currentpage">1</span> 页 &nbsp; 共 <span id="pagelimit">1</span> 页</div>
+            </div>
+            <div style="clear:both"></div>
+            <hr class="hr_bottom" />
+            <div style="clear:both"></div>
+            <div class="tright">
+                <input type="button" value="新建卷组" class="btn btn_big build_newvols" />
+                <input type="button" value="删除卷组" class="btn btn_big delvols" />
+            </div>
+        </div>
+        
+        <!--卷组扩容-->
+        <div id="extend_vols" class="extend_vols hide" style="display:none;">
+            <hr class="hr_top2" border="2" />
+            <form name="frm" action="" method="post">
+            <table class="table1">
+                <tr class="top">
+                    <th width="20px"><input type="checkbox" value="0" name="kuAll" id="ku_all" class="chek" onclick="All(this, 'ku_choice')"/></th>
+                    <label for="ku_all"><th>名称</th>
+                    <th>型号</th>
+                    <th>WWN</th>
+                    <th>大小</th>
+                    <th>速率</th></label>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" value="0" id="ku_choice1" name="ku_choice" class="chek" onclick="Item(this, 'kuAll')"/></td>
+                    <label for="ku_choice1"><td>volumn1</td>
+                    <td>vo5425</td>
+                    <td>WWN</td>
+                    <td>25GB</td>
+                    <td>0</td></label>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" value="1" id="ku_choice2" name="ku_choice" class="chek" onclick="Item(this, 'kuAll')"/></td>
+                    <label for="ku_choice2"><td>volumn2</td>
+                    <td>vo487</td>
+                    <td>WWN</td>
+                    <td>56GB</td>
+                    <td>0</td></label>
+                </tr>
+            </table>
+        <!--    <hr border="2" color="#cccccc" style="margin-top:15px;"/>-->
+            <div class="tright bottom_bg">
+                <input type="button" value="确定" class="btn btn_small" />
+                <input type="button" value="取消" class="btn btn_small cancel" />
+            </div>
+            </form>
+        </div>
+        
+        <!--新建卷组-->
+        <div id="new_vols" class="new_vols hide" style="display:none">
+            <p class="con_title">物理卷</p>
+            <hr class="hr_top2" />
+            <table class="table1">
+                <tr class="top">
+                    <th width="20px"><input type="checkbox" value="0" name="wulijuan" id="wuli_all" onclick="All(this,'wuli_choice')" /></th>
+                    <label for="wuli_all"><th>名称</th>
+                    <th>型号</th>
+                    <th>WWN</th>
+                    <th>大小</th>
+                    <th>速率</th></label>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" value="0" id="wu_choice1" name="wuli_choice" onclick="Item(this, 'wulijuan')" /></td>
+                    <label for="wu_choice1"><td>volumn1</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td></label>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" value="0" id="wu_choice2" name="wuli_choice" onclick="Item(this, 'wulijuan')" /></td>
+                    <label for="wu_choice2"><td>volumn2</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td></label>
+                </tr>
+            </table>
+            <br />
+            <fieldset class="lightblue">
+                <legend>RAID</legend>
+                <table>
+                    <tr>
+                        <td class="s_width80" height="30px">级别：</td>
+                        <td><input type="text" class="s_width2" /></td>
+                    </tr>
+                    <tr>
+                        <td class="s_width80" height="30px">条带带宽：</td>
+                        <td><input type="text" class="s_width2" /></td>
+                    </tr>
+                </table>
+            </fieldset>
+            <div class="new_volsname">
+                <span class="s_width80 flb">卷组名称:</span><input type="text" id="volsname" class="s_width2" />
+            </div>
+            <!--    <hr border="2" color="#cccccc" style="margin-top:15px;"/>-->
+            <div class="tright bottom_bg">
+                <input type="button" value="确定" class="btn btn_small" />
+                <input type="button" value="取消" class="btn btn_small cancel" />
+            </div>
+        </div>
+        
+        <!--删除卷组-->
+        <div id="del_vols" class="del_vols hide ">
+            <div class="del_div1">
+                <table>
+                    <tr><td valign="top" width="90px;"><img src="__PUBLIC__/img/warning.png" alt="警告" /></td>
+                    <td>&nbsp;确定删除卷组:<span id="vols_no"></span></td></tr>
+                </table>
+                <!--确定删除卷组:<span id="vols_no" style="margin-left:80px;">1,2,3</span>?-->
+            </div>
+            <!--    <hr border="2" color="#cccccc" style="margin-top:15px;"/>-->
+            <div class="tright bottom_bg">
+                <input type="button" value="确定" class="btn btn_small" />
+                <input type="button" value="取消" class="btn btn_small cancel" />
+            </div>
+        </div>
+    </div>
+</body>

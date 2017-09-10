@@ -1,0 +1,249 @@
+<include file="Public:file"/>
+<body class="rightbody">
+    <div class="right_title" style="">
+        <span>首页 </span> &raquo; 网络管理  &raquo; 链路聚合
+    </div>
+    <div class="right_main">
+        <div class="right_fortable">
+            <hr class="hr_top" />
+			
+			<!--页面操作成功与否提示-->
+            <div class="publicNotice pN_error" id="pN_info"></div>
+            <!--页面操作成功与否提示 over-->
+			
+            <fieldset class="d_lightblue">
+                <legend class="orange">网卡信息</legend>
+                <div class="insetTable">
+                        <table border="0" id="tablevols" class="table1 thin sortable">
+                            <tr class="top">
+                                <th width="5%"><input type="checkbox" value="0" name="ddfs" class="chek" onclick="All(this, 'choice')"/></th>
+                                <th width="5%">编号</th>
+                                <th width="10%">设备名</th>
+                                <th width="10%">IP</th>
+                                <th width="10%">掩码</th>
+                                <th width="10%">网关</th>
+                                <th width="10%">状态</th>
+                                <th width="10%">速率</th>
+                            </tr>
+                            <tr class="bbb">
+                                <td><input type="checkbox" name="choice" id="choice1" value="1" class="chek" onclick="Item(this, 'ddfs')" /></td>
+                                <label for="choice1">
+                                <td>1</td>
+                                <td class="volsname">eth0</td>
+                                <td>192.168.1.85</td>
+                                <td>255.255.255.0</td>
+                                <td>192.168.0.1</td>
+                                <td><img src="__PUBLIC__/img/statue.png" title="连接" align="absmiddle"/></td>
+                                <td>70MB/s</td>
+                                </label>
+                            </tr>
+                            <tr class="bbb">
+                                <td><input type="checkbox" name="choice" id="choice2" value="2" class="chek" onclick="Item(this, 'ddfs')" disabled/></td>
+                                <label for="choice2">
+                                <td>2</td>
+                                <td class="volsname">eth1</td>
+                                <td>192.168.1.85</td>
+                                <td>255.255.255.0</td>
+                                <td>192.168.0.1</td>
+                                <td>已绑定</td>
+                                <td></td>
+                                </label>
+                            </tr>
+                            <tr class="bbb">
+                                <td><input type="checkbox" name="choice" id="choice3" value="3" class="chek" onclick="Item(this, 'ddfs')" disabled/></td>
+                                <label for="choice3">
+                                <td>3</td>
+                                <td class="volsname">eth2</td>
+                                <td>192.168.1.85</td>
+                                <td>255.255.255.0</td>
+                                <td>192.168.0.1</td>
+                                <td><img src="__PUBLIC__/img/status_no.png" title="未连接" align="absmiddle"/></td>
+                                <td></td>
+                                </label>
+                            </tr>
+                            <tr class="bbb">
+                                <td><input type="checkbox" name="choice" id="choice4" value="4" class="chek" onclick="Item(this, 'ddfs')"/></td>
+                                <label for="choice4">
+                                <td>4</td>
+                                <td class="volsname">eth3</td>
+                                <td>192.168.1.85</td>
+                                <td>255.255.255.0</td>
+                                <td>192.168.0.1</td>
+                                <td><img src="__PUBLIC__/img/statue.png" title="连接" align="absmiddle"/></td>
+                                <td>60MB/s</td>
+                                </label>
+                            </tr>
+                            <tr class="bbb">
+                                <td><input type="checkbox" name="choice" id="choice5" value="5" class="chek" onclick="Item(this, 'ddfs')" disabled/></td>
+                                <label for="choice5">
+                                <td>5</td>
+                                <td class="volsname">eth4</td>
+                                <td>192.168.1.85</td>
+                                <td>255.255.255.0</td>
+                                <td>192.168.0.1</td>
+                                <td>已绑定</td>
+                                <td></td>
+                                </label>
+                            </tr>
+                            <tr class="bbb">
+                                <td><input type="checkbox" name="choice" id="choice6" value="6" class="chek" onclick="Item(this, 'ddfs')"/></td>
+                                <label for="choice6">
+                                <td>6</td>
+                                <td class="volsname">eth5</td>
+                                <td>192.168.1.85</td>
+                                <td>255.255.255.0</td>
+                                <td>192.168.0.1</td>
+                                <td><img src="__PUBLIC__/img/statue.png" title="连接" align="absmiddle"/></td>
+                                <td>70MB/s</td>
+                                </label>
+                            </tr>
+                            <tr class="bbb">
+                                <td><input type="checkbox" name="choice" id="choice7" value="7" class="chek" onclick="Item(this, 'ddfs')"/></td>
+                                <label for="choice7">
+                                <td>7</td>
+                                <td class="volsname">eth6</td>
+                                <td>192.168.1.85</td>
+                                <td>255.255.255.0</td>
+                                <td>192.168.0.1</td>
+                                <td><img src="__PUBLIC__/img/statue.png" title="连接" align="absmiddle"/></td>
+                                <td>80MB/s</td>
+                                </label>
+                            </tr>
+                            <tr class="bbb">
+                                <td><input type="checkbox" name="choice" id="choice8" value="8" class="chek" onclick="Item(this, 'ddfs')"/></td>
+                                <label for="choice8">
+                                <td>8</td>
+                                <td class="volsname">eth7</td>
+                                <td>192.168.1.85</td>
+                                <td>255.255.255.0</td>
+                                <td>192.168.0.1</td>
+                                <td><img src="__PUBLIC__/img/statue.png" title="连接" align="absmiddle"/></td>
+                                <td>80MB/s</td>
+                                </label>
+                            </tr>
+                        </table>
+                </div>
+                <!--分页条-->
+                <div id="controls" class="controls">
+                    <div id="perpage" class="perpage">
+                        <span>跳转到</span>
+                        <input type="text" name="gopage" value="{$jump_page}" class="gopage" id="gopage" /> 页
+                        <a href="#" id="jump_img"><img src="__PUBLIC__/img/left_grey.png" alt="跳页" title="跳转到指定页" onclick="jumpPage('Bond')"/></a>
+                    </div>
+                    <include file="Public:page" />
+                </div>
+                <div class="tright">
+                    <input type="button" value="绑定" class="btn btn_big build_newvols" id="Bond_set"/>
+                </div>
+            </fieldset>
+        </div>
+        
+        <!-- 绑定后的网卡显示 -->
+        <div class="right_fortable">
+            <hr class="hr_top" />
+            <fieldset class="FC_lightblue">
+                <legend class="bottom10">已绑定网卡信息</legend>
+                <div class="insetTable">
+                        <table border="0" id="tablevols" class="table1 thin sortable">
+                            <tr class="top">
+                                <th width="5%">编号</th>
+                                <th width="10%">设备名</th>
+                                <th width="10%">IP</th>
+                                <th width="10%">掩码</th>
+                                <th width="10%">网关</th>
+                                <th width="10%">状态</th>
+                                <th width="10%">子网卡</th>
+                                <th width="10%">绑定模式</th>
+                                <th width="10%">操作</th>
+                            </tr>
+                            <tr class="bbb">
+                                <label for="choice1">
+                                <td>1</td>
+                                <td class="volsname">Bond0</td>
+                                <td>192.168.1.85</td>
+                                <td>255.255.255.0</td>
+                                <td>192.168.0.1</td>
+                                <td><img src="__PUBLIC__/img/statue.png" title="连接" align="absmiddle"/></td>
+                                <td>ech1,ech4</td>
+                                <td>balance-alb</td>
+                                <td><input type="button" value="解绑" class="btn btn_small bond_remove" name="" id="k1"></td></td>
+                                </label>
+                            </tr>
+                        </table>
+                </div>
+                <!--分页条-->
+                <div id="controls" class="controls">
+                    <div id="perpage" class="perpage">
+                        <span>跳转到</span>
+                        <input type="text" name="gopage" value="{$jump_page}" class="gopage" id="gopage" /> 页
+                        <a href="#" id="jump_img"><img src="__PUBLIC__/img/left_grey.png" alt="跳页" title="跳转到指定页" onclick="jumpPage('Bond')"/></a>
+                    </div>
+                    <include file="Public:page" />
+                </div>
+            </fieldset>
+            <div style="clear:both"></div>
+            <hr class="hr_bottom" />
+        </div>
+        
+        
+        <!-- 绑定网卡 -->
+        <div id="card_bond" class="card_bond hide"> 
+            <form name="frm" action="" method="post">
+                    <table border="0" class="tab_bond"> 
+                        <tr>
+                            <td>DEVICES:</td>
+                            <td class="bond_td"><span id="DEVICES"></span></td>
+                        </tr>
+                        <tr>
+                            <td>MODE:</td>
+                            <td class="bond_td">
+                                <select name="bondmode" id="bondmode" class="bandsel" >
+                                    <option value="0">0 - balance-rr</option>
+                                    <option value="1">1 - active-backup</option>
+                                    <option value="2">2 - balance-xor</option>
+                                    <option value="3">3 - broadcast</option>
+                                    <option value="4">4 - 802.3ad</option>
+                                    <option value="5">5 - balance-tlb</option>
+                                    <option value="6" selected>6 - balance-alb</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>MTU:</td>
+                            <td class="bond_td">
+                                <input class="s_width200" name="mtu_set" type="text" value="1500" />
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="zidongspan"> 
+                        <input type="radio" name="ip_set" id="auto_set" value="1"/>
+                        <label for="auto_set">自动获取IP地址</label><br>
+                    </div>
+                    <fieldset class="fieldset">
+                        <legend>
+                            <input type="radio" name="ip_set" id="hand_set" value="2" checked/>
+                            <label for="hand_set">使用以下IP地址</label>
+                        </legend>
+                        <table class="tab_ip" cellspacing="0" cellpadding="0" border="0"> 
+                            <tr> 
+                                <td>IP地址：</td>
+                                <td><input name="ipAdd" class="s_width200" type="text" value="192.168.0.1" /></td>
+                            </tr>
+                            <tr> 
+                                <td>子网掩码：</td>
+                                <td><input name="mask" class="s_width200" type="text" value="255.255.255.0" /></td>
+                            </tr>
+                            <tr> 
+                                <td>默认网关：</td>
+                                <td><input name="geteWay" class="s_width200" type="text" value="192.168.0.1"/></td>
+                            </tr>
+                        </table>
+                    </fieldset>
+                    <div class="set_sub">
+                        <input type="button" value="确定" class="btn btn_small" />
+                        <input type="button" value="取消" class="btn btn_small cancel" />
+                    </div>
+            </form>
+        </div>
+    </div>
+</body>

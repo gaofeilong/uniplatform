@@ -1,0 +1,722 @@
+<include file="Public:file"/>
+<body class="rightbody">
+    <div class="right_title" style="">
+        <span>首页 </span> &raquo; NAS管理 &raquo; 共享管理 &raquo; NAS共享
+    </div>
+    <div class="right_main">
+        <div class="right_fortable">
+            <!--头部切换页面标签栏-->
+            <div class="shareNav">
+                <ul>
+                    <li class="navson"><a href="__URL__/index" >ISCSI共享</a></li>
+                    <li class="navson"><a href="__URL__/FCshare">FC共享</a></li>
+                    <li class="navson select"><a href="__URL__/NASshare" >NAS共享</a></li>
+                </ul>
+            </div>
+            <!--over 头部切换页面标签栏-->
+            
+            <!--页面操作成功与否提示-->
+            <div class="publicNotice pN_error" id="pN_info"></div>
+            <!--页面操作成功与否提示 over-->
+            
+            <!--共享目录-->
+            <table class="table1" id="nsTable" border="0">
+                <tr class="top">
+                    <th width="30px"><input type="checkbox" name="ns_all" value="checkall" onclick="All(this, 'choice')" /></th>
+                    <th width="30%">共享名称</th>
+                    <th>总空间</th>
+                    <th>可用空间</th>
+                    <th>消冗</th>
+                    <th>状态</th>
+                    <th>操作</th>
+                </tr>
+                
+                <tr class="gggg">
+                    <td><input type="checkbox" name="choice" id="choice1" value="1" onclick="Item(this, 'ns_all')" /></td>
+                    <label for="choice1"><td class="nsConList">mbt/df/dfd/logical_volume1/</td>
+                    <td>2.0TB</td>
+                    <td>200GB</td>
+                    <td>启用</td>
+                    <td>
+                        <span class="status_ok"></span>
+                        <span class="status_con1">正常</span>
+                    </td>
+                    <td><input type="button" value="编辑" class="btn btn_small ns_edit" /> |
+                        <input type="button" value="详细" class="btn btn_small ns_more" />
+                    </td></label>
+                </tr>
+                
+                <tr class="gggg">
+                    <td><input type="checkbox" name="choice" id="choice2" value="2" onclick="Item(this, 'ns_all')" /></td>
+                    <label for="choice2"><td class="nsConList">mbt/df/dfd/logical_volume2/</td>
+                    <td>2.0TB</td>
+                    <td>200GB</td>
+                    <td>启用</td>
+                    <td>
+                        <span class="status_ok"></span>
+                        <span class="status_con1">正常</span>
+                    </td>
+                    <td><input type="button" value="编辑" class="btn btn_small ns_edit" /> |
+                        <input type="button" value="详细" class="btn btn_small ns_more" />
+                    </td></label>
+                </tr>
+                
+                <tr class="gggg">
+                    <td><input type="checkbox" name="choice" id="choice3" value="3" onclick="Item(this, 'ns_all')" /></td>
+                    <label for="choice3"><td class="nsConList">mbt/df/dfd/logical_volume3/</td>
+                    <td>2.0TB</td>
+                    <td>200GB</td>
+                    <td>未启用</td>
+                    <td>
+                        <span class="status_no"></span>
+                        <span class="status_con1">异常</span>
+                    </td>
+                    <td><input type="button" value="编辑" class="btn btn_small ns_edit" /> |
+                        <input type="button" value="详细" class="btn btn_small ns_more" />
+                    </td></label>
+                </tr>
+            </table>
+            <!--分页条-->
+            <div id="controls" class="controls">
+                <div id="perpage" class="perpage">
+                    <span>跳转到</span>
+                    <input type="text" name="gopage" value="1" class="gopage" id="gopage" /> 页
+                    <img src="__PUBLIC__/img/left_grey.png" alt="跳页" title="跳转到指定页" />
+                </div>
+                <div id="navigation" class="navigation">
+                    <img src="__PUBLIC__/img/first.gif" title="首页" alt="首页" onclick="sorter.move(-1,true)" />
+                    <img src="__PUBLIC__/img/previous.gif" title="上一页" alt="上一页" onclick="sorter.move(-1)" />
+                    <img src="__PUBLIC__/img/next.gif" title="下一页" alt="下一页" onclick="sorter.move(1)" />
+                    <img src="__PUBLIC__/img/last.gif" title="尾页" alt="尾页" onclick="sorter.move(1,true)" />
+                </div>
+                <div id="text" class="page">当前第 <span id="currentpage">1</span> 页 &nbsp; 共 <span id="pagelimit">1</span> 页</div>
+            </div>
+            <!--over 分页条-->
+            
+            <hr class="hr_bottom" />
+            
+            <div class="tright bbb">
+                <input type="button" value="新建" class="btn btn_big build_newns" />
+                <input type="button" value="删除" class="btn btn_big delns" />
+            </div>
+            
+            <!--单个共享目录详细信息-->
+            <div class="hide nsMore" id="nsMore">
+                <table class="margin10">
+                    <tr>
+                        <td width="80px">名称：</td>
+                        <td><span id="ns_name" name="ns_name">suibianquyige</span></td>
+                    </tr>
+                    <tr>
+                        <td>状态：</td>
+                        <td><span id="ns_status" name="ns_status">正常</span></td>
+                    </tr>
+                    <tr>
+                        <td>数据卷：</td>
+                        <td><span id="ns_vol" name="ns_vol">vol_1</span></td>
+                    </tr>
+                    <tr>
+                        <td>总空间：</td>
+                        <td><span id="ns_vol" name="ns_allspace">40GB</span></td>
+                    </tr>
+                    <tr>
+                        <td>可用空间：</td>
+                        <td><span id="ns_vol" name="ns_usablespace">20GB</span></td>
+                    </tr>
+                    <tr>
+                        <td>消冗：</td>
+                        <td><span id="ns_rongyu" name="ns_rongyu">已消冗</span></td>
+                    </tr>
+                    <tr>
+                        <td valign="top">共享模式：</td>
+                        <td><span class="green">GIFS:</span>XXX 
+                            <p class="linep"><span class="green">NFS:</span>挂载路径：<span id="loadRoad">XXX</span></p>
+                        </td>
+                    </tr>
+                </table>
+                <div class="tright bottom_bg">
+                    <input type="submit" value="确定" class="btn btn_small cancel" />
+                </div>
+            </div>
+            
+            <!--新建NAS共享对话框-->
+            <div class="hide new_ns" id="new_ns">
+                <form name="nsForm" id="nsForm" action="" method="post">
+                <table class="margin10">
+                    <!--<tr>
+                        <td width="80px">启用消冗：</td>
+                        <td><input type="checkbox" name="startXr" id="startXr" /></td>
+                    </tr>-->
+                    <tr>
+                        <td>名称：</td>
+                        <td><input type="text" value="" name="new_nasShare" id="new_nasShare" class="s_width2" /></td>
+                    </tr>
+                    <tr>
+                        <td>数据卷：</td>
+                        <td><select class="s_widths" name="data_vol" id="data_vol">
+                            <option value="0">data_volume</option>
+                            <option value="1">data_volume1</option>
+                            <option value="2">data_volume2</option>
+                        </select></td>
+                    </tr>
+                    <!--<tr>
+                        <td>描述：</td>
+                        <td><input type="text" class="s_width2" id="new_disc" name="new_disc" /></td>
+                    </tr>-->
+                </table><br />
+                <fieldset class="lightblue">
+                    <legend>共享方式</legend>
+                    <div class="newns_nav">
+                        <ul class="tab">
+                            <li class="gxway" onclick="sharewaySet(this,'NFSdiv')">
+                                <input type="checkbox" name="shareway" value="NFS" id="NFS" onclick="nasTabDis(this,'NFSdiv')" />NFS
+                            </li>
+                            <li class="gxway" onclick="sharewaySet(this,'SMBdiv')">
+                                <input type="checkbox" name="shareway" value="SMB" id="SMB" onclick="nasTabDis(this,'SMBdiv')" checked="checked" />SMB
+                            </li>
+                            <li class="gxway" onclick="sharewaySet(this,'FTPdiv')">
+                                <input type="checkbox" name="shareway" value="FTP" id="FTP" onclick="nasTabDis(this,'FTPdiv')" />FTP
+                            </li>
+                            <li class="gxway" onclick="sharewaySet(this,'RSYNCdiv')">
+                                <input type="checkbox" name="shareway" value="RSYNC" id="RSYNC" onclick="nasTabDis(this,'RSYNCdiv')" />RSYNC
+                            </li>
+                            <li class="gxway" onclick="sharewaySet(this,'WEBDAVdiv')">
+                                <input type="checkbox" name="shareway" value="WEBDAV" id="WEBDAV" onclick="nasTabDis(this,'WEBDAVdiv')" />WEBDAV
+                            </li>
+                        </ul>
+                        <div style="clear:both"></div>
+                        
+                        <div id="coverNFS" class="ns_cover"></div>
+                        <div id="NFSdiv" class="ns_model">
+                            <p class="ns_p">允许权限：</p>
+                            <div class="allow">
+                                <table class="nfstable" id="nfs_List" border="0">
+                                    <tr class="top">
+                                        <th width="5%"><input type="checkbox" value="all" name="nfs_check" id="nfsAll" onclick="All(this, 'nfschoice')" /></th>
+                                        <th>允许名称</th>
+                                        <th>权限</th>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" name="nfschoice" id="nfs_choice1" value="nfsUser1" onclick="Item(this,'nfs_check')" /></td>
+                                        <label for="nfs_choice1">
+                                        <td>
+                                            <input type="text" value="mygroup1" name="allowNameList[]" class="nobg_ipt" size="10" readonly />
+                                        </td>
+                                        <td>
+                                            <input type="text" value="rw" name="allowLimitList[]" class="nobg_ipt" size="3" readonly />
+                                        </td></label>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" name="nfschoice" id="nfs_choice2" value="nfsUser2" onclick="Item(this,'nfs_check')" /></td>
+                                        <label for="nfs_choice2">
+                                        <td>
+                                            <input type="text" value="mygroup2" name="allowNameList[]" class="nobg_ipt" size="10" readonly />
+                                        </td>
+                                        <td>
+                                            <input type="text" value="ro" name="allowLimitList[]" class="nobg_ipt" size="3" readonly />
+                                        </td></label>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="allowset"> 允许的IP字段、工作组名等:
+                                <input type="text" id="allowIP" name="allowIP" class="s_width180" />
+                                <p class="ptop5">读写权限：</p>
+                                <select name="allowlimit" id="allowlimit" class="s_width80">
+                                    <option value="rw">读写</option>
+                                    <option value="ro">只读</option>
+                                </select>
+                                <input type="button" value="更新" name="refreshNfs" class="fright btn btn_small" id="refreshNfs"  />
+                                <p class="allow_bt">
+                                    <input type="button" value="&lt;&lt;添加" name="addAllow" id="addAllow" class="fleft btn btn_small" onclick="addnfs('nfs_List','allowIP','allowlimit','nfs','allowNameList[]','allowLimitList[]')" />
+                                    <input type="button" value="删除&gt;&gt;" name="delAllow" id="delAllow" class="fright btn btn_small" onclick="delnfs('nfs_List','nfschoice')" />
+                                    
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div id="coverSMB" class="ns_cover"></div>
+                        <div id="SMBdiv" class="ns_model">
+                            <p class="ns_p">
+                                <input type="checkbox" name="nameless" id="nameless" value="nameless" onclick="checknameless(this,'namelw','smb_ulimit')" />
+                                <label for="nameless">允许匿名访问</label>&nbsp;&nbsp;&nbsp;
+                                <input type="checkbox" name="namelw" id="namelw" value="namelw" disabled="disabled" />
+                                <label for="namelw">匿名用户可写</label>
+                            </p>
+                            <table class="margin10">
+                                <tr>
+                                    <td width="95px"> 授权用户(组)：
+                                        <div id="smb_cUsers" class="cUser">
+                                            <div class="search">
+                                                <input type="text" placeholder="搜索" name="keySmb" id="keySmb" class="s_width80" />
+                                                <input type="button" class="nas_search" id="SMBsearch" title="搜索" />
+                                            </div>
+                                            <span>FFF</span>
+                                        </div>
+                                    </td>
+                                    <td width="140px"> 用户权限:
+                                        <p class="margin5">
+                                        <select name="smb_ulimit" id="smb_ulimit" class="margin10 fleft">
+                                            <option value="readonly">只读</option>
+                                            <option value="read_write">读写</option>
+                                        </select>
+                                        <input type="button" value="更新" name="refreshSmb" class="fright btn btn_small" id="refreshSmb"  /><br />
+                                        </p>
+                                        <p class="margin5">
+                                        <input type="button" value="&lt;&lt;添加" name="addsmb_copyU" class="fleft btn btn_small" id="addsmb_copyU" />
+                                        <input type="button" value="删除&gt;&gt;" name="delsmb_copyU" class="fright btn btn_small" id="delsmb_copyU" />
+                                        </p>
+                                    </td>
+                                    <td width="100px"> 用户(组):<br />
+                                        <div id="smb_cUser" class="cUser">
+                                            <div class="search">
+                                                <input type="text" placeholder="搜索" name="keyCSmb" id="keyCSmb" class="s_width80" />
+                                                <input type="button" class="nas_search" id="SMBCsearch" title="搜索" />
+                                            </div>
+                                            <span>ffff</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        
+                        <div id="coverFTP" class="ns_cover"></div>
+                        <div id="FTPdiv" class="ns_model">
+                            <table class="margin10">
+                            <!--<caption class="orange" style="margin:0 0 10px 0;text-align:left;">FTP配置</caption>-->
+                                <tr>
+                                    <td width="95px"> 授权用户(组)：
+                                        <div id="ftp_cUsers" class="cUser">
+                                            <div class="search">
+                                                <input type="text" placeholder="搜索" name="keyFtp" id="keyFtp" class="s_width80" />
+                                                <input type="button" class="nas_search" id="FTPsearch" title="搜索" />
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td width="140px"> 用户权限:
+                                        <p class="margin5">
+                                            <select name="ftp_ulimit" id="ftp_ulimit" class="margin10 fleft">
+                                                <option value="readonly">只读</option>
+                                                <option value="read_write">读写</option>
+                                            </select>
+                                            <input type="button" value="更新" name="refreshFtp" class="fright btn btn_small" id="refreshFtp"  />
+                                        </p>
+                                        <p class="margin5">
+                                            <input type="button" value="&lt;&lt;添加" name="addftp_copyU" class="fleft btn btn_small" id="addftp_copyU" />
+                                            <input type="button" value="删除&gt;&gt;" name="delftp_copyU" class="fright btn btn_small" id="delftp_copyU" />
+                                        </p>
+                                    </td>
+                                    <td width="100px"> 用户(组):<br />
+                                        <div id="ftp_cUser" class="cUser">
+                                            <div class="search">
+                                                <input type="text" placeholder="搜索" name="keyCFtp" id="keyCFtp" class="s_width80" />
+                                                <input type="button" class="nas_search" id="FTPCsearch" title="搜索" />
+                                            </div>
+                                            <span>ffff</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        
+                        <div id="coverRSYNC" class="ns_cover"></div>
+                        <div id="RSYNCdiv" class="ns_model">
+                            <p class="ns_p">目录权限：
+                                <select name="conlimit" id="conlimit">
+                                    <option value="0">目录权限一</option>
+                                    <option value="2">目录权限二</option>
+                                </select>
+                            </p>
+                            <table class="margin10">
+                                <tr>
+                                    <td width="100px">授权用户(组)：
+                                        <div id="rsync_cUsers" class="cUser">
+                                            <div class="search">
+                                                <input type="text" placeholder="搜索" name="keyRsync" id="keyRsync" class="s_width80" />
+                                                <input type="button" class="nas_search" id="RSYNCsearch" title="搜索" />
+                                            </div>
+                                            <span>ddddd</span>
+                                        </div>
+                                    </td>
+                                    <td width="140px">
+                                        <br /><br /><!--用户权限:
+                                        <p class="margin5">
+                                            <select name="webdav_ulimit" id="rsync_ulimit" class="margin10 fleft">
+                                                <option value="readonly">只读</option>
+                                                <option value="read_write">读写</option>
+                                            </select>
+                                            <input type="button" value="更新" name="refreshRsync" class="fright btn btn_small" id="refreshRsync"  />
+                                        </p>-->
+                                        <p class="margin5">
+                                            <input type="button" value="&lt;&lt;添加" name="addrsync_copyU" class="fleft btn btn_small" id="addrsync_copyU" />
+                                            <input type="button" value="删除&gt;&gt;" name="delrsync_copyU" class="fright btn btn_small" id="delrsync_copyU" />
+                                        </p>
+                                    </td>
+                                    <td width="100px">用户(组):<br />
+                                        <div id="rsync_cUser" class="cUser">
+                                            <div class="search">
+                                                <input type="text" placeholder="搜索" name="keyCRsync" id="keyCRsync" class="s_width80" />
+                                                <input type="button" class="nas_search" id="RSYNCCsearch" title="搜索" />
+                                            </div>
+                                            <span>ffff</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        
+                        <div id="coverWEBDAV" class="ns_cover"></div>
+                        <div id="WEBDAVdiv" class="ns_model">
+                            <p class="ns_p">目录权限：
+                                <select name="conlimitW" id="conlimitW">
+                                    <option value="0">目录权限一</option>
+                                    <option value="2">目录权限二</option>
+                                </select>
+                            </p>
+                            <table class="margin10">
+                                <tr>
+                                    <td width="100px">授权用户(组)：
+                                        <div id="webdav_cUsers" class="cUser">
+                                            <div class="search">
+                                                <input type="text" placeholder="搜索" name="keyWebdav" id="keyWebdav" class="s_width80" />
+                                                <input type="button" class="nas_search" id="WEBDAVsearch" title="搜索" />
+                                            </div>
+                                            <span>ddddd</span>
+                                        </div>
+                                    </td>
+                                    <td width="140px">
+                                        <br /><br /><!--用户权限:
+                                        <p class="margin5">
+                                            <select name="webdav_ulimit" id="webdav_ulimit" class="margin10 fleft">
+                                                <option value="readonly">只读</option>
+                                                <option value="read_write">读写</option>
+                                            </select>
+                                            <input type="button" value="更新" name="refreshWebdav" class="fright btn btn_small" id="refreshWebdav"  />
+                                        </p>-->
+                                        <p class="margin5">
+                                        <input type="button" value="&lt;&lt;添加" name="addwebdav_copyU" class="fleft btn btn_small" id="addwebdav_copyU" />
+                                        <input type="button" value="删除&gt;&gt;" name="delwebdav_copyU" class="fright btn btn_small" id="delwebdav_copyU" />
+                                    </td>
+                                    <td width="100px">用户(组):<br />
+                                        <div id="webdav_cUser" class="cUser">
+                                            <div class="search">
+                                                <input type="text" placeholder="搜索" name="keyCWebdav" id="keyCWebdav" class="s_width80" />
+                                                <input type="button" class="nas_search" id="WEBDAVCsearch" title="搜索" />
+                                            </div>
+                                            <span>ffff</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </fieldset>
+                <div class="tright bottom_bg">
+                    <input type="submit" value="确定" class="btn btn_small" />
+                    <input type="button" value="取消" class="btn btn_small cancel" />
+                </div>
+                </form>
+            </div>
+            
+            <!--编辑NAS共享对话框-->
+            <div class="hide edit_ns" id="edit_ns">
+                <form action="" name="editNsForm" id="editNsForm" method="post">
+                <table class="margin10">
+                    <tr>
+                        <td>名称：</td>
+                        <td><input type="text" value="" name="edit_nasShare" id="edit_nasShare" class="s_width2" readonly /></td>
+                    </tr>
+                    <tr>
+                        <td>共享目录：</td>
+                        <td><select class="s_widths" name="edit_share" id="edit_share">
+                            <option value="0">普通共享</option>
+                            <option value="1">消冗共享</option>
+                        </select></td>
+                    </tr>
+                    <tr>
+                        <td>数据卷：</td>
+                        <td>
+                            <select class="s_widths" name="edit_datavol" id="edit_datavol">
+                                <option value="0">data_volume</option>
+                                <option value="1">data_volume1</option>
+                                <option value="2">data_volume2</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <!--<tr>
+                        <td>描述：</td>
+                        <td><input type="text" class="s_width2" id="edit_disc" name="edit_disc" /></td>
+                    </tr>-->
+                </table><br />
+                
+                <fieldset class="lightblue">
+                    <legend>共享方式</legend>
+                    <div class="newns_nav">
+                        <ul class="tab">
+                            <li class="gxway" onclick="sharewaySet(this,'editNFSdiv')">
+                                <input type="checkbox" name="editshareway" value="NFS" id="editNFS" onclick="nasTabDis(this,'editNFSdiv')" />NFS
+                            </li>
+                            <li class="gxway" onclick="sharewaySet(this,'editSMBdiv')">
+                                <input type="checkbox" name="editshareway" value="SMB" id="editSMB" onclick="nasTabDis(this,'editSMBdiv')" />SMB
+                            </li>
+                            <li class="gxway" onclick="sharewaySet(this,'editFTPdiv')">
+                                <input type="checkbox" name="editshareway" value="FTP" id="editFTP" onclick="nasTabDis(this,'editFTPdiv')" checked="checked" />FTP
+                            </li>
+                            <li class="gxway" onclick="sharewaySet(this,'editRSYNCdiv')">
+                                <input type="checkbox" name="editshareway" value="RSYNC" id="editRSYNC" onclick="nasTabDis(this,'editRSYNCdiv')" />RSYNC
+                            </li>
+                            <li class="gxway" onclick="sharewaySet(this,'editWEBDAVdiv')">
+                                <input type="checkbox" name="editshareway" value="WEBDAV" id="editWEBDAV" onclick="nasTabDis(this,'editWEBDAVdiv')" />WEBDAV
+                            </li>
+                        </ul>
+                        <div style="clear:both"></div>
+                        
+                        <div id="coverEFTP" class="ns_cover"></div>
+                        <div id="editFTPdiv" class="ns_model">
+                            <table class="margin10">
+                                <tr>
+                                    <td width="108px"> 授权用户(组)：
+                                        <div id="editftp_cUsers" class="cUser">
+                                            <div class="search">
+                                                <input type="text" placeholder="搜索" name="editkeyFtp" id="editkeyFtp" class="s_width80" />
+                                                <input type="button" class="nas_search" id="editFTPsearch" title="搜索" />
+                                            </div>
+                                            <span>ddddd</span>
+                                        </div>
+                                    </td>
+                                    <td width="145px"> 用户权限:
+                                        <p class="margin5">
+                                            <select name="editftp_ulimit" id="editftp_ulimit" class="margin10 fleft">
+                                                <option value="readonly">只读</option>
+                                                <option value="read_write">读写</option>
+                                            </select>
+                                            <input type="button" value="更新" name="editrefreshFtp" class="fright btn btn_small" id="editrefreshFtp"  />
+                                        </p>
+                                        <p class="margin5">
+                                            <input type="button" value="&lt;&lt;添加" name="editaddftp_copyU" class="fleft btn btn_small" id="editaddftp_copyU" />
+                                            <input type="button" value="删除&gt;&gt;" name="editdelftp_copyU" class="fright btn btn_small" id="editdelftp_copyU" />
+                                        </p>
+                                    </td>
+                                    <td>用户(组):<br />
+                                        <div id="editftp_cUser" class="cUser">
+                                            <div class="search">
+                                                <input type="text" placeholder="搜索" name="editkeyCFtp" id="editkeyCFtp" class="s_width80" />
+                                                <input type="button" class="nas_search" id="editFTPCsearch" title="搜索" />
+                                            </div>
+                                            <span>ffff</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        
+                        <div id="coverENFS" class="ns_cover"></div>
+                        <div id="editNFSdiv" class="ns_model">
+                            <p class="ns_p">允许权限：</p>
+                            <div class="allow">
+                                <table class="nfstable" id="editnfs_List" border="0">
+                                    <tr class="top">
+                                        <th width="5%"><input type="checkbox" value="all" name="editnfs_check" id="editnfsAll" onclick="All(this, 'editnfschoice')" /></th>
+                                        <th>允许名称</th>
+                                        <th>权限</th>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" name="editnfschoice" value="nfsUser1" id="editnfs_choice1" onclick="Item(this,'editnfs_check')" /></td>
+                                        <label for="editnfs_choice1">
+                                        <td>
+                                            <input type="text" value="mygroup1" name="EallowNameList[]" size="10" class="nobg_ipt" readonly />
+                                        </td>
+                                        <td>
+                                            <input type="text" value="ro" name="EallowLimitList[]" class="nobg_ipt" size="3" readonly />
+                                        </td></label>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" name="editnfschoice" id="editnfs_choice2" value="nfsUser2" onclick="Item(this,'editnfs_check')" /></td>
+                                        <label for="editnfs_choice2">
+                                        <td>
+                                            <input type="text" value="mygroup1" name="EallowNameList[]" size="10" class="nobg_ipt" readonly />
+                                        </td>
+                                        <td>
+                                            <input type="text" value="rw" name="EallowLimitList[]" class="nobg_ipt" size="3" readonly />
+                                        </td></label>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="allowset">
+                                <p class="ns_p">允许的IP字段、工作组名等:</p>
+                                <input type="text" id="editallowIP" name="editllowIP" class="s_width180" />
+                                <p class="ptop5">读写权限：</p>
+                                <select name="editallowlimit" id="editallowlimit" class="s_width80">
+                                    <option value="rw">读写</option>
+                                    <option value="ro">只读</option>
+                                </select>
+                                <input type="button" value="更新" name="editrefreshNfs" class="fright btn btn_small" id="editrefreshNfs"  />
+                                <p class="allow_bt">
+                                    <input type="button" value="&lt;&lt;添加" name="editddAllow" id="editaddAllow" class="fleft btn btn_small" onclick="addnfs('editnfs_List','editallowIP','editallowlimit','editnfs','EallowNameList[]','EallowLimitList[]')")" />
+                                    <input type="button" value="删除&gt;&gt;" name="editdelAllow" id="editdelAllow" class="fright btn btn_small" onclick="delnfs('editnfs_List','editnfschoice')" />
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div id="coverEESMB" class="ns_cover"></div>
+                        <div id="editSMBdiv" class="ns_model">
+                            <p class="ns_p" style="margin-bottom:10px">
+                                <input type="checkbox" name="editnameless" id="editnameless" value="nameless" onclick="checknameless(this,'editnamelw','editsmb_ulimit')" />
+                                <label for="editnameless">允许匿名访问</label>&nbsp;&nbsp;&nbsp;
+                                <input type="checkbox" name="editnamelw" id="editnamelw" value="namelw" disabled="disabled" />
+                                <label for="editnamelw">匿名用户可写</label>
+                            </p>
+                            <table class="margin10">
+                                <tr>
+                                    <td width="108px">授权用户(组)：
+                                        <div id="editsmb_cUsers" class="cUser">
+                                            <div class="search">
+                                                <input type="text" placeholder="搜索" name="editkeySmb" id="editkeySmb" class="s_width80" />
+                                                <input type="button" class="nas_search" id="editSMBsearch" title="搜索" />
+                                            </div>
+                                            <span>ddddd</span>
+                                        </div>
+                                    </td>
+                                    <td width="145px">用户权限:
+                                        <p class="margin5">
+                                            <select name="editsmb_ulimit" id="editsmb_ulimit" class="margin10 fleft">
+                                                <option value="readonly">只读</option>
+                                                <option value="read_write">读写</option>
+                                            </select>
+                                            <input type="button" value="更新" name="editrefreshSmb" class="fright btn btn_small" id="editrefreshSmb"  />
+                                        </p>
+                                        <p class="margin5">
+                                            <input type="button" value="&lt;&lt;添加" name="editaddsmb_copyU" class="fleft btn btn_small" id="editaddsmb_copyU" />
+                                            <input type="button" value="删除&gt;&gt;" name="editdelsmb_copyU" class="fright btn btn_small" id="editdelsmb_copyU" />
+                                        </p>
+                                    </td>
+                                    <td>用户(组):<br />
+                                        <div id="editsmb_cUser" class="cUser">
+                                            <div class="search">
+                                                <input type="text" placeholder="搜索" name="editkeyCSmb" id="editkeyCSmb" class="s_width80" />
+                                                <input type="button" class="nas_search" id="editSMBCsearch" title="搜索" />
+                                            </div>
+                                            <span>ffff</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        
+                        <div id="coverERSYNC" class="ns_cover"></div>
+                        <div id="editRSYNCdiv" class="ns_model">
+                            <p class="ns_p">目录权限：
+                                <select name="editconlimit" id="editconlimit">
+                                    <option value="0">目录权限一</option>
+                                    <option value="2">目录权限二</option>
+                                </select>
+                            </p>
+                            <table class="margin10">
+                                <tr>
+                                    <td width="108px">授权用户(组)：
+                                        <div id="editrsync_cUsers" class="cUser">
+                                            <div class="search">
+                                                <input type="text" placeholder="搜索" name="editkeyRsync" id="editkeyRsync" class="s_width80" />
+                                                <input type="button" class="nas_search" id="editRSYNCsearch" title="搜索" />
+                                            </div>
+                                            <span>ddddd</span>
+                                        </div>
+                                    </td>
+                                    <td width="145px">
+                                        <br /><br /><!--用户权限:
+                                        <p class="margin5">
+                                            <select name="editrsync_ulimit" id="editrsync_ulimit" class="margin10 fleft">
+                                                <option value="readonly">只读</option>
+                                                <option value="read_write">读写</option>
+                                            </select>
+                                            <input type="button" value="更新" name="editrefreshRsync" class="fright btn btn_small" id="editrefreshRsync"  />
+                                        </p>-->
+                                        <p class="margin5">
+                                            <input type="button" value="&lt;&lt;添加" name="editaddrsync_copyU" class="fleft btn btn_small" id="editaddrsync_copyU" />
+                                            <input type="button" value="删除&gt;&gt;" name="editdelrsync_copyU2" class="fright btn btn_small" id="editdelrsync_copyU" />
+                                        </p>
+                                    </td>
+                                    <td>用户(组):<br />
+                                        <div id="editrsync_cUser" class="cUser">
+                                            <div class="search">
+                                                <input type="text" placeholder="搜索" name="editkeyCRsync" id="editkeyCRsync" class="s_width80" />
+                                                <input type="button" class="nas_search" id="editRSYNCCsearch" title="搜索" />
+                                            </div>
+                                            <span>ffff</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        
+                        <div id="coverEWEVDAV" class="ns_cover"></div>
+                        <div id="editWEBDAVdiv" class="ns_model">
+                            <p class="ns_p">目录权限：
+                                <select name="editconlimitW" id="editconlimitW">
+                                    <option value="0">目录权限一</option>
+                                    <option value="2">目录权限二</option>
+                                </select>
+                            </p>
+                            <table class="margin10">
+                                <tr>
+                                    <td width="108px">授权用户(组)：
+                                        <div id="editwebdav_cUsers" class="cUser">
+                                            <div class="search">
+                                                <input type="text" placeholder="搜索" name="editkeyWebdav" id="editkeyWebdav" class="s_width80" />
+                                                <input type="button" class="nas_search" id="editWEBDAVsearch" title="搜索" />
+                                            </div>
+                                            <span>ddddd</span>
+                                        </div>
+                                    </td>
+                                    <td width="145px">
+                                        <br /><br /><!--用户权限:
+                                        <p class="margin5">
+                                            <select name="editrsync_ulimit" id="editrsync_ulimit" class="margin10 fleft">
+                                                <option value="readonly">只读</option>
+                                                <option value="read_write">读写</option>
+                                            </select>
+                                            <input type="button" value="更新" name="editrefreshWebdav" class="fright btn btn_small" id="editrefreshWebdav"  />
+                                        </p>-->
+                                        <p class="margin5">
+                                            <input type="button" value="&lt;&lt;添加" name="editaddwebdav_copyU" class="fleft btn btn_small" id="editaddwebdav_copyU" />
+                                            <input type="button" value="删除&gt;&gt;" name="editdelwebdav_copyU" class="fright btn btn_small" id="editdelwebdav_copyU" />
+                                        </p>
+                                    </td>
+                                    <td>用户(组):<br />
+                                        <div id="editwebdav_cUser" class="cUser">
+                                            <div class="search">
+                                                <input type="text" placeholder="搜索" name="editkeyCWebdav" id="editkeyCWebdav" class="s_width80" />
+                                                <input type="button" class="nas_search" id="editWEBDAVCsearch" title="搜索" />
+                                            </div>
+                                            <span>ffff</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </fieldset>
+                    <div class="tright bottom_bg">
+                        <input type="submit" value="确定" class="btn btn_small" />
+                        <input type="button" value="取消" class="btn btn_small cancel" />
+                    </div>
+                </form>
+            </div>
+            
+            <!--删除NAS共享对话框-->
+            <div id="del_ns" class="del_ns hide">
+                <form id="delNsForm" name="delNsForm" action="" method="post">
+                    <div class="del_div1">
+                        <table>
+                            <tr><td class="vtop" width="90px;"><img src="__PUBLIC__/img/warning.png" alt="警告" /></td>
+                            <td>&nbsp;确定删除共享目录:<span class="del_list" id="delNs_list"></span></td></tr>
+                        </table>
+                    </div>
+                    <div class="tright bottom_bg">
+                        <input type="submit" value="确定" class="btn btn_small" />
+                        <input type="button" value="取消" class="btn btn_small cancel" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>

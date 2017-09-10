@@ -1,0 +1,994 @@
+<include file="Public:file"/>
+<body class="rightbody">
+    <div class="right_title" style="">
+        <span>首页 </span> &raquo; 消冗文件系统管理  &raquo; 配置管理
+    </div>
+    <div class="right_main">
+        <div class="right_fortable">
+            <hr class="hr_top" />
+            
+			<!--页面操作成功与否提示-->
+            <div class="publicNotice pN_error" id="pN_info"></div>
+            <!--页面操作成功与否提示 over-->
+			<input type="hidden" value="{$fbsnode}" id ="fbsnode"/>
+			<input type="hidden" value="{$system}" id ="systemType"/>
+            <table class="table1" id="serviceTable">
+                <tr class="top">
+                    <th width="5%"><input type="checkbox" value="checkall" name="ddfs" class="chek" onclick="All(this, 'choice')" /></th>
+                    <th width="28%">挂载点</th>
+                    <th width="8%">系统容量</th>
+                    <th width="10%">消冗前数据量</th>
+                    <th width="10%">消冗后数据量</th>
+                    <th width="8%">消冗比</th>
+                    <th width="8%">剩余容量</th>
+                    <!--<th width="10">应用</th>-->
+                    <th width="8%">状态</th>
+                    <th width="10%" class="hide">路径</th>
+                    <th width="15%">操作</th>
+                </tr>
+                <volist name="ddfs_data" id="vo" key="k">
+                    <tr>
+                        <td>
+                            <input type="checkbox" name="choice" id="choice{$k}" value="1" class="chek" onclick="Item(this, 'ddfs')" <if condition="$vo.state eq mounted || $vo.state eq readonly || $vo.state eq nospace|| $vo.state eq unknown || $vo.nfsState neq noPath">disabled</if> />
+                        </td>
+                        <label for="choice{$k}">
+                        <td class="mount_point bbfs_td" id="mount_point{$k}" title="{$vo[mountPoint]}" >{$vo[mountPoint]}</td>
+                        <td>{$vo[capacity]}</td>
+                        <td>{$vo[total]}</td>
+                        <td>{$vo[real]}</td>
+                        <td>{$vo[ratio]}x</td>
+                        <td>{$vo[left]}</td>
+                        <!--<td>{$vo[usage]}</td>-->
+                        <td class="tleft">
+                            <if condition="$vo[state] eq mounted">
+	                            <span class="status_ok"></span>
+	                        </if>
+	                        <if condition="$vo[state] eq umounted">
+	                            <span class="status_no"></span>
+	                        </if>
+	                        <if condition="$vo[state] eq error">
+                                <span class="status_warn"></span>
+                            </if>
+                            <if condition="$vo[state] eq unknown">
+                                <span class="status_unknown"></span>
+                            </if>
+                            <if condition="$vo[state] eq readonly">
+                                <span class="status_warn"></span>
+                            </if>
+                            <if condition="$vo[state] eq nospace">
+                                <span class="status_warn"></span>
+                            </if>
+                            <span class="status_con">{$vo[state]}</span>
+                        </td>
+                        <td id="json_recv{$k}" class="hide">{$vo.json_recv}</td>
+                        <td id="pathInfo{$k}" class="hide allDataPath">
+                            <volist name="vo[dataPath]" id="v" key="u">
+                                 <span class="spanPath{$k}">{$v}</span>
+                            </volist>
+                        </td>
+                        <td>
+                            <input type="hidden" name="ddfsconfig" class="ddfsconfig" id="ddfsconfig{$k}" value="{$vo.configPath}"/>
+                            <input type="hidden" name="firstDataPath" class="firstDataPath" id="firstDataPath{$k}" value="{$vo.firstDataPath}"/>
+                            <if condition="$vo.state eq umounted" >
+                                <input type="button" name="guaqi" value="挂载" class="btn btn_small" onclick="mount({$k})" />
+                            <elseif condition="$vo.state eq mounted" />
+                                <input type="button" name="guaqi" value="卸载" class="btn btn_small" onclick="umount({$k})" <if condition = "$vo.nfsState eq running">disabled</if> />
+                            <elseif condition="$vo.state eq error" />
+                                <input type="button" name="guaqi" value="修复" class="btn btn_small" onclick="fix({$k})" />
+                            <elseif condition="$vo.state eq unknown" />
+                                <input type="button" name="guaqi" value="修复" class="btn btn_small" disabled />
+                            <elseif condition="$vo.state eq nospace" />
+                                <input type="button" name="guaqi" value="卸载" class="btn btn_small" onclick="umount({$k})" <if condition = "$vo.nfsState eq running">disabled</if> />
+                            <elseif condition="$vo.state eq readonly" />
+                                <input type="button" name="guaqi" value="卸载" class="btn btn_small" onclick="umount({$k})" <if condition = "$vo.nfsState eq running">disabled</if> />
+                            </if>
+                            <input type="button" value="编辑" class="btn btn_small" onclick="edit_Ddfs({$k})" <if condition="$vo.state eq unknown || $vo.state eq error || $vo.state eq readonly">disabled</if> />
+                            <input type="button" name="ddfs_detail" value="查看" class="btn btn_small" onclick="detail_Ddfs({$k})"/>
+                        </td></label>
+                    </tr>
+                </volist>
+            </table>
+            <div class="table_bottom"></div>
+            <!--分页条-->
+            <!--<div id="controls" class="controls">
+                <div id="perpage" class="perpage">
+                    <span>跳转到</span>
+                    <input type="text" name="gopage" value="{$jump_page}" class="gopage" id="gopage" /> 页
+                    <a href="#" id="jump_img"><img src="__PUBLIC__/img/left_grey.png" alt="跳页" title="跳转到指定页" onclick="jumpPage('Ddfs')"/></a>
+                </div>
+                <include file="Public:page" />
+            </div>-->
+            <!--over 分页条-->
+            
+            <hr class="hr_bottom" />
+            <div class="tright bbb">
+                <input type="button" value="新建挂载点" class="btn btn_big" onclick = "addDdfsnode()" />
+                <input type="button" value="删除挂载点" class="btn btn_big delddfs" />
+            </div>
+            
+            <!--新建挂载点-->
+            <div class="hide new_ddfs" id="new_ddfs" style="width:570px;max-height:550px">
+            <form name="newddfsForm" id="newddfsForm" action="" method="post">
+                <table class="margin10">
+                    <tr>
+                        <td width="120px">文件系统类型：</td>
+                        <td>
+                          <select name="mountWay" id="mountWay" class="s_width250s" onchange="mountDdfs('mountWay','superBtn','superDiv');clearDataPath()">
+                            <option value="ddfs" <if condition = "$system eq ddfs">selected</if> >ddfs</option>
+                            <option value="adfs" <if condition = "$system eq adfs">selected</if> >adfs</option>
+                          </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="120px">挂载点路径:</td>
+                        <td class="fileset">
+                            <input type="text" name="mountPoint" id="mountPoint" class="s_width250" />
+                            <span id="adfsTip" class="gray">根据数据路径自动生成</span>
+                        <!--
+                            <input type="file" value="浏览" name="mountPointFile" id="mountPointFile" class="ifile" onchange="mountPoint.value = this.value" />
+                            <input type="text" name="mountPoint" id="mountPoint" class="s_width250" readonly />
+                            <input type="button" value="浏览" onclick="mountPointFile.click()" class="btn btn_small" />
+                        -->
+                        </td>
+                    </tr>
+                    <!--<tr>
+                        <td>数据存储路径:</td>
+                        <td>
+                            <input type="file" value="浏览" name="dataPathFile" id="dataPathFile" class="ifile" onchange="dataPath.value = this.value" />
+                            <input type="text" name="dataPath" id="dataPath" class="s_width250" readonly />
+                            <input type="button" value="浏览" onclick="dataPathFile.click()" class="btn btn_small" />
+                            <input type="button" value="添加" name="addRoad" class="btn btn_small" />
+                            
+                        </td>
+                    </tr>-->
+                </table>
+                <div class="yu_shuju">
+                    <p class="archive_pnew">数据存储路径:</p>
+                    <div class="fleft">
+                        <table id="dataPathTab" class="archive_table" > 
+                            <tr>
+                                <td>
+                                    <input type="text" name="dataPath[]" id="dataPath" class="s_width250" onkeyup="pathHand();dpFirstVal('mountPoint');" />
+                                </td>
+                                <td>
+                                    <img src="__PUBLIC__/img/clear.gif" class="img_delete1" align="" title="删除数据存储路径" onclick="Ddfsdelete_row()"/><br>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="preRoad_content1">
+                        <input type="button" value="添加路径" class="btn btn_middle" title="添加路径" onclick="Ddfsbuild_row()"/>
+                    </div>
+                </div>
+                
+                <span class="gray">———</span>
+                <input type="button" value="高级选项" name="super" id="superBtn" class="btn btn_middle" onclick="showSuper(this,'superDiv')" />
+                <span class="gray">—————————————————————————————————</span>
+                <!--高级选项部分-->
+                <div id="superDiv">
+                    <table class="margin10">
+                        <tr>
+                            <td width="120px">元数据存储路径:</td>
+                            <td>
+                                <input type="text" name="metaPath" id="metaPath" class="s_width250" />
+	                            <!--<input type="file" value="浏览" name="metaPathFile" id="metaPathFile" class="ifile" onchange="metaPath.value = this.value" />
+	                            <input type="text" name="metaPath" id="metaPath" class="s_width250" readonly />
+	                            <input type="button" value="浏览" onclick="metaPathFile.click()" class="btn btn_small" />
+							     -->
+							</td>
+                        </tr>
+                        <tr>
+                            <td>数据索引存储路径:</td>
+                            <td>
+	                            <input type="text" name="mapPath" id="mapPath" class="s_width250" />
+	                            <!--<input type="file" value="浏览" name="mapPathFile" id="mapPathFile" class="ifile" onchange="mapPath.value = this.value" />
+	                            <input type="text" name="mapPath" id="mapPath" class="s_width250" readonly />
+	                            <input type="button" value="浏览" onclick="mapPathFile.click()" class="btn btn_small" />-->
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>二级块索引路径:</td>
+                            <td>
+	                            <input type="text" name="biPath" id="biPath" class="s_width250" />
+	                            <!--<input type="file" value="浏览" name="biPathFile" id="biPathFile" class="ifile" onchange="biPath.value = this.value" />
+	                            <input type="text" name="biPath" id="biPath" class="s_width250" readonly />
+	                            <input type="button" value="浏览" onclick="biPathFile.click()" class="btn btn_small" />-->
+                            </td>
+                        </tr>
+                    </table>
+                    
+                    <!--分级索引-->
+                    <fieldset class="lightblue_pww mtop10 hide">
+                        <legend class="orange">分级索引</legend>
+                        <table class="new_margin10">
+                            <tr>
+                                <td width="78px">桶数量：</td>
+                                <td width="100px">
+                                    <input type="text" name="bucketCount" id="bucketCount" class="s_width30" value="192"/>
+                                    <span class="gray">MB</span>
+                                </td>
+                                <td width="110px">最小预留空间：</td>
+                                <td width="107px">
+                                    <input type="text" name="minSpace" id="minSpace" class="s_width30" value="10" title="最小预留空间最新为10G"/>
+                                    <span class="gray">GB</span>
+                                </td>
+                                <td width="90px">块索引级别:</td>
+                                <td>
+                                    <select name="fileTypeCount" id="fileTypeCount" class="s_width30 ddfsel">
+                                        <option value="1">1</option>
+                                        <option value="4">4</option>
+                                        <option value="8">8</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </table>
+                    </fieldset>
+                    
+                    <!--流水线参数-->
+                    <fieldset class="lightblue_pww mtop10 hide">
+                        <legend class="orange">流水线参数</legend>
+                        <table class="new_margin10">
+                            <tr>
+                                <td width="75px">block大小:</td>
+                                <td width="60px">
+                                    <select name="blockSize" id="blockSize" class="ddfsel">
+                                        <option value="1">1M</option>
+                                        <option value="4">4M</option>
+                                        <option value="8">8M</option>
+                                        <option value="16" selected="selected">16M</option>
+                                        <option value="64">64M</option>
+                                    </select>
+                                </td>
+                                <td width="75px">chunk大小:</td>
+                                <td width="70px">
+                                    <select name="chunkSize" id="chunkSize" class="ddfsel">
+                                        <option value="32">1*32K</option>
+                                        <option value="64">2*32K</option>
+                                        <option value="96">3*32K</option>
+                                        <option value="128">4*32K</option>
+                                    </select>
+                                </td>
+                                <!--<td width="75px">字节级消冗:</td>
+                                <td width="60px">
+                                    <select name="byteDedup" id="byteDedup" class="s_width30 ddfsel">
+                                        <option value="3">3</option>
+                                    </select>
+                                </td>-->
+                                <td width="65px">哈希方法:</td>
+                                <td  width="65px">
+                                    <select name="hashType" id="hashType" class="s_width30 ddfsel">
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                    </select>
+                                </td>
+                                <td width="65px">压缩算法:</td>
+                                <td>
+                                    <select name="compressType" id="compressType" class="s_width30 ddfsel">
+                                        <option value="0">0</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3" selected="selected">3</option>
+                                        <option value="4">4</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>消冗选项:</td>
+                                <td>
+                                    <select name="dedupOption" id="dedupOption" class="s_width30 ddfsel">
+                                        <option value="0">0</option>
+                                        <option value="1" selected="selected">1</option>
+                                    </select>
+                                </td>
+                                <td>crc校验:</td>
+                                <td>
+                                    <select name="crcOption" id="crcOption" class="s_width30 ddfsel">
+                                        <option value="0">0</option>
+                                        <option value="1" selected="selected">1</option>
+                                        <option value="2">2</option>
+                                    </select>
+                                </td>
+                                <td  width="75px">字节级比较:</td>
+                                <td>
+                                    <select name="byteCmpOption" id="byteCmpOption" class="s_width30 ddfsel">
+                                        <option value="0">0</option>
+                                        <option value="1">1</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </table>
+                    </fieldset>
+                    
+                    <!--流水线运行参数-->
+                    <fieldset class="lightblue_pww mtop10 hide">
+                        <legend class="orange">流水线运行参数</legend>
+                        <table class="new_margin10">
+                            <tr>
+                                <td width="75px">cpu数目:</td>
+                                <td width="90px">
+                                    <select name="dplCpuNum" id="dplCpuNum" class="s_width30 ddfsel">
+                                        <option value="0">0</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                    </select>
+                                </td>
+                                <td width="45px">超时:</td>
+                                <td width="90px">
+                                    <select name="dplTimeOutSec" id="dplTimeOutSec" class="s_width30 ddfsel">
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                    </select>
+                                </td>
+                                <td width="45px">缓存:</td>
+                                <td width="80px">
+                                    <select name="dplCapacity" id="dplCapacity" class="s_width30 ddfsel">
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4" selected>4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                    </select>
+                                </td>
+                                <td width="63px">读模式:</td>
+                                <td>
+                                    <select name="dplReadMode" id="dplReadMode" class="s_width30">
+                                        <option value="0">0</option>
+                                        <option value="1">1</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </table>
+                    </fieldset>
+                    
+                    <!--文件系统设置-->
+                    <fieldset class="lightblue_pww mtop10 hide">
+                        <legend class="orange">文件系统设置</legend>
+                        <table class="new_margin10">
+                            <tr>
+                                <td width="78px">桶数量:</td>
+                                <td width="80px">
+                                    <input type="text" name="fsBucketCount" id="fsBucketCount" class="s_width30" value="256"/>
+                                    <span class="gray">MB</span>
+                                </td>
+                                <td width="130px">文件延迟关闭时间:</td>
+                                <td width="110px">
+                                    <input type="text" name="delayedCloseTime" id="delayedCloseTime" class="s_width30" value="0"/>
+                                    <span class="gray">秒</span>
+                                </td>
+                                <!--<td width="100px">预读窗口大小:</td>
+                                <td>
+                                    <input type="text" name="raStrategy" id="raStrategy" class="s_width30" value="8192"/>
+                                    <span class="gray">KB</span>
+                                </td>-->
+                                <td width="90px">预读chunk数:</td>
+                                <td>
+                                    <input type="text" name="raChunkCnt" id="raChunkCnt" class="s_width30" value="8"/>
+                                </td>
+                            </tr>
+                        </table>
+                        <table class="new_margin10">
+                            <tr>
+                                <td width="75px">预读算法:</td>
+                                <td width="85px">
+                                    <select name="raStrategy" id="raStrategy" class="s_width30new ddfsel">
+                                        <option value="0">0</option>
+                                        <option value="1">1</option>
+                                        <option value="2" selected>2</option>
+                                    </select>
+                                </td>
+                                <td width="100px">内存映射大小:</td>
+                                <td width="90px">
+                                    <input type="text" name="mmapSize" id="mmapSize" class="s_width30" value="1024"/>
+                                    <span class="gray">MB</span>
+                                </td>
+                                <td width="138px">最大延迟关闭文件数:</td>
+                                <td>
+                                    <input type="text" name="maxDelayedCloseNum" id="maxDelayedCloseNum" class="s_width30" value="100"/>
+                                </td>
+                            </tr>
+                        </table>
+                    </fieldset>
+                </div>
+                
+                <div class="tright bottom_bg">
+                    <input type="button" value="确定" class="btn btn_small" onclick="createDdfs()"/>
+                    <input type="button" value="取消" class="btn btn_small cancel" />
+                </div>
+            </form>
+            </div>
+            
+            <!--编辑挂载点-->
+            <div class="hide edit_ddfs" id="edit_ddfs" style="width:570px;max-height:550px">
+            <form name="editddfsForm" id="editddfsForm" action="" method="post">
+                <input type="hidden" name="configPath" value="" id="editddfs_hid"/>
+                <table class="margin10">
+                    <tr>
+                        <td width="120px">文件系统类型：</td>
+                        <td>
+                          <select name="mountWay" id="e_mountWay" class="s_width250s" disabled>
+                            <option value="ddfs" <if condition = "$system eq ddfs">selected</if> >ddfs</option>
+                            <option value="adfs" <if condition = "$system eq adfs">selected</if> >adfs</option>
+                          </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="120px">挂载点路径:</td>
+                        <td>
+                            <input type="text" name="mountPoint" id="e_mountPoint" class="s_width250"  disabled/>
+                            <!--<input type="file" value="浏览" name="e_mountPointFile" id="e_mountPointFile" class="ifile" onchange="e_mountPoint.value = this.value" />
+                            <input type="text" name="e_mountPoint" id="e_mountPoint" class="s_width250" readonly />
+                            <input type="button" value="浏览" onclick="e_mountPointFile.click()" class="btn btn_small" />
+                        --></td>
+                    </tr>
+                    <!--<tr>
+                        <td>数据存储路径:</td>
+                        <td>
+                            <input type="text" name="e_dataPath" id="e_dataPath" class="s_width250"  />
+                            <input type="file" value="浏览" name="e_dataPathFile" id="e_dataPathFile" class="ifile" onchange="e_dataPath.value = this.value" />
+                            <input type="text" name="e_dataPath" id="e_dataPath" class="s_width250" readonly />
+                            <input type="button" value="浏览" onclick="e_dataPathFile.click()" class="btn btn_small" />
+                            <input type="button" value="添加" name="e_addRoad" class="btn btn_small" />
+                        </td>
+                    </tr>-->
+                </table>
+                <div class="yu_shuju">
+                    <p class="archive_pnew">数据存储路径:</p>
+                    <div class="fleft">
+                        <table id="editPathTab" class="archive_table" > 
+                        </table>
+                    </div>
+                    <div class="preRoad_content1">
+                        <input type="button" value="添加路径" class="btn btn_middle" title="添加路径" onclick="editDdfs_row()"/>
+                    </div>
+                </div>
+                <span class="gray"> ———</span>
+				<input type="button" value="高级选项" id="e_superBtn" onclick="showSuper(this,'e_superDiv')" name="" class="btn btn_middle" />
+				<span class="gray">—————————————————————————————————</span>
+                <!--高级选项部分-->
+                <div id="e_superDiv">
+                    <table class="margin10">
+                        <tr>
+                            <td width="120px">元数据存储路径:</td>
+                            <td>
+	                            <input type="text" name="metaPath" id="e_metaPath" class="s_width250"  disabled/>
+	                            <!--<input type="file" value="浏览" name="e_metaPathFile" id="e_metaPathFile" class="ifile" onchange="e_metaPath.value = this.value" />
+	                            <input type="text" name="e_metaPath" id="e_metaPath" class="s_width250" readonly />
+	                            <input type="button" value="浏览" onclick="e_metaPathFile.click()" class="btn btn_small" />-->
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>数据索引存储路径:</td>
+                            <td>
+                                <input type="text" name="mapPath" id="e_mapPath" class="s_width250"  disabled/>
+	                            <!--<input type="file" value="浏览" name="e_mapPathFile" id="e_mapPathFile" class="ifile" onchange="e_mapPath.value = this.value" />
+	                            <input type="text" name="e_mapPath" id="e_mapPath" class="s_width250" readonly />
+	                            <input type="button" value="浏览" onclick="e_mapPathFile.click()" class="btn btn_small" />-->
+	                        </td>
+                        </tr>
+                        <tr>
+                            <td>二级块索引路径:</td>
+                            <td>
+	                            <input type="text" name="biPath" id="e_biPath" class="s_width250" disabled />
+	                            <!--<input type="file" value="浏览" name="e_biPathFile" id="e_biPathFile" class="ifile" onchange="e_biPath.value = this.value" />
+	                            <input type="text" name="e_biPath" id="e_biPath" class="s_width250" readonly />
+	                            <input type="button" value="浏览" onclick="e_biPathFile.click()" class="btn btn_small" />-->
+	                        </td>
+                        </tr>
+                    </table>
+                    
+                    <!--分级索引-->
+                    <fieldset class="lightblue_pww mtop10 hide">
+                        <legend class="orange">分级索引</legend>
+                        <table class="new_margin10">
+                            <tr>
+                                <td width="78px">桶数量：</td>
+                                <td width="100px">
+                                    <input type="text" name="bucketCount" id="e_bucketCount" class="s_width30"  disabled/>
+                                    <span class="gray">MB</span>
+                                </td>
+                                <td width="110px">最小预留空间：</td>
+                                <td width="107px">
+                                    <input type="text" name="minSpace" id="e_minSpace" class="s_width30" disabled />
+                                    <span class="gray">GB</span>
+                                </td>
+                                <td width="90px">块索引级别:</td>
+                                <td>
+                                    <select name="fileTypeCount" id="e_fileTypeCount" class="s_width30 ddfsel" disabled>
+                                        <option value="1">1</option>
+                                        <option value="4">4</option>
+                                        <option value="8">8</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </table>
+                    </fieldset>
+                    
+                    <!--流水线参数-->
+                    <fieldset class="lightblue_pww mtop10 hide">
+                        <legend class="orange">流水线参数</legend>
+                        <table class="new_margin10">
+                            <tr>
+                                <td width="75px">block大小:</td>
+                                <td width="60px">
+                                    <select name="blockSize" id="e_blockSize" class="ddfsel" disabled>
+                                        <option value="1">1M</option>
+                                        <option value="4">4M</option>
+                                        <option value="8">8M</option>
+                                        <option value="16" selected="selected">16M</option>
+                                        <option value="64">64M</option>
+                                    </select>
+                                </td>
+                                <td width="75px">chunk大小:</td>
+                                <td width="70px">
+                                    <select name="chunkSize" id="e_chunkSize" class="ddfsel" disabled>
+                                        <option value="32">1*32K</option>
+                                        <option value="64">2*32K</option>
+                                        <option value="96">3*32K</option>
+                                        <option value="128">4*32K</option>
+                                    </select>
+                                </td>
+                                <!--<td width="75px">字节级消冗:</td>
+                                <td width="60px">
+                                    <select name="byteDedup" id="e_byteDedup" class="s_width30 ddfsel" disabled>
+                                        <option value="3">3</option>
+                                    </select>
+                                </td>-->
+                                <td width="65px">哈希方法:</td>
+                                <td  width="65px">
+                                    <select name="hashType" id="e_hashType" class="s_width30 ddfsel" disabled>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                    </select>
+                                </td>
+                                <td  width="65px">压缩算法:</td>
+                                <td>
+                                    <select name="compressType" id="e_compressType" class="s_width30 ddfsel" disabled>
+                                        <option value="0">0</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3" selected="selected">3</option>
+                                        <option value="4">4</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr> 
+                                <td>消冗选项:</td>
+                                <td>
+                                    <select name="dedupOption" id="e_dedupOption" class="s_width30 ddfsel" disabled>
+                                        <option value="0">0</option>
+                                        <option value="1" selected="selected">1</option>
+                                    </select>
+                                </td>
+                                <td>crc校验:</td>
+                                <td>
+                                    <select name="crcOption" id="e_crcOption" class="s_width30 ddfsel" disabled>
+                                        <option value="0">0</option>
+                                        <option value="1" selected="selected">1</option>
+                                        <option value="2">2</option>
+                                    </select>
+                                </td>
+                                <td  width="75px">字节级比较:</td>
+                                <td>
+                                    <select name="byteCmpOption" id="e_byteCmpOption" class="s_width30 ddfsel" disabled>
+                                        <option value="0">0</option>
+                                        <option value="1">1</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </table>
+                    </fieldset>
+                    
+                    <!--流水线运行参数-->
+                    <fieldset class="lightblue_pww mtop10 hide">
+                        <legend class="orange">流水线运行参数</legend>
+                        <table class="new_margin10">
+                            <tr>
+                                <td width="75px">cpu数目:</td>
+                                <td width="90px">
+                                    <select name="dplCpuNum" id="e_dplCpuNum" class="s_width30 ddfsel" disabled>
+                                        <option value="0">0</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                    </select>
+                                </td>
+                                <td width="45px">超时:</td>
+                                <td width="90px">
+                                    <select name="dplTimeOutSec" id="e_dplTimeOutSec" class="s_width30 ddfsel" disabled>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                    </select>
+                                </td>
+                                <td width="45px">缓存:</td>
+                                <td width="80px">
+                                    <select name="dplCapacity" id="e_dplCapacity" class="s_width30 ddfsel" disabled>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4" selected>4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                    </select>
+                                </td>
+                                <td width="63px">读模式:</td>
+                                <td>
+                                    <select name="dplReadMode" id="e_dplReadMode" class="s_width30" disabled>
+                                        <option value="0">0</option>
+                                        <option value="1">1</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </table>
+                    </fieldset>
+                    
+                    <!--文件系统设置-->
+                    <fieldset class="lightblue_pww mtop10 hide">
+                        <legend class="orange">文件系统设置</legend>
+                        <table class="new_margin10">
+                            <tr>
+                                <td width="78px">桶数量:</td>
+                                <td width="80px">
+                                    <input type="text" name="fsBucketCount" id="e_fsBucketCount" class="s_width30" disabled />
+                                    <span class="gray">MB</span>
+                                </td>
+                                <td width="130px">文件延迟关闭时间:</td>
+                                <td width="110px">
+                                    <input type="text" name="delayedCloseTime" id="e_delayedCloseTime" class="s_width30"  disabled/>
+                                </td>
+                                <!--<td width="100px">预读窗口大小:</td>
+                                <td>
+                                    <input type="text" name="raSize" id="e_raSize" class="s_width30" value="8192"/>
+                                    <span class="gray">KB</span>
+                                </td>-->
+                                <td width="90px">预读chunk数:</td>
+                                <td>
+                                    <input type="text" name="raChunkCnt" id="e_raChunkCnt" class="s_width30" disabled />
+                                </td>
+                            </tr>
+                        </table>
+                        <table class="new_margin10">
+                            <tr>
+                                <td width="75px">预读算法:</td>
+                                <td width="85px">
+                                    <select name="raStrategy" id="e_raStrategy" class="s_width30 ddfsel" disabled>
+                                        <option value="0">0</option>
+                                        <option value="1">1</option>
+                                        <option value="2" selected>2</option>
+                                    </select>
+                                </td>
+                                <td width="100px">内存映射大小:</td>
+                                <td width="90px">
+                                    <input type="text" name="mmapSize" id="e_mmapSize" class="s_width30" disabled />
+                                    <span class="gray">MB</span>
+                                </td>
+                                <td width="138px">最大延迟关闭文件数:</td>
+                                <td>
+                                    <input type="text" name="maxDelayedCloseNum" id="e_maxDelayedCloseNum" class="s_width30" disabled />
+                                </td>
+                            </tr>
+                        </table>
+                    </fieldset>
+                </div>
+                
+                <div class="tright bottom_bg">
+                    <input type="button" value="确定" class="btn btn_small" onclick="editMountpoint()" />
+                    <input type="button" value="取消" class="btn btn_small cancel" />
+                </div>
+            </form>
+            </div>
+            
+            <!--挂载点详细信息-->
+            <div class="hide show_ddfs" id="show_ddfs" style="width:570px;max-height:550px">
+                <table class="margin10">
+                    <tr>
+                        <td width="120px">文件系统类型：</td>
+                        <td>
+                          <select name="mountWay" id="d_mountWay" class="s_width250s" disabled>
+                            <option value="ddfs" <if condition = "$system eq ddfs">selected</if> >ddfs</option>
+                            <option value="adfs" <if condition = "$system eq adfs">selected</if> >adfs</option>
+                          </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="120px">挂载点路径:</td>
+                        <td>
+                            <input type="text" name="d_mountPoint" id="d_mountPoint" class="s_width250" disabled/>
+                            <!--<input type="file" value="浏览" name="d_mountPointFile" id="d_mountPointFile" class="ifile" onchange="d_mountPoint.value = this.value" />
+                            <input type="text" name="d_mountPoint" id="d_mountPoint" class="s_width250" readonly />
+                            <input type="button" value="浏览" onclick="d_mountPointFile.click()" class="btn btn_small" />-->
+                        </td>
+                    </tr>
+                    <!--<tr>
+                        <td>数据存储路径:</td>
+                        <td><input type="file" value="浏览" name="d_dataPathFile" id="d_dataPathFile" class="ifile" onchange="d_dataPath.value = this.value" />
+                            <input type="text" name="d_dataPath" id="d_dataPath" class="s_width250" readonly />
+                            <input type="button" value="浏览" onclick="d_dataPathFile.click()" class="btn btn_small" />
+                            <input type="button" value="添加" name="d_addRoad" class="btn btn_small" />
+                        </td>
+                    </tr>-->
+                </table>
+                <div class="yu_shuju">
+                    <p class=archive_pnew>数据存储路径:</p>
+                    <div class="fleft">
+                        <table id="detailPathTab" class="archive_table" > 
+                        </table>
+                    </div>
+                </div>
+                <span class="gray"> ———</span>
+				<input type="button" value="高级选项" name="" onclick="showSuper(this,'d_superDiv')" id="d_superBtn" class="btn btn_middle" />
+				<span class="gray">—————————————————————————————————</span>
+                <!--高级选项部分-->
+                <div id="d_superDiv">
+                    <table class="margin10">
+                        <tr>
+                            <td width="120px">元数据存储路径:</td>
+                            <td>
+                                <input type="text" name="metaPath" id="d_metaPath" class="s_width250" disabled/>
+                                <!--<input type="file" value="浏览" name="e_metaPathFile" id="e_metaPathFile" class="ifile" onchange="e_metaPath.value = this.value" />
+                                <input type="text" name="e_metaPath" id="e_metaPath" class="s_width250" readonly />
+                                <input type="button" value="浏览" onclick="e_metaPathFile.click()" class="btn btn_small" />-->
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>数据索引存储路径:</td>
+                            <td>
+                                <input type="text" name="mapPath" id="d_mapPath" class="s_width250" disabled/>
+                                <!--<input type="file" value="浏览" name="e_mapPathFile" id="e_mapPathFile" class="ifile" onchange="e_mapPath.value = this.value" />
+                                <input type="text" name="e_mapPath" id="e_mapPath" class="s_width250" readonly />
+                                <input type="button" value="浏览" onclick="e_mapPathFile.click()" class="btn btn_small" />-->
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>二级块索引路径:</td>
+                            <td>
+                                <input type="text" name="biPath" id="d_biPath" class="s_width250" disabled/>
+                                <!--<input type="file" value="浏览" name="e_biPathFile" id="e_biPathFile" class="ifile" onchange="e_biPath.value = this.value" />
+                                <input type="text" name="e_biPath" id="e_biPath" class="s_width250" readonly />
+                                <input type="button" value="浏览" onclick="e_biPathFile.click()" class="btn btn_small" />-->
+                            </td>
+                        </tr>
+                    </table>
+                    
+                    <!--分级索引-->
+                    <fieldset class="lightblue_pww mtop10 hide">
+                        <legend class="orange">分级索引</legend>
+                        <table class="new_margin10">
+                            <tr>
+                                <td width="78px">桶数量：</td>
+                                <td width="100px">
+                                    <input type="text" name="bucketCount" id="d_bucketCount" class="s_width30" disabled="disabled" />
+                                    <span class="gray">MB</span>
+                                </td>
+                                <td width="110px">最小预留空间：</td>
+                                <td width="107px">
+                                    <input type="text" name="minSpace" id="d_minSpace" class="s_width30" disabled />
+                                    <span class="gray">GB</span>
+                                </td>
+                                <td width="90px">块索引级别:</td>
+                                <td>
+                                    <select name="fileTypeCount" id="d_fileTypeCount" class="s_width30 ddfsel">
+                                        <option value="1">1</option>
+                                        <option value="4">4</option>
+                                        <option value="8">8</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </table>
+                    </fieldset>
+                    
+                    <!--流水线参数-->
+                    <fieldset class="lightblue_pww mtop10 hide">
+                        <legend class="orange">流水线参数</legend>
+                        <table class="new_margin10">
+                            <tr>
+                                <td width="75px">block大小:</td>
+                                <td width="60px">
+                                    <select name="blockSize" id="d_blockSize" class="ddfsel">
+                                        <option value="1">1M</option>
+                                        <option value="4">4M</option>
+                                        <option value="8">8M</option>
+                                        <option value="16" selected="selected">16M</option>
+                                        <option value="64">64M</option>
+                                    </select>
+                                </td>
+                                <td width="75px">chunk大小:</td>
+                                <td width="70px">
+                                    <select name="chunkSize" id="d_chunkSize" class="ddfsel">
+                                        <option value="32">1*32</option>
+                                        <option value="64">2*32</option>
+                                        <option value="96">3*32</option>
+                                        <option value="128">4*32</option>
+                                    </select>
+                                </td>
+                                <!--<td width="75px">字节级消冗:</td>
+                                <td width="60px">
+                                    <select name="byteDedup" id="d_byteDedup" class="s_width30 ddfsel">
+                                        <option value="3">3</option>
+                                    </select>
+                                </td>-->
+                                <td width="65px">哈希方法:</td>
+                                <td width="65px">
+                                    <select name="hashType" id="d_hashType" class="s_width30 ddfsel">
+                                        <option value="1">1</option>
+                                        <option value="2" selected="selected">2</option>
+                                    </select>
+                                </td>
+                                <td width="65px">压缩算法:</td>
+                                <td>
+                                    <select name="compressType" id="d_compressType" class="s_width30 ddfsel">
+                                        <option value="0">0</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3" selected="selected">3</option>
+                                        <option value="4">4</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr> 
+                                <td width="65px">消冗选项:</td>
+                                <td width="60px">
+                                    <select name="dedupOption" id="d_dedupOption" class="s_width30 ddfsel">
+                                        <option value="0">0</option>
+                                        <option value="1" selected="selected">1</option>
+                                    </select>
+                                </td>
+                                <td>crc校验:</td>
+                                <td>
+                                    <select name="crcOption" id="d_crcOption" class="s_width30 ddfsel">
+                                        <option value="0">0</option>
+                                        <option value="1" selected="selected">1</option>
+                                        <option value="2">2</option>
+                                    </select>
+                                </td>
+                                <td width="75px">字节级比较:</td>
+                                <td>
+                                    <select name="byteCmpOption" id="d_byteCmpOption" class="s_width30 ddfsel">
+                                        <option value="0">0</option>
+                                        <option value="1">1</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </table>
+                    </fieldset>
+                    
+                    <!--流水线运行参数-->
+                    <fieldset class="lightblue_pww mtop10 hide">
+                        <legend class="orange">流水线运行参数</legend>
+                        <table class="new_margin10">
+                            <tr>
+                                <td width="75px">cpu数目:</td>
+                                <td width="90px">
+                                    <select name="dplCpuNum" id="d_dplCpuNum" class="s_width30 ddfsel">
+                                        <option value="0">0</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                    </select>
+                                </td>
+                                <td width="45px">超时:</td>
+                                <td width="90px">
+                                    <select name="dplTimeOutSec" id="d_dplTimeOutSec" class="s_width30 ddfsel">
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                    </select>
+                                </td>
+                                <td width="45px">缓存:</td>
+                                <td width="80px">
+                                    <select name="dplCapacity" id="d_dplCapacity" class="s_width30 ddfsel">
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4" selected>4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                    </select>
+                                </td>
+                                <td width="60px">读模式:</td>
+                                <td>
+                                    <select name="e_dplReadMode" id="d_dplReadMode" class="s_width30 ddfsel">
+                                        <option value="0">0</option>
+                                        <option value="1">1</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </table>
+                    </fieldset>
+                    
+                    <!--文件系统设置-->
+                    <fieldset class="lightblue_pww mtop10 hide">
+                        <legend class="orange">文件系统设置</legend>
+                        <table class="new_margin10">
+                            <tr>
+                                <td width="78px">桶数量:</td>
+                                <td width="80px">
+                                    <input type="text" name="fsBucketCount" id="d_fsBucketCount" class="s_width30" disabled/>
+                                    <span class="gray">MB</span>
+                                </td>
+                                <td width="130px">文件延迟关闭时间:</td>
+                                <td width="110px">
+                                    <input type="text" name="e_delayedCloseTime" id="d_delayedCloseTime" class="s_width30" disabled/>
+                                </td>
+                                
+                                <!--<td width="100px">预读窗口大小:</td>
+                                <td>
+                                    <input type="text" name="raSize" id="d_raSize" class="s_width30" value="8192" disabled/>
+                                    <span class="gray">KB</span>
+                                </td>-->
+                                <td width="90px">预读chunk数:</td>
+                                <td>
+                                    <input type="text" name="e_raChunkCnt" id="d_raChunkCnt" class="s_width30" disabled/>
+                                </td>
+                            </tr>
+                        </table>
+                        <table class="new_margin10">
+                            <tr>
+                                <td width="75px">预读算法:</td>
+                                <td width="85px">
+                                    <select name="e_raStrategy" id="d_raStrategy" class="s_width30 ddfsel" disabled>
+                                        <option value="0">0</option>
+                                        <option value="1">1</option>
+                                        <option value="2" selected>2</option>
+                                    </select>
+                                </td>
+                                <td width="100px">内存映射大小:</td>
+                                <td width="90px">
+                                    <input type="text" name="mmapSize" id="d_mmapSize" class="s_width30" disabled/>
+                                    <span class="gray">MB</span>
+                                </td>
+                                <td width="138px">最大延迟关闭文件数:</td>
+                                <td>
+                                    <input type="text" name="e_maxDelayedCloseNum" id="d_maxDelayedCloseNum" class="s_width30" disabled/>
+                                </td>
+                            </tr>
+                        </table>
+                    </fieldset>
+                </div>
+                
+                <div class="tright bottom_bg">
+                    <input type="submit" value="确定" class="btn btn_small cancel" />
+                </div>
+            </div>
+            
+            <!--删除挂载点-->
+            <div class="hide del_ddfs" id="del_ddfs">
+            <form id="delMountForm" name="delMountForm" action="" method="post" target="">
+                <input type="hidden" name="delconfig" id="delconfig" value=""/>
+                <input type="hidden" name="systemType" id="delSystemType" value=""/>
+                <input type="hidden" name="delmount_point" id="delmount_point" value=""/>
+                <div class="del_div1">
+                    <table>
+                        <tr><td class="vtop" width="90px;"><img src="__PUBLIC__/img/warning.png" alt="警告" /></td>
+                        <td>&nbsp;确定删除挂载点:<span class="del_list" id="delMount_list"></span></td></tr>
+                    </table>
+                </div>
+                <div class="tright bottom_bg">
+                    <input type="button" value="确定" class="btn btn_small" onclick="del_Ddfs()"/>
+                    <input type="button" value="取消" class="btn btn_small cancel" />
+                </div>
+            </form>
+            </div>
+            
+            <!---->
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+    function clearDataPath(){
+        //新建时，当更改文件系统类型，将挂载点路径和数据路径重置
+        var dataPths = document.getElementsByName("dataPath[]");
+        document.getElementById("mountPoint").value = "";
+        jQuery("[name='dataPath[]']:gt(0)").parent().parent().remove();
+        dataPths[0].value = "";
+    }
+</script>

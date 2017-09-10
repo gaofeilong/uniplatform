@@ -1,0 +1,23 @@
+<script type="text/javascript" src="__PUBLIC__/js/tablecss.js"></script>
+<style>
+.hideMore_syslog{
+   text-overflow:ellipsis;
+   overflow:hidden;
+   text-align:left;
+}
+</style>
+<table class="table1 table5">
+    <empty name="dateInfo">
+        <tr><td>没有符合条件的查询结果</td></tr>
+    </empty>
+    <volist name="dateInfo" id="vo" key="k">
+	 <tr>
+	     <td width="20%">{$vo.time}</td>
+	     <td width="15%">{$vo.loglevel}</td>
+	     <td width="12%">{$vo.module}</td>
+	     <td title="{$vo.description}"><p class="hideMore_syslog">{$vo.description}</p></td>
+	 </tr>
+	</volist>
+</table>
+<input type='hidden'  id='currentpage' name='currentpage' value='{$currentPage}'>
+<input type='hidden'  id='totalPage' name='totalPage' value='{$totalPage}'>

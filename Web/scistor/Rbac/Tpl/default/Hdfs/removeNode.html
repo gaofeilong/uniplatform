@@ -1,0 +1,68 @@
+<include file="Public:file"/>
+<script type="text/javascript">
+setInterval(
+    function(){
+     location.href="index.php?s=/Hdfs/removeDis";
+    },1500
+);
+</script>
+<body class="rightbody" onload="removeLast()">
+    <div class="right_title" style="">
+        <span>首页 </span> &raquo; 分布式消冗文件系统  &raquo; 删除节点
+    </div>
+    <div class="right_main">
+        <div class="right_fortable">
+            <hr class="hr_top" />
+            
+            <!--页面操作成功与否提示-->
+            <div class="publicNotice pN_error" id="pN_info"></div>
+            <!--页面操作成功与否提示 over-->
+            
+            <form name="addCluster" id="setSysTime" action="__URL__/index/indexname/{$idxIp}" method="post">
+                <input type="hidden" value="{$lastdel}" id="lastdel" />
+                <input type="hidden" value="{$laststate}" id="laststate" />
+                <fieldset class="d_lightblue">
+                <legend class="orange">删除节点</legend><br />
+                    <table class="hdfstab">
+                        <volist name="delData" id="v" key="k">
+                        <tr>
+                            <td width="90px"><if condition = "$v.progress neq 0">remove </if></td>
+                            <td width="110px">{$v.ip}</td>
+                            <td width="115px">
+                                <div class="bg_jindu"><div style="background:url(__PUBLIC__/img/icons/bg_jin.png) no-repeat;width:{$v.progress}%;height:10px;"></div></div>
+                            </td>
+                            <td width="60px">{$v.progress}%</td>
+                            <if condition = "($v.state eq ok) or ($v.state eq error)">
+                                <td width="100px">{$v.state} </td>
+                            </if>
+                            <td width="200px"><if condition = "$v.state neq 'ok'">{$v.description}</if></td>
+                        </tr>
+                        </volist>
+                    </table>
+                </fieldset>
+                <hr class="hr_bottom" />
+                <div class="tright bbb">
+                    <input type="submit" value="完成" id="deldone" class="btn btn_big"/>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+    /***删除节点
+     ***/
+    function removeLast()
+    {
+           var lastData  = jQuery("#lastdel").val();
+           var laststate = jQuery("#laststate").val();
+
+           if (lastData == 100) {
+              document.getElementById("deldone").disabled = false;
+           } else if (laststate == "error") {
+        	   document.getElementById("deldone").disabled = false;
+           } else {
+              document.getElementById("deldone").disabled = true;
+           }
+    }
+        
+    </script>
+</body>

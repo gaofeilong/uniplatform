@@ -1,0 +1,224 @@
+<include file="Public:file"/>
+<body class="rightbody">
+    <div class="right_title" style="">
+        <span>首页 </span> &raquo; 存储管理  &raquo; 卷组管理
+    </div>
+    <div class="right_main">
+        <div class="right_fortable">
+            <hr class="hr_top" />
+			
+			<!--页面操作成功与否提示-->
+            <div class="publicNotice pN_error" id="pN_info"></div>
+            <!--页面操作成功与否提示 over-->
+			
+            <div class="insetTable">
+                <table border="0" id="tablevols" class="table1 thin sortable">
+                    <tr class="top">
+                        <th width="5%"><input type="checkbox" value="0" name="ddfs" class="chek" onclick="All(this, 'choice')"/></th>
+                        <th width="5%">编号</th>
+                        <th width="10%">名称</th>
+                        <th width="10%">总空间</th>
+                        <th width="10%">剩余空间</th>
+                        <th width="10%">逻辑卷数量</th>
+                        <th width="10%">RAID级别</th>
+                        <th width="10%">状态</th>
+                        <th  width="10%">操作</th>
+                    </tr>
+                    <tr class="bbb">
+                        <td><input type="checkbox" name="choice" id="choice" value="1" class="chek" onclick="Item(this, 'ddfs')"/></td>
+                        <label for="choice"><td>1</td>
+                        <td class="volsname">test</td>
+                        <td>1125MB</td>
+                        <td>800MB</td>
+                        <td>3</td>
+                        <td>RAID0</td>
+                        <!-- <td><img src="__PUBLIC__/img/statue.png" title="在线" align="absmiddle"/></td> -->
+                        <td>
+                            <span class="status_ok"></span>
+                            <span class="status_con1">在线</span>
+                        </td>
+                        <td><input type="button" value="扩容" class="btn btn_small extends" name="" id="k1"></td></label>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" name="choice" id="choice1" value="2" class="chek" onclick="Item(this, 'ddfs')"/></td>
+                        <label for="choice1"><td>2</td>
+                        <td class="volsname">abs</td>
+                        <td>154GB</td>
+                        <td>80GB</td>
+                        <td>7</td>
+                        <td>RAID1</td>
+                        <!-- <td><img src="__PUBLIC__/img/status_no.png" title="在线" align="absmiddle"/></td> -->
+                        <td>
+                            <span class="status_no"></span>
+                            <span class="status_con1">离线</span>
+                        </td>
+                        <td class="t_center"><input type="button" value="扩容" class="btn btn_small extends" name="" id="k1"></td></label>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" name="choice" id="choice2"  value="3" class="chek" onclick="Item(this, 'ddfs')"/></td>
+                        <label for="choice2"><td>3</td>
+                        <td class="volsname">lvlnam</td>
+                        <td>20GB</td>
+                        <td>800MB</td>
+                        <td>5</td>
+                        <td>RAID0</td>
+                        <!-- <td><img src="__PUBLIC__/img/statue.png" title="在线" align="absmiddle"/></td> -->
+                        <td>
+                            <span class="status_ok"></span>
+                            <span class="status_con1">在线</span>
+                        </td>
+                        <td class="t_center"><input type="button" value="扩容" class="btn btn_small extends" name="" id="k1"></td></label>
+                    </tr>
+                </table>
+            </div>
+            <div class="table_bottom"></div>
+            <!--分页条-->
+            <!--<div id="controls" class="controls">
+                <div id="perpage" class="perpage">
+                    <span>跳转到</span>
+                    <input type="text" name="gopage" value="{$jump_page}" class="gopage" id="gopage" /> 页
+                    <a href="#" id="jump_img"><img src="__PUBLIC__/img/left_grey.png" alt="跳页" title="跳转到指定页" onclick="jumpPage('Vg')"/></a>
+                </div>
+                <include file="Public:page" />
+            </div>-->
+            <div style="clear:both"></div>
+            <hr class="hr_bottom" />
+            <div style="clear:both"></div>
+            <div class="tright bbb">
+                <input type="button" value="新建卷组" class="btn btn_big build_newvols" />
+                <input type="button" value="删除卷组" class="btn btn_big delvols" />
+            </div>
+        </div>
+        
+        <!--卷组扩容-->
+        <div id="extend_vols" class="extend_vols hide" style="display:none;">
+            <hr class="hr_top2" border="2" />
+            <form name="extendvols" action="" method="post" id="vgExentForm">
+            <input type="hidden" id="hidLvexName" name="lvexentName" value=""/>
+            <table class="table1" id="lvexentTab">
+                <tr class="top">
+                    <th width="20px"><input type="checkbox" value="0" name="kuAll" id="ku_all" class="chek" onclick="All(this, 'ku_choice')"/></th>
+                    <label for="ku_all"><th>名称</th>
+                    <th>型号</th>
+                    <th>WWN</th>
+                    <th>大小</th>
+                    <th>速率</th></label>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" value="0" id="ku_choice1" name="ku_choice" class="chek" onclick="Item(this, 'kuAll')"/></td>
+                    <label for="ku_choice1">
+                    <td  class="lvexentName">volumn1</td>
+                    <td>vo5425</td>
+                    <td>WWN</td>
+                    <td>25GB</td>
+                    <td>0</td></label>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" value="1" id="ku_choice2" name="ku_choice" class="chek" onclick="Item(this, 'kuAll')"/></td>
+                    <label for="ku_choice2">
+                    <td  class="lvexentName">volumn2</td>
+                    <td>vo487</td>
+                    <td>WWN</td>
+                    <td>56GB</td>
+                    <td>0</td></label>
+                </tr>
+            </table>
+            <div class="tright bottom_bg">
+                <input type="button" value="确定" class="btn btn_small" onclick="vgExent()"/>
+                <input type="button" value="取消" class="btn btn_small cancel" />
+            </div>
+            </form>
+        </div>
+        
+        <!--新建卷组-->
+        <div id="new_vols" class="new_vols hide" style="display:none">
+        <form name="newvols" id="vgCreForm" action="" method="post">
+            <input type="hidden" id="hidvgCreate" name="hidvgCreate" value=""/>
+            <p class="con_title">物理卷</p>
+            <hr class="hr_top2" />
+            <table class="table1" id="vgCreateTab">
+                <tr class="top">
+                    <th width="20px"><input type="checkbox" value="0" name="wulijuan" id="wuli_all" onclick="All(this,'wuli_choice')" /></th>
+                    <label for="wuli_all"><th>名称</th>
+                    <th>型号</th>
+                    <th>WWN</th>
+                    <th>大小</th>
+                    <th>速率</th></label>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" value="0" id="wu_choice1" name="wuli_choice" onclick="Item(this, 'wulijuan')" /></td>
+                    <label for="wu_choice1">
+                    <td class="vgCreName">volumn1</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td></label>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" value="0" id="wu_choice2" name="wuli_choice" onclick="Item(this, 'wulijuan')" /></td>
+                    <label for="wu_choice2">
+                    <td  class="vgCreName">volumn2</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td></label>
+                </tr>
+            </table>
+            <br />
+            <fieldset class="lightblue">
+                <legend>RAID</legend>
+                <table>
+                    <tr>
+                        <td width="75px" height="30px">级别：</td>
+                        <td>
+                            <select name="vol_level" id="vol_level" class="s_widths">
+                                <option value="Raid0">RAID 0</option>
+                                <option value="Raid1">RAID 1</option>
+                                <option value="Raid5">RAID 5</option>
+                                <option value="Raid6">RAID 6</option>
+                                <option value="Raid10">RAID 10</option>
+                                <option value="Raid50">RAID 50</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td height="30px">条带宽度：</td>
+                        <td>
+                            <select name="bandwidth" id="bandwidth" class="s_widths">
+                                <option value="20">20</option>
+                                <option value="30">30</option>
+                            </select>
+                            <b class="b1">KB</b>
+                        </td>
+                    </tr>
+                </table>
+            </fieldset>
+            <div class="new_volsname">
+                <span class="flb" style="width:75px">卷组名称:</span><input type="text" id="volsname" class="s_width2" name="vgName"/>
+            </div>
+            <!--    <hr border="2" color="#cccccc" style="margin-top:15px;"/>-->
+            <div class="tright bottom_bg">
+                <input type="button" value="确定" class="btn btn_small" onclick="vgCreate()"/>
+                <input type="button" value="取消" class="btn btn_small cancel" />
+            </div>
+        </form>
+        </div>
+        
+        <!--删除卷组-->
+        <div id="del_vols" class="del_vols hide ">
+        <form name="delvols" id="vgDelForm" action="" method="post">
+            <input type="hidden" name="vgDelname" id="vgDelname" value=""/>
+            <div class="del_div1">
+                <table>
+                    <tr><td valign="top" width="90px;"><img src="__PUBLIC__/img/warning.png" alt="警告" /></td>
+                    <td>&nbsp;确定删除卷组:<span id="vols_no"></span></td></tr>
+                </table>
+            </div>
+            <div class="tright bottom_bg">
+                <input type="button" value="确定" class="btn btn_small" onclick="vgDelete()"/>
+                <input type="button" value="取消" class="btn btn_small cancel" />
+            </div>
+        </form>
+        </div>
+    </div>
+</body>

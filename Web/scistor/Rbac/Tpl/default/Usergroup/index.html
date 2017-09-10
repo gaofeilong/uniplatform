@@ -1,0 +1,120 @@
+<include file="Public:file"/>
+<body class="rightbody">
+    <div class="right_title" style="">
+        <span>首页 </span> &raquo; NAS管理  &raquo; 用户和组 &raquo; 用户验证
+    </div>
+    <div class="right_main">
+        <div class="right_fortable">
+            <div class="shareNav share_top" style="overflow:hidden">
+                <ul>
+                    <li class="navson select"><a href="__URL__/index">用户验证</a></li>
+                    <li class="navson"><a href="__URL__/grouplist">用户组</a></li>
+                    <li class="navson"><a href="__URL__/userlist">用户</a></li>
+                    <li class="navson"><a href="__URL__/groupquota">用户组配额</a></li>
+                    <li class="navson"><a href="__URL__/userquota">用户配额 </a></li>
+                </ul>
+            </div>
+
+            <!--页面操作成功与否提示-->
+            <div class="publicNotice pN_error" id="pN_info"></div>
+            <!--页面操作成功与否提示 over-->
+
+            <div class="insetTable">
+                <div class="validata_set">
+                    <form name="authForm" id="authForm" action="" method="post">
+                        <div class="licenseModel1">
+                        <div class="">
+                            <h4 class="l_title"><input type="radio" name="usertype" value="1" <if condition="$usertype eq 1">checked</if>/> 本地验证</h4>
+                            <table class="lic1">
+                                <tr>
+                                    <th width="150px">状态：</th>
+                                    <td>
+                                        <input type="radio" name="local_validate" id="local_ab" value="1"  onclick="localset_valida()"/><label for="local_ab">激活</label>
+                                        <input type="radio" name="local_validate" id="local_disab" value="2" checked onclick="localset_valida()"/><label for="local_disab">禁用</label>
+                                    </td>
+                                </tr>
+                                <!--<tr>
+                                    <th>服务器域名：</th>
+                                    <td>
+                                        <input type="text"  class="s_width200 local_valiset" name="server_name" title="" disabled/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>域名别名：</th>
+                                    <td>
+                                        <input type="text"  class="s_width200 local_valiset" name="server_alias" title="" disabled/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>服务器主机地址：</th>
+                                    <td>
+                                        <input type="text"  class="s_width200 local_valiset" name="server_locip" title="只允许除127.0.0.1外的合法网段IP地址" disabled/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>管理员用户名：</th>
+                                    <td>
+                                        <input type="text"  class="s_width200 local_valiset" name="admin_name" title="" disabled/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>管理员密码：</th>
+                                    <td>
+                                        <input type="password"  class="s_width200 local_valiset" name="admin_pwd" title="" disabled/>
+                                    </td>
+                                </tr>
+                            --></table>
+                        </div>
+                        </div>
+                        
+                        <div class="licenseModel1">
+                        <div class="">
+                            <h4 class="l_title"><input type="radio" name="usertype" value="2" <if condition="$usertype eq 2">checked</if>/> LDAP验证</h4>
+                            <table class="lic1">
+                                <tr>
+                                    <th width="150px">状态：</th>
+                                    <td>
+                                        <input type="radio" name="ldap_validate" id="ldap_ab" value="1"  onclick="set_validaldap()"/><label for="ldap_ab">激活</label>
+                                        <input type="radio" name="ldap_validate" id="ldap_disab" value="2" checked onclick="set_validaldap()"/><label for="ldap_disab">禁用</label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>基准DN：</th>
+                                    <td>
+                                        <input type="text"  class="s_width200 ldap_valiset" name="ldap_dn" title="" disabled/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>服务器主机地址：</th>
+                                    <td>
+                                        <input type="text"  class="s_width200 ldap_valiset" name="ldapserver_locip" title="只允许除127.0.0.1外的合法网段IP地址" disabled/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>管理员DN：</th>
+                                    <td>
+                                        <input type="text"  class="s_width200 ldap_valiset" name="ldapadmin_dn" title="" disabled/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>管理员DN密码：</th>
+                                    <td>
+                                        <input type="password"  class="s_width200 ldap_valiset" name="ldapadmin_pwd" title="" disabled/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div style="clear:both">
+            <hr class="hr_bottom" />
+            <div class="tright">
+                <input type="button" value="确定" class="btn btn_big " onclick="SetAuth()"/>
+                <input type="reset" value="取消" class="btn btn_big cre_user" />
+            </div>
+            
+        </div>
+    </div>
+</body>

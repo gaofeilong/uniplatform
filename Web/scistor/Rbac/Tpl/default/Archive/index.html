@@ -1,0 +1,929 @@
+<include file="Public:file"/>
+<body class="rightbody archiveBody">
+    <div class="right_title" style="">
+        <span>首页 </span> &raquo; 归档管理  &raquo; 数据归档
+    </div>
+    <div class="right_main">
+        <div class="right_fortable">
+            <hr class="hr_top" />
+            
+            <!--页面操作成功与否提示-->
+            <div class="publicNotice pN_error" id="pN_info"></div>
+            <input type="hidden" value="{$countnode}" id="countNode"/>
+            <input type="hidden" value="{$countdata}" id="countData"/>
+            <!--页面操作成功与否提示 over-->
+            
+                <!-- <div class="insetTable">
+                    <table border="0" id="tab_group" class="table1 thin sortable">
+                        <tr class="top">
+                            <th width="3%"><input type="checkbox" value="0" name="ddfs" class="chek" onclick="All(this, 'guidang')"/></th>
+                            <th width="7%">名称</th>
+                            <th width="10%">节点IP</th>
+                            <th width="15%">状态</th>
+                            <th class="hide">启动小时</th>
+                            <th class="hide">启动分钟</th>
+                            <th class="hide">停止小时</th>
+                            <th class="hide">停止分钟</th>
+                            <th class="hide">数据时间</th>
+                            <th class="hide">间隔时间</th>
+                            <th class="hide">校验</th>
+                            <th class="hide">路径</th>
+                            <th width="17%">操作</th>
+                        </tr>
+                        <volist name="archive_data" id="vo" key="k">
+                            <tr>
+                                <td>
+                                    <input type="checkbox" name="guidang" id="choice{$k}" value="1" class="chek" onclick="Item(this, 'ddfs')" <if condition="$vo.state neq stopped">disabled</if> />
+                                </td>
+                                <label for="choice{$k}">
+                                <td class="document" id="info_name{$k}">{$vo[name]}</td>
+                                <td>{$vo[node]}</td>
+                                <td>
+                                    <if condition="$vo.state eq stopped">
+                                        <span class="status_no"></span>
+                                    <elseif condition="$vo.state eq running" />
+                                        <span class="status_run"></span>
+                                    <elseif condition="$vo.state eq idle" />
+                                        <span class="status_ok"></span>
+                                    <elseif condition="$vo.state eq unknown" />
+                                        <span class="status_unknown"></span>
+                                    </if>
+                                    <span class="status_con">{$vo[state]}</span>
+                                </td>
+                                <td id="infostart_h{$k}" class="hide">{$vo.start_hour}</td>
+                                <td id="infostart_m{$k}" class="hide">{$vo.start_minute}</td>
+                                <td id="infostop_h{$k}" class="hide">{$vo.duration}</td>
+                                <td id="infostop_m{$k}" class="hide">{$vo.stop_minute}</td>
+                                <td id="infodatatime{$k}" class="hide">{$vo.dataTime}</td>
+                                <td id="infointervalTime{$k}" class="hide">{$vo.intervalTime}</td>
+                                <td id="infocheck{$k}" class="hide">{$vo.check}</td>
+                                <td id="infoSource{$k}" class="hide">{$vo.deleteSource}</td>
+                                <td id="infopath{$k}" class="hide infopathMsg" >
+                                    <volist name="vo[path]" id="v">
+                                         <span class="spanEven{$k}">{$v.src_path}</span>
+                                         <span class="spanOdd{$k}">{$v.dest_path}</span>
+                                    </volist>
+                                </td>
+                                <td class="t_center">
+                                    <if condition="$vo.state eq stopped">
+                                        <input type="button" class="btn btn_small " name="" value="启动" onclick="startArch({$k})"/>&nbsp;
+                                    <elseif condition="$vo.state eq idle" />
+                                        <input type="button" class="btn btn_small " name="" value="停止" onclick="stopArch({$k})"/>&nbsp;
+                                    <elseif condition = "$vo.state eq running" />
+                                        <input type="button" class="btn btn_small " name="" value="停止" disabled/>&nbsp;
+                                    <elseif condition = "$vo.state eq unknown" />
+                                        <input type="button" class="btn btn_small " name="" value="停止" disabled/>&nbsp;
+                                    </if>
+                                    <input type="button" value="编辑" class="btn btn_small" onclick="editArc({$k})" <if condition="$vo.state neq stopped">disabled</if> />&nbsp;
+                                    <input type="button" value="查看" class="btn btn_small doc_detail" onclick="infoArchive({$k})" />
+                                    <input type="hidden" class="nobg_input inputId" id="hidId{$k}" value="{$vo[id]}" />
+                                </td></label>
+                            </tr>
+                        </volist>
+                    </table>
+                </div> -->
+                
+                <!--new archive 2013-08-08-->
+              <volist name="archive_data" id="vo" key="k">
+                <div class="sys">
+                    <div class="s_title clearfix plr10" title="收起" onclick="show_hide2(this,'archiveMode{$k}')">
+                        <h4 class="fleft" onclick="stopPop(event)" title="勾选复选框可对其进行删除操作">
+                            <input type="checkbox" name="guidang" id="choice{$k}" value="{$vo[name]}" class="chek" onclick="Item(this, 'ddfs')" <if condition="$vo.delSig eq 1">disabled</if> /> 
+                            <label for="choice{$k}"><span class="document arvname" id="info_name{$k}">{$vo[name]}</span></label>
+                        </h4>
+                        <span class="colexp fright">︽</span>
+                        <div class="fright" onclick="stopPop(event)" title="归档任务操作">
+                            <if condition = "$vo.stopSig eq 1">
+                                <input type="button" value="停止" class="btn btn_small" onclick="stopArch({$k})" />
+                            <elseif condition = "$vo.startSig eq 1" />
+                                <input type="button" value="启动" class="btn btn_small" onclick="startArch({$k})" />
+                            <else />
+                                <input type="button" value="启动" class="btn btn_small" disabled />
+                            </if>
+                            <input type="button" value="编辑" class="btn btn_small" onclick="editArc({$k})" <if condition="$vo.delSig eq 1">disabled</if> />
+                            <input type="button" value="查看" class="btn btn_small doc_detail" onclick="infoArchive({$k})" />
+                            <input type="hidden" class="nobg_input inputId" id="hidId{$k}" value="{$vo[id]}" />
+                        </div>
+                    </div>
+                    <div id="archiveMode{$k}" class="sysmodel">
+                      <table class="lic lic2" id="" border="1">
+                        <tr class="t_save">
+                            <th width="30%">节点IP</th>
+                            <th width="">状态</th>
+                            <th class="hide">启动小时</th>
+                            <th class="hide">启动分钟</th>
+                            <th class="hide">停止小时</th>
+                            <th class="hide">停止分钟</th>
+                            <th class="hide">数据时间</th>
+                            <th class="hide">间隔时间</th>
+                            <th class="hide">校验</th>
+                            <th class="hide"></th>
+                            <th class="hide"></th>
+                            <th class="hide"></th>
+                            <th class="hide"></th>
+                            <th class="hide"></th>
+                            <th class="hide"></th>
+                            <th class="hide"></th>
+                            <th class="hide"></th>
+                            <th class="hide"></th>
+                            <th class="hide">路径</th>
+                            <th width="35%">操作</th>
+                        </tr>
+                        <volist name="vo.nodes" id="no" key="kn">
+                        <tr>
+                            <td class="nodesIp{$k}" id = "nodesIps{$k}{$kn}">{$no.ip}</td>
+                            <td>
+                                <if condition="$no.state eq stop">
+                                    <span class="status_no"></span>
+                                <elseif condition="$no.state eq running" />
+                                    <span class="status_run"></span>
+                                <elseif condition="$no.state eq idle" />
+                                    <span class="status_ok"></span>
+                                <elseif condition="$no.state eq unknown" />
+                                    <span class="status_unknown"></span>
+                                </if>
+                                <span class="status_con">{$no.state}</span>
+                            </td>
+                            <td id="infostart_h{$k}" class="hide">{$vo.start_hour}</td>
+                            <td id="infostart_m{$k}" class="hide">{$vo.start_minute}</td>
+                            <td id="infostop_h{$k}" class="hide">{$vo.duration}</td>
+                            <td id="infostop_m{$k}" class="hide">{$vo.stop_minute}</td>
+                            <td id="infodatatime{$k}" class="hide">{$vo.dataTime}</td>
+                            <td id="infointervalTime{$k}" class="hide">{$vo.intervalTime}</td>
+                            <td id="infocheck{$k}" class="hide">{$vo.check}</td>
+                            <td id="infoSource{$k}" class="hide">{$vo.deleteSource}</td>
+                            
+                            <td id="infoprefix{$k}" class="hide">{$vo.prefix}</td>
+                            <td id="infoprefixType{$k}" class="hide">{$vo.prefixType}</td>
+                            <td id="infopostfix{$k}" class="hide">{$vo.postfix}</td>
+                            <td id="infopostfixType{$k}" class="hide">{$vo.postfixType}</td>
+                            <td id="infosizeType{$k}" class="hide">{$vo.sizeType}</td>
+                            <td id="infomaxSize{$k}" class="hide">{$vo.maxSize}</td>
+                            <td id="infominSize{$k}" class="hide">{$vo.minSize}</td>
+                            <td id="infodir{$k}" class="hide">{$vo.dir}</td>
+                            <td id="infodirType{$k}" class="hide">{$vo.dirType}</td>
+                            
+                            <td id="infopath{$k}" class="hide infopathMsg" >
+                                <volist name="vo[path]" id="v">
+                                     <span class="spanEven{$k}">{$v.src_path}</span>
+                                     <span class="spanOdd{$k}">{$v.dest_path}</span>
+                                </volist>
+                            </td>
+                            <td class="t_center">
+                                <if condition="$no.state eq stop">
+                                    <input type="button" class="btn btn_small " name="" value="启动" onclick="startAlone({$kn},{$k})"/>&nbsp;
+                                <elseif condition="$no.state eq idle" />
+                                    <input type="button" class="btn btn_small " name="" value="停止" onclick="stopAlone({$kn},{$k})"/>&nbsp;
+                                <elseif condition = "$no.state eq running" />
+                                    <input type="button" class="btn btn_small " name="" value="停止" disabled/>&nbsp;
+                                <elseif condition = "$no.state eq unknown" />
+                                    <input type="button" class="btn btn_small " name="" value="停止" disabled/>&nbsp;
+                                </if>
+                            </td>
+                        </tr>
+                        </volist>
+                      </table>
+                    </div>
+                </div>
+              </volist>
+                
+                <div class="table_bottom"></div>
+                <!--分页条-->
+                <!--<div id="controls" class="controlsnew">
+                    <div id="perpage" class="perpage">
+                        <span>跳转到</span>
+                        <input type="text" name="gopage" value="{$jump_page}" class="gopage" id="gopage" /> 页
+                        <a href="#" id="jump_img"><img src="__PUBLIC__/img/left_grey.png" alt="跳页" title="跳转到指定页" onclick="jumpPage('Archive')"/></a>
+                    </div>
+                    <include file="Public:page" />
+                </div>-->
+                <div style="clear:both"></div>
+                <!--分页条结束-->
+            <hr class="hr_bottom" />
+            
+            <div class="tright">
+                <input type="button" value="新建" class="btn btn_big cre_document" />
+                <input type="button" value="删除" class="btn btn_big deldocument" />
+            </div>
+            
+        </div>
+        
+        <!--新建归档-->
+        <div class="new_document hide" id="new_document" style="width:610px">
+            <form name="myfrm" action="" method="post" id="createDocuForm"> 
+                <table class="margin10" border="0">
+                    <tr>
+                        <td width="140px">归档任务名称:</td>
+                        <td colspan="3">
+                            <input  type="text"  name="archive_name" id="archive_name"  value=""  class="s_width100" title="输入下划线、字母、数字、或'.'组成的20位字符" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>归档启动时间:</td>
+                        <td class="ctrl_width">
+                            <select  name="starttime_hour" id="starttime_hour">
+                                 <volist name="time_hour" id="vo" >
+                                    <option value="{$vo}">{$vo}</option>
+                                 </volist>
+                            </select>
+                             : 
+                            <select name="starttime_minute" id="starttime_minute">
+                                 <foreach name="time_minute" item="vo">
+                                    <option value="{$vo}">{$vo}</option>
+                                 </foreach>
+                            </select>
+                        </td>
+                        <td width="120px" class="ctrl_widthR"> 归档运行时长:</td>
+                        <td>
+                            <select  name="stoptime_hour" id="stoptime_hour">
+                                 <volist name="time_duration" id="vo" >
+                                       <option value="{$vo}">{$vo}</option>
+                                 </volist>
+                            </select> <span class="orange">小时</span>
+                             <!-- : 
+                            <select name="stoptime_minute" id="stoptime_minute">
+                                 <foreach name="time_minute" item="vo">
+                                   <option value="{$vo}">{$vo}</option>
+                                 </foreach>
+                            </select> -->
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>服务启动间隔时间:</td>
+                        <td class="ctrl_width">
+                            <select name="intervaltime">
+                                 <foreach name="interval_time" item="vo">
+                                    <option value="{$vo}">{$vo}</option>
+                                 </foreach>
+                            </select><b class="b1new">&nbsp;天</b>
+                        </td>
+                        <td class="ctrl_widthR">归档数据时间:</td>
+                        <td>
+                            <div class="smallb">
+                                <input type="text" value="1" class="letter s_width50" name="modifyTime" id="letter" onkeyup="checkDisabled(this,'minus','letter','1')" />
+                                <input type="button" value="" class="plus" id="plus" onclick="plusSelf('minus','letter','1')" />
+                                <input type="button" value="" class="minus" id="minus" onclick="minusSelf('minus','letter','1')" />
+                            </div><b class="b1new">&nbsp;天</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>归档后执行文档校验:</td>
+                        <td class="ctrl_width">
+                            <input  type="checkbox"  name="newcheck"  value="1" checked="checked"/>
+                        </td>
+                        <td class="ctrl_widthR">归档后删除源文件:</td>
+                        <td>
+                           <input type="checkbox" name="deleteSource" id="deleteSource" value="1" checked="checked" /> 
+                        </td>
+                    </tr>
+                </table>
+                <div class="iplist" id="newIp">
+                    <p>IP列表:  </p>
+                    <!--当不存在节点时，默认有127.0.0.1-->
+                    <if condition = "$countnode eq 0">
+                        <div class="ipbg mtop10">
+	                        <div class="ipNode">
+	                            <input type="checkbox" value="127.0.0.1" name="archiveNodes[]" id="archiveIpnode" disabled checked/>
+	                            <span>127.0.0.1</span>
+	                        </div>
+	                    </div>
+                    <else />
+                        <volist name="newData" id="vo" key="k">
+	                    <div class="ipbg mtop10">
+	                      <div class="ipNode">
+	                        <input type="checkbox" value="all" name="archiveIpAll{$k}" id="allArchiveIp{$k}" onclick="AllArchive(this,'archiveIp{$k}')" />
+	                        <label for="allArchiveIp{$k}"><span>{$vo.index}</span></label>
+	                      </div>
+	                      <div class="clearfix mleft20 mtop10">
+	                        <volist name="vo.data" id="v" key="key">
+	                        <div class="ipson">
+	                            <input type="checkbox" value="{$v}" name="archiveNodes[]" id="archiveIp{$k}{$key}" class="archiveIp{$k}" onclick="ItemArchive(this, 'archiveIpAll{$k}')" />
+	                            <label for="archiveIp{$k}{$key}"><span>{$v}</span></label>
+	                        </div>
+	                        </volist>
+	                      </div>
+	                    </div>
+	                   </volist> 
+                    </if>
+                </div>
+                <div class="yu_shuju">
+                    <p class="mleft5">数据归档: <!-- | <input type="button" value="添加路径" class="btn btn_middle" title="新增路径" onclick="build_row()"/>--></p>
+                    <div class="fleft">
+                        <table id="Table1" class="archive_table">
+                            <tr>
+                                <td>
+                                    <span>源：</span><input style="" class="s_width220"  type="text" name="archiveSrcdir[]" id="archiveSrcdir" value="" />&nbsp;
+                                    <span>目标：</span><input type="text" name="archiveDestdir[]" id="archiveDestdir" value=""  class="s_width220" />
+                                </td>
+                                <td>
+                                    <img src="__PUBLIC__/img/clear.gif" class="img_delete" id="del_img{$k}" align="absmiddle" title="删除数据路径对" onclick="delete_row()"/><br>
+                                </td>
+                            </tr>
+                        </table>
+                        <div class="preRoad_content">
+                            <input type="button" value="添加路径" class="btn btn_middle" title="新增路径" onclick="build_row()"/>
+                        </div>
+                    </div>
+                </div>
+                <fieldset class="lightblue">
+                    <legend>过滤条件</legend>
+                    <div class="newns_nav">
+                        <ul class="tab">
+                            <li class="gxway" onclick="sharewaySet(this,'prefixdiv')">
+                                <input type="checkbox" name="prePostfix" value="cpre" id="cpre" onclick="nasTabDis(this,'prefixdiv')" /> 前缀
+                            </li>
+                            <li class="gxway" onclick="sharewaySet(this,'postfixdiv')">
+                                <input type="checkbox" name="prePostfix" value="cpost" id="cpost" onclick="nasTabDis(this,'postfixdiv')" /> 后缀
+                            </li>
+                            <li class="gxway" onclick="sharewaySet(this,'sizetypediv')">
+                                <input type="checkbox" name="prePostfix" value="csize" id="csize" onclick="nasTabDis(this,'sizetypediv')" /> 文件大小
+                            </li>
+                            <li class="gxway" onclick="sharewaySet(this,'dirdiv')">
+                                <input type="checkbox" name="prePostfix" value="cdir" id="cdir" onclick="nasTabDis(this,'dirdiv')" /> 目录
+                            </li>
+                        </ul>
+                        <div style="clear:both"></div>
+                        
+                        <div id="prefixdiv" class="ns_model">
+                            <p class="orange1">提示：多个前缀时用分号隔开，仅支持输入字母、数字或下划线</p>
+                            <div class="ns_p fleft linep">
+                              <p>
+                                <input type="radio" name="prefixType" value="1" id="preid1" />
+                                <label for="preid1">指定</label>
+                              </p>
+                              <p>
+                                <input type="radio" name="prefixType" value="2" id="preid2" />
+                                <label for="preid2">过滤</label>
+                              </p>
+                            </div>
+                            <div class="prepost">
+                                <textarea name="prefix" id="prefix" class="pretext"></textarea>
+                            </div>
+                        </div>
+                        
+                        <div id="postfixdiv" class="ns_model">
+                            <p class="orange1">提示：多个后缀时用分号隔开，仅支持输入字母、数字或下划线</p>
+                            <div class="ns_p fleft linep">
+                              <p>
+                                <input type="radio" name="postfixType" value="1" id="postid1" />
+                                <label for="postid1">指定</label>
+                              </p>
+                              <p>
+                                <input type="radio" name="postfixType" value="2" id="postid2" />
+                                <label for="postid2">过滤</label>
+                              </p>
+                            </div>
+                            <div class="prepost">
+                                <textarea name="postfix" id="postfix" class="pretext"></textarea>
+                            </div>
+                        </div>
+                        
+                        <div id="sizetypediv" class="ns_model">
+                            <p class="orange1">提示：当最小值或最大值为0时，则对该值不做限制</p>
+                            <div class="ns_p fleft linep">
+                              <p>
+                                <input type="radio" name="sizeType" value="1" id="sizeid1" />
+                                <label for="sizeid1">指定</label>
+                              </p>
+                              <p>
+                                <input type="radio" name="sizeType" value="2" id="sizeid2" />
+                                <label for="sizeid2">过滤</label>
+                              </p>
+                            </div>
+                            <div class="prepost">
+                              <p class="line50">
+                                <span>文件最小值:</span>
+                                <input type="text" name="minSize" id="minSize" class="s_width65" />
+                                <select name="minSizeUnit" id="minSizeUnit">
+                                    <option value="BT">BYTE</option>
+                                    <option value="KB">KB</option>
+                                    <option value="MB">MB</option>
+                                    <option value="GB">GB</option>
+                                </select>
+                                <span>文件最大值:</span>
+                                <input type="text" name="maxSize" id="maxSize" class="s_width65" />
+                                <select name="maxSizeUnit" id="maxSizeUnit">
+                                    <option value="BT">BYTE</option>
+                                    <option value="KB">KB</option>
+                                    <option value="MB">MB</option>
+                                    <option value="GB">GB</option>
+                                </select>
+                              </p>
+                            </div>
+                        </div>
+                        
+                        <div id="dirdiv" class="ns_model">
+                            <p class="orange1">提示：多个目录时用分号隔开，仅支持输入字母、数字、“/”或下划线</p>
+                            <div class="ns_p fleft linep">
+                              <p>
+                                <input type="radio" name="dirType" value="2" id="dirid1" />
+                                <label for="dirid1">过滤</label>
+                              </p>
+                            </div>
+                            <div class="prepost">
+                                <textarea name="dir" id="dir" class="pretext"></textarea>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </fieldset><div style="clear:both;"></div>
+                <div class="tright bottom_bg">
+                    <input type="button" value="确定" class="btn btn_small" onclick="createArchive()"/>
+                    <input type="button" value="取消" class="btn btn_small cancel" />
+                </div>
+            </form>
+        </div>
+        <!--新建归档结束-->
+        
+        
+        <!--选择目录-->
+        <div id="div_dir1" style="display:none">
+            <table>
+             <tr>
+                <td align="left" class="current_dir_td">
+                    当前目录: <input id="current_dir_path" value="/" readonly/>
+                </td>
+             </tr>
+          </table>
+          <div class="table_name"> 
+            <table id="tab_dir1" class="body_table" align="center" width="96%" border="1px">
+            <tr>
+              <td align="left" width="70%">名称</td>
+            </tr>
+          </table>
+          </div>
+          <table class="fom_submit"> 
+            <tr> 
+                <td> 
+                    <input type="button" value="确定" onclick="get_value()" class="btntyp"/>
+                </td>
+            </tr>
+          </table>
+        </div>
+        <!--选择目录结束-->
+        
+        
+        <!--编辑归档-->
+        <div class="edit_doc hide" id="edit_doc" style="width:610px">
+            <form name="edit_frm" action="" method="post" id="editDocForm"> 
+                <input type="hidden" id="hideId" value="" name="hideId" />
+                <table class="margin10" border="0">
+                    <tr>
+                        <td width="140px">归档任务名称:</td>
+                        <td colspan="3">
+                            <input  type="text"  name="doc_name" id="doc_name"  value=""  class="nobg_input" disabled/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>归档启动时间:</td>
+                        <td class="ctrl_width">
+                            <select  name="starttime_hour" id="editbe_h">
+                                 <volist name="time_hour" id="vo" >
+                                       <option value="{$vo}">{$vo}</option>
+                                 </volist>
+                            </select>
+                             : 
+                            <select name="starttime_minute" id="editbe_m">
+                                 <foreach name="time_minute" item="vo">
+                                   <option value="{$vo}">{$vo}</option>
+                                 </foreach>
+                            </select>
+                        </td>
+                        <td class="ctrl_widthR"> 归档运行时长:</td>
+                        <td>
+                            <select  name="stoptime_hour" id="editstop_ho">
+                                 <volist name="time_duration" id="vo" >
+                                       <option value="{$vo}">{$vo}</option>
+                                 </volist>
+                            </select> <span class="orange">小时</span>
+                            <!--  : 
+                            <select name="stoptime_minute" id="editstop_mi">
+                                 <foreach name="time_minute" item="vo">
+                                   <option value="{$vo}">{$vo}</option>
+                                 </foreach>
+                            </select> -->
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>服务启动间隔时间:</td>
+                        <td class="ctrl_width">
+                            <select name="intervaltime" id="editinterv">
+                                 <foreach name="interval_time" item="vo">
+                                    <option value="{$vo}">{$vo}</option>
+                                 </foreach>
+                            </select><b class="b1new">&nbsp;天</b>
+                        </td>
+                        <td class="ctrl_widthR">归档数据时间:</td>
+                        <td>
+                            <div class="smallb">
+                                <input type="text" value="1" name="modifyTime" class="letter s_width50" id="edit_letter" onkeyup="checkDisabled(this,'edit_minus','edit_letter','1')" />
+                                <input type="button" value="" class="plus" id="edit_plus" onclick="plusSelf('edit_minus','edit_letter','1')" />
+                                <input type="button" value="" class="minus" id="edit_minus" onclick="minusSelf('edit_minus','edit_letter','1')" />
+                            </div><b class="b1new">&nbsp;天</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="">归档后执行文档校验:</td>
+                        <td class="ctrl_width">
+                            <input type="checkbox"  name="eidtcheck" id="editcheck_y"  value="1" />
+                        </td>
+                        <td class="ctrl_widthR">归档后删除源文件</td>
+                        <td>
+                            <input type="checkbox"  name="editSource" id="editSource"  value="1" />
+                        </td>
+                    </tr>
+                </table>
+                <div class="iplist" id="editIp">
+                    <p>IP列表:  </p>
+                    <if condition = "$countnode eq 0">
+                        <div class="ipbg mtop10">
+                            <div class="ipNode">
+                                <input type="checkbox" value="127.0.0.1" name="archiveNodes[]" id="editarcIpnode" disabled checked/>
+                                <span>127.0.0.1</span>
+                            </div>
+                        </div>
+                    <else />
+	                    <volist name="newData" id="vol" key="ka">
+	                    <div class="ipbg mtop10 Eipbg">
+	                      <div class="ipNode">
+	                        <input type="checkbox" value="all" name="EarchiveIpAll{$ka}" id="EallArchiveIp{$ka}" onclick="AllArchive(this,'EarchiveIp{$ka}')" />
+	                        <label for="EallArchiveIp{$ka}"><span>{$vol.index}</span></label>
+	                      </div>
+	                      <div class="clearfix mleft20 mtop10 Eiplist">
+	                        <volist name="vol.data" id="da" key="ke">
+	                        <div class="ipson Eipson">
+	                            <input type="checkbox" value="{$da}" name="archiveNodes[]" id="EarchiveIp{$ka}{$ke}" class="EarchiveIp{$ka}" onclick="ItemArchive(this, 'EarchiveIpAll{$ka}')" />
+	                            <label for="EarchiveIp{$ka}{$ke}"><span>{$da}</span></label>
+	                        </div>
+	                        </volist>
+	                      </div>
+	                    </div>
+	                    </volist>
+                    </if>
+                </div>
+                <div class="yu_shuju">
+                    <p class="mleft5">数据归档：</p>
+                    <div class="fleft">
+                        <table id="Table_edit" class="archive_table">
+                        </table>
+                        <div class="preRoad_content">
+                            <input type="button" value="添加路径" class="btn btn_middle" title="新增路径" onclick="editbuild_row()"/>
+                        </div>
+                    </div>
+                </div>
+                <fieldset class="lightblue">
+                    <legend>过滤条件</legend>
+                    <div class="newns_nav">
+                        <ul class="tab">
+                            <li class="gxway" onclick="sharewaySet(this,'Eprefixdiv')">
+                                <input type="checkbox" name="prePostfix" value="cpre" id="Ecpre" onclick="nasTabDis(this,'Eprefixdiv')" /> 前缀
+                            </li>
+                            <li class="gxway" onclick="sharewaySet(this,'Epostfixdiv')">
+                                <input type="checkbox" name="prePostfix" value="cpost" id="Ecpost" onclick="nasTabDis(this,'Epostfixdiv')" /> 后缀
+                            </li>
+                            <li class="gxway" onclick="sharewaySet(this,'Esizetypediv')">
+                                <input type="checkbox" name="prePostfix" value="csize" id="Ecsize" onclick="nasTabDis(this,'Esizetypediv')" /> 文件大小
+                            </li>
+                            <li class="gxway" onclick="sharewaySet(this,'Edirdiv')">
+                                <input type="checkbox" name="prePostfix" value="cdir" id="Ecdir" onclick="nasTabDis(this,'Edirdiv')" /> 目录
+                            </li>
+                        </ul>
+                        <div style="clear:both"></div>
+                        
+                        <div id="Eprefixdiv" class="ns_model">
+                            <p class="orange1">提示：多个前缀时用分号隔开，仅支持输入字母、数字或下划线</p>
+                            <div class="ns_p fleft linep">
+                              <p>
+                                <input type="radio" name="prefixType" value="1" id="Epreass" />
+                                <label for="Epreass">指定</label>
+                              </p>
+                              <p>
+                                <input type="radio" name="prefixType" value="2" id="Eprefil" />
+                                <label for="Eprefil">过滤</label>
+                              </p>
+                            </div>
+                            <div class="prepost">
+                                <textarea name="prefix" id="Eprefix" class="pretext"></textarea>
+                            </div>
+                        </div>
+                        
+                        <div id="Epostfixdiv" class="ns_model">
+                            <p class="orange1">提示：多个后缀时用分号隔开，仅支持输入字母、数字或下划线</p>
+                            <div class="ns_p fleft linep">
+                              <p>
+                                <input type="radio" name="postfixType" value="1" id="Epostass" />
+                                <label for="Epostass">指定</label>
+                              </p>
+                              <p>
+                                <input type="radio" name="postfixType" value="2" id="Epostfil" />
+                                <label for="Epostfil">过滤</label>
+                              </p>
+                            </div>
+                            <div class="prepost">
+                                <textarea name="postfix" id="Epostfix" class="pretext"></textarea>
+                            </div>
+                        </div>
+                        
+                        <div id="Esizetypediv" class="ns_model">
+                            <p class="orange1">提示：当最小值或最大值为0时，则对该值不做限制</p>
+                            <div class="ns_p fleft linep">
+                              <p>
+                                <input type="radio" name="sizeType" value="1" id="Esizeass" />
+                                <label for="Esizeass">指定</label>
+                              </p>
+                              <p>
+                                <input type="radio" name="sizeType" value="2" id="Esizefil" />
+                                <label for="Esizefil">过滤</label>
+                              </p>
+                            </div>
+                            <div class="prepost">
+                              <p class="line50">
+                                <span>文件最小值：</span>
+                                <input type="text" name="minSize" id="EminSize" class="s_width65" />
+                                <select name="minSizeUnit" id="EminSizeUnit">
+                                    <option value="BT">BYTE</option>
+                                    <option value="KB">KB</option>
+                                    <option value="MB">MB</option>
+                                    <option value="GB">GB</option>
+                                </select>
+                                <span>文件最大值：</span>
+                                <input type="text" name="maxSize" id="EmaxSize" class="s_width65" />
+                                <select name="maxSizeUnit" id="EmaxSizeUnit">
+                                    <option value="BT">BYTE</option>
+                                    <option value="KB">KB</option>
+                                    <option value="MB">MB</option>
+                                    <option value="GB">GB</option>
+                                </select>
+                              </p>
+                            </div>
+                        </div>
+                        
+                        <div id="Edirdiv" class="ns_model">
+                            <p class="orange1">提示：多个目录时用分号隔开，仅支持输入字母、数字、“/”或下划线</p>
+                            <div class="ns_p fleft linep">
+                              <p>
+                                <input type="radio" name="dirType" value="2" id="Edirfil" />
+                                <label for="Edirfil">过滤</label>
+                              </p>
+                            </div>
+                            <div class="prepost">
+                                <textarea name="dir" id="Edir" class="pretext">dd</textarea>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </fieldset>
+                <div style="clear:both;"></div>
+                <div style="clear:both;"></div>
+                <div class="tright bottom_bg">
+                    <input type="button" value="确定" class="btn btn_small" onclick="editArchive()"/>
+                    <input type="button" value="取消" class="btn btn_small cancel" />
+                </div>
+            </form>
+        </div>
+        <!--编辑归档结束-->
+        
+        <!--归档详细信息-->
+        <div class="detail_doc hide" id="detail_doc" style="width:610px">
+                <table class="margin10" border="0">
+                    <tr>
+                        <td width="140px">归档任务名称:</td>
+                        <td colspan="3">
+                            <input  type="text"  name="name" id="detail_name"  value=""  class="nobg_input" disabled="disabled" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>归档启动时间:</td>
+                        <td class="ctrl_width">
+                            <select  name="starttime_hour" id="infobe_h" disabled>
+                                 <volist name="time_hour" id="vo" >
+                                       <option value="{$vo}">{$vo}</option>
+                                 </volist>
+                            </select>
+                             : 
+                            <select name="time_minute" id="infobe_m" disabled >
+                                 <foreach name="time_minute" item="vo">
+                                   <option value="{$vo}">{$vo}</option>
+                                 </foreach>
+                            </select>
+                        </td>
+                        <td class="ctrl_widthR">归档运行时长:</td>
+                        <td width="130px">
+                            <select  name="stoptime_hour" id="infostop_ho" disabled>
+                                 <volist name="time_duration" id="vo" >
+                                       <option value="{$vo}">{$vo}</option>
+                                 </volist>
+                            </select> <span class="orange">小时</span>
+                            <!--  : 
+                            <select name="time_minute" id="infostop_mi" disabled>
+                                 <foreach name="time_minute" item="vo">
+                                   <option value="{$vo}">{$vo}</option>
+                                 </foreach>
+                            </select> -->
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>服务启动间隔时间:</td>
+                        <td class="ctrl_width">
+                            <select name="intervaltime" id="infointerv" disabled>
+                                 <foreach name="interval_time" item="vo">
+                                    <option value="{$vo}">{$vo}</option>
+                                 </foreach>
+                            </select><b class="b1new">&nbsp;天</b>
+                        </td>
+                        <td class="ctrl_widthR">归档数据时间:</td>
+                        <td>
+                            <div class="smallb">
+                                <input type="text" value="" name="ago_time" class="letter s_width50" id="ago_time" disabled="disabled" />
+                                <input type="button" value="" class="plus" id="edit_plus" disabled="disabled" />
+                                <input type="button" value="" class="minus" id="edit_minus" disabled="disabled" />
+                            </div><b class="b1new">&nbsp;天</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="">归档后执行文档校验:</td>
+                         <td class="ctrl_width">
+                            <input  type="checkbox" name="infocheck"  value="1" id="infocheck_y" disabled />
+                        </td>
+                        <td class="ctrl_widthR">归档后删除源文件</td>
+                        <td>
+                            <input type="checkbox"  name="infodelOldFile" id="infodelOldFile" value="1" disabled="disabled" />
+                        </td>
+                    </tr>
+                </table>
+                <div class="iplist">
+                    <p>IP列表:  </p>
+                    <if condition = "$countnode eq 0">
+                        <div class="ipbg mtop10">
+                            <div class="ipNode">
+                                <input type="checkbox" value="127.0.0.1" name="darchiveNodes[]" id="darcIpnode" disabled checked/>
+                                <span>127.0.0.1</span>
+                            </div>
+                        </div>
+                    <else />
+                        <volist name="newData" id="vol" key="ka">
+                        <div class="ipbg mtop10">
+                          <div class="ipNode">
+                            <input type="checkbox" value="all" name="DarchiveIpAll{$ka}" id="DallArchiveIp{$ka}" disabled="disabled" />
+                            <span>{$vol.index}</span>
+                          </div>
+                          <div class="clearfix mleft20 mtop10 Diplist">
+                            <volist name="vol.data" id="da" key="ke">
+                            <div class="ipson Dipson">
+                                <input type="checkbox" value="{$da}" name="archiveNodes[]" id="DarchiveIp{$ka}{$ke}" class="DarchiveIp{$ka}" disabled="disabled" />
+                                <span>{$da}</span>
+                            </div>
+                            </volist>
+                          </div>
+                        </div>
+                        </volist>
+                    </if>
+                </div>
+                
+                <div class="yu_shuju">
+                    <p class="archive_p">数据归档：</p>
+                    <div class="fleft">
+                        <table id="Table_detail" class="archive_table">
+                        </table>
+                    </div>
+                </div>
+                <fieldset class="lightblue">
+                    <legend>过滤条件</legend>
+                    <div class="newns_nav" id="isDisabled">
+                        <ul class="tab">
+                            <li class="gxway" onclick="sharewaySet(this,'Dprefixdiv')">
+                                <input type="checkbox" name="prePostfix"  id="Depre" disabled="disabled" /> 前缀
+                            </li>
+                            <li class="gxway" onclick="sharewaySet(this,'Dpostfixdiv')">
+                                <input type="checkbox" name="prePostfix"  id="Depost" disabled="disabled" /> 后缀
+                            </li>
+                            <li class="gxway" onclick="sharewaySet(this,'Dsizetypediv')">
+                                <input type="checkbox" name="prePostfix"  id="Desize" disabled="disabled" /> 文件大小
+                            </li>
+                            <li class="gxway" onclick="sharewaySet(this,'Ddirdiv')">
+                                <input type="checkbox" name="prePostfix"  id="Dedir" disabled="disabled" /> 目录
+                            </li>
+                        </ul>
+                        <div style="clear:both"></div>
+                        
+                        <div id="Dprefixdiv" class="ns_model">
+                            <div class="ns_p fleft linep">
+                              <p>
+                                <input type="radio" name="prefixType" value="1" id="Dpreass" disabled="disabled" />
+                                <label for="Dpreass">指定</label>
+                              </p>
+                              <p>
+                                <input type="radio" name="prefixType" value="2" id="Dprefil" disabled="disabled" />
+                                <label for="Dprefil">过滤</label>
+                              </p>
+                            </div>
+                            <div class="prepost">
+                                <textarea name="prefix" id="Dprefix" class="pretext" disabled="disabled"></textarea>
+                            </div>
+                        </div>
+                        
+                        <div id="Dpostfixdiv" class="ns_model">
+                            <div class="ns_p fleft linep">
+                              <p>
+                                <input type="radio" name="postfixType" value="1" id="Dpostass" disabled="disabled" />
+                                <label for="Dpostid1">指定</label>
+                              </p>
+                              <p>
+                                <input type="radio" name="postfixType" value="2" id="Dpostfil" disabled="disabled" />
+                                <label for="Dpostfil">过滤</label>
+                              </p>
+                            </div>
+                            <div class="prepost">
+                                <textarea name="postfix" id="Dpostfix" class="pretext" disabled="disabled"></textarea>
+                            </div>
+                        </div>
+                        
+                        <div id="Dsizetypediv" class="ns_model">
+                            <div class="ns_p fleft linep">
+                              <p>
+                                <input type="radio" name="sizeType" value="1" id="Dsizeass" disabled="disabled" />
+                                <label for="Dsizeass">指定</label>
+                              </p>
+                              <p>
+                                <input type="radio" name="sizeType" value="2" id="Dsizefil" disabled="disabled" />
+                                <label for="Dsizefil">过滤</label>
+                              </p>
+                            </div>
+                            <div class="prepost">
+                              <p class="line50">
+                                <span>文件最小值：</span>
+                                <input type="text" name="minSize" id="dminSize" class="s_width65" disabled="disabled" />
+                                <select name="minSizeUnit" id="DminSizeUnit" disabled="disabled">
+                                    <option value="BT">BYTE</option>
+                                    <option value="KB">KB</option>
+                                    <option value="MB">MB</option>
+                                    <option value="GB">GB</option>
+                                </select>
+                                <span>文件最大值：</span>
+                                <input type="text" name="maxSize" id="dmaxSize" class="s_width65" disabled="disabled" />
+                                <select name="maxSizeUnit" id="DmaxSizeUnit" disabled="disabled">
+                                    <option value="BT">BYTE</option>
+                                    <option value="KB">KB</option>
+                                    <option value="MB">MB</option>
+                                    <option value="GB">GB</option>
+                                </select>
+                              </p>
+                            </div>
+                        </div>
+                        
+                        <div id="Ddirdiv" class="ns_model">
+                            <div class="ns_p fleft linep">
+                              <p>
+                                <input type="radio" name="dirType" value="2" id="Ddirfil" disabled="disabled" />
+                                <label for="dirfil">过滤</label>
+                              </p>
+                            </div>
+                            <div class="prepost">
+                                <textarea name="dir" id="Ddir" class="pretext" disabled="disabled">dd</textarea>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </fieldset>
+                <div style="clear:both;"></div>
+                <div class="tright bottom_bg detail_but">
+                    <input type="button" value="确定" class="btn btn_small cancel" />
+                </div>
+        </div>
+        <!--归档详细信息结束-->
+        
+        
+        <!--删除归档结束-->
+        <form name="delArchiveForm" id="delArchiveForm" method="post" action="">
+            <input type="hidden" id="delhidId" value="" name="delhidId" />
+            <input type="hidden" id="arv_name" value="" name="arv_name" />
+            <div class="del_docu hide" id="del_docu" id="del_docu"> 
+            <div class="del_div1">
+                <table>
+                    <tr><td valign="top" width="90px;"><img src="__PUBLIC__/img/warning.png" alt="警告" /></td>
+                    <td>&nbsp;确定删除归档任务:<span class="del_list" id="del_document"></span></td></tr>
+                </table>
+            </div>
+            <div class="tright bottom_bg">
+                <input type="button" value="确定" class="btn btn_small cancel" onclick="delArchive()"/>
+                <input type="button" value="取消" class="btn btn_small cancel" />
+            </div>
+        </div>
+        </form>
+        <!--删除归档任务结束-->
+        
+    </div>
+    <script type="text/javascript">
+        jQuery(document).ready(function(){
+            var cbox    = jQuery(".gxway").children("input");
+            var showdiv = jQuery(".gxway").parents(".newns_nav").children(".ns_model");
+            for (var i = 0; i < cbox.length; i++) {
+                if (cbox.eq(i).is(":checked")) {
+                    showdiv.eq(i).find("input,textarea,select").attr("disabled",false);
+                } else {
+                    showdiv.eq(i).find("input,textarea,select").attr("disabled",true);
+                }
+            }
+        });
+    </script>
+</body>

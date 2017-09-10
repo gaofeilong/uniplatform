@@ -1,0 +1,325 @@
+<include file="Public:file"/>
+<script type="text/javascript" src="__PUBLIC__/js/highcharts.js"></script>
+<style>
+<!--
+/*集群概况*/
+.idxstyle{
+    min-width: 400px; 
+    height: 220px; 
+    margin: 0 auto;
+}
+.datastyle{
+    min-width: 400px; 
+    height: 220px; 
+    margin: 0 auto;
+}
+.nonode{
+    min-width: 400px; 
+    height: 220px;
+    line-height:220px;
+    margin: 0 auto;
+    text-align:center;
+    font-size:16px;
+    color:#D1780D;
+    font-weight:bold;
+}
+-->
+</style>
+<body class="rightbody">
+    <div class="right_title" style="">
+        <span>首页 </span> &raquo; 分布式消冗文件系统  &raquo; 集群概况
+        <input type="hidden" id="allI" value="{$allI}" />
+        <input type="hidden" id="readyI" value="{$readyI}" />
+        <input type="hidden" id="runI" value="{$runI}" />
+        <input type="hidden" id="errorI" value="{$errorI}" />
+        <input type="hidden" id="stopI" value="{$stopI}" />
+        <input type="hidden" id="lostI" value="{$lostI}" />
+        <input type="hidden" id="allD" value="{$allD}" />
+        <input type="hidden" id="readyD" value="{$readyD}" />
+        <input type="hidden" id="runD" value="{$runD}" />
+        <input type="hidden" id="errorD" value="{$errorD}" />
+        <input type="hidden" id="stopD" value="{$stopD}" />
+        <input type="hidden" id="lostD" value="{$lostD}" />
+        <input type="hidden" id="ratioClu" value="{$ratio}" />
+        <input type="hidden" id="totalInt" value="{$totalInt}" />
+        <input type="hidden" id="realInt" value="{$realInt}" />
+    </div>
+    <div class="right_main">
+        <div class="right_fortable">
+            <hr class="hr_top" />
+            <div class="license_left">
+                <div class="sys">
+                    <div class="s_title" id="sysinfo" title="收起" onclick="show_hide(this,'hdfs_status')">
+                        <h4 class="hdfs_status">集群状态</h4>
+                        <span class="show_hide">︽</span>
+                    </div>
+                    <div id="hdfs_status" class="hdfsModel clearfix">
+                      <div>
+                        <div class="indexNode">
+                            <div class="rateInfo1">索引节点状态：</div>
+                            <div id="indexState" class="idxstyle"></div>
+                        </div>
+                        <div class="dataNode">
+                            <div class="rateInfo1">数据节点状态：</div>
+                            <div id="dataState">当前没有数据节点</div>
+                        </div>
+                        <div style="clear:both"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="license_left">
+                <div class="sys">
+                    <div class="s_title" id="sysinfo" title="收起" onclick="show_hide(this,'hdfs_rate')">
+                        <h4 class="hdfs_rate">集群消冗比</h4>
+                        <span class="show_hide">︽</span>
+                    </div>
+                    <div id="hdfs_rate" class="hdfsModel clearfix">
+                        <input type="hidden" id="ratioPie" value="{$ratio}" />
+                        <div class="rateInfo">集群消冗比： <span class="green">{$ratio} x</span></div>
+                        <div id="container" style="min-width: 680px; height: 200px; margin: 0 auto;float:left"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!--<div class="license_left">
+                <div class="sys">
+                    <div class="s_title" id="sysinfo" title="收起" onclick="show_hide(this,'hdfs_ctrl')" >
+                        <h4 class="hdfs_ctrl">集群控制</h4>
+                        <span class="show_hide">︽</span>
+                    </div>
+                    <div id="hdfs_ctrl" class="hdfsModel bottomB">
+                        <div class="tright bbb">
+                            <input type="button" value="启动集群" class="btn btn_big" />
+                            <input type="button" value="停止集群" class="btn btn_big" />
+                        </div>
+                    </div>
+                </div>
+            </div>-->
+            <div style="clear:both"></div>
+            <hr class="hr_bottom3" />
+        </div>
+    </div>
+    <script type="text/javascript">
+    jQuery(function () {
+            var chart;
+            //索引节点的状态
+            jQuery(document).ready(function() {
+                var allI   = jQuery("#allI").val() * 1;
+                var runI   = jQuery("#runI").val() * 1;
+                var errorI = jQuery("#errorI").val() * 1;
+                var stopI  = jQuery("#stopI").val() * 1;
+                var lostI  = jQuery("#lostI").val() * 1;
+                var readyI = jQuery("#readyI").val() * 1;
+                if (allI < 1) {
+                	jQuery("#indexState").addClass("nonode");
+                    jQuery("#indexState").html("当前没有索引节点");
+                } else {
+                	jQuery("#indexState").addClass("idxstyle");
+	                chart = new Highcharts.Chart({
+	                    chart: {
+	                        backgroundColor: 'rgba(255, 255, 255, 0)',
+	                        plotBorderColor : null,
+	                        plotBackgroundColor: null,
+	                        plotBackgroundImage:null,
+	                        plotBorderWidth: null,
+	                        plotShadow: false,
+	                        
+	                        renderTo: 'indexState',
+	                        plotBackgroundColor: null,
+	                        plotBorderWidth: null,
+	                        plotShadow: false
+	                    },
+	                    title: {
+	                        text: ' '
+	                    },
+	                    tooltip: {
+	                        //pointFormat: '{series.name}: <b>{point.percentage}</b>',
+	                        //percentageDecimals: 1
+	                        formatter: function() {
+                                return '<b>'+ this.point.name +'</b>: '+ Highcharts.numberFormat(this.percentage, 1) +'% ('+
+                                             Highcharts.numberFormat(this.y, 0, ',') +' 台)';
+                             }
+	                    },
+	                    plotOptions: {
+	                        pie: {
+	                            allowPointSelect: true,
+	                            cursor: 'pointer',
+	                            dataLabels: {
+	                                enabled: true,
+	                                color: '#000000',
+	                                connectorColor: '#000000',
+	                                formatter: function() {
+	                                    return '<b>'+ this.point.name +'</b>: '+ this.percentage.toFixed(1) +'%';
+	                                }
+	                            }
+	                        }
+	                    },
+	                    series: [{
+	                        type: 'pie',
+	                        name: 'Browser share',
+	                        data: [
+	                            ['running', runI],
+	                            ['stopped', stopI],
+	                            ['error', errorI],
+	                            ['lost', lostI],
+	                            ['ready', readyI]
+	                        ]
+	                    }]
+	                });
+                }
+            });
+            
+            //数据节点的状态
+            jQuery(document).ready(function() {
+            	var allD   = jQuery("#allD").val() * 1;
+            	var runD   = jQuery("#runD").val() * 1;
+                var errorD = jQuery("#errorD").val() * 1;
+                var stopD  = jQuery("#stopD").val() * 1;
+                var lostD  = jQuery("#lostD").val() * 1;
+                var readyD = jQuery("#readyD").val() * 1;
+                if (allD < 1) {
+                    jQuery("#dataState").addClass("nonode");
+                	jQuery("#dataState").html("当前没有数据节点");
+                } else {
+                	jQuery("#dataState").addClass("datastyle");
+	                chart = new Highcharts.Chart({
+	                    chart: {
+	                        backgroundColor: 'rgba(255, 255, 255, 0)',
+	                        plotBorderColor : null,
+	                        plotBackgroundColor: null,
+	                        plotBackgroundImage:null,
+	                        plotBorderWidth: null,
+	                        plotShadow: false,
+	                        
+	                        renderTo: 'dataState',
+	                        plotBackgroundColor: null,
+	                        plotBorderWidth: null,
+	                        plotShadow: false
+	                    },
+	                    title: {
+	                        text: ' '
+	                    },
+	                    tooltip: {
+	                        //pointFormat: '{series.name}: <b>{point.percentage}</b>',
+	                        //percentageDecimals: 1
+	                        formatter: function() {
+                                return '<b>'+ this.point.name +'</b>: '+ Highcharts.numberFormat(this.percentage, 1) +'% ('+
+                                             Highcharts.numberFormat(this.y, 0, ',') +' 台)';
+                             }
+	                    },
+	                    plotOptions: {
+	                        pie: {
+	                            allowPointSelect: true,
+	                            cursor: 'pointer',
+	                            dataLabels: {
+	                                enabled: true,
+	                                color: '#000000',
+	                                connectorColor: '#000000',
+	                                formatter: function() {
+	                                    return '<b>'+ this.point.name +'</b>: '+ this.percentage.toFixed(1) +' %';
+	                                }
+	                            }
+	                        }
+	                    },
+	                    series: [{
+	                        type: 'pie',
+	                        name: 'Browser share',
+	                        data: [
+	                            ['running',   runD],
+	                            ['stopped', stopD],
+	                            ['error', errorD],
+	                            ['lost', lostD],
+	                            ['ready', readyD]
+	                        ]
+	                    }]
+	                });
+                }
+            });
+
+            //柱状图
+            jQuery(document).ready(function() {
+                var totalInt = jQuery("#totalInt").val().split(" ");
+                var total    = totalInt[0] * 1;
+                var unit     = totalInt[1];
+                var realInt  = jQuery("#realInt").val() * 1;
+                var dw = new Array('byte','KB','MB', 'GB', 'TB' ,'PB');
+                for (var i = 0; i < dw.length; i++) {
+                    if (unit == dw[i]) {
+                        var realu = realInt / Math.pow(1024,i);
+                        var real  = Math.round(realu * 100) / 100;
+                    }
+                }
+                chart = new Highcharts.Chart({
+                    chart: {
+             	        backgroundColor: 'rgba(255, 255, 255, 0)',
+                        renderTo: 'container',
+                        type: 'bar'
+                    },
+                    title: {
+                        text: ' '
+                    },
+                    subtitle: {
+                        text: ''
+                    },
+                    xAxis: {
+                        categories: [''],
+                        title: {
+                            text: null
+                        }
+                    },
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: unit,
+                            align: 'high'
+                        },
+                        labels: {
+                            overflow: 'justify'
+                        }
+                    },
+                    tooltip: {
+                        formatter: function() {
+                            return ''+
+                                this.series.name +': '+ this.y + unit;
+                        }
+                    },
+                    plotOptions: {
+                        bar: {
+                            dataLabels: {
+                                enabled: true
+                            }
+                        }
+                    },
+                    legend: {
+                        layout: 'vertical',
+                        align: 'right',
+                        verticalAlign: 'top',
+                        x: 0,
+                        y: 10,
+                        floating: true,
+                        borderWidth: 1,
+                        backgroundColor: '#D6E3ED',
+                        shadow: true
+                    },
+                    credits: {
+                        enabled: false
+                    },
+                    series: [
+						{
+						    name:'real',
+						    data:[real]
+						},
+	                    {
+	                        name:'total',
+	                        data:[total]
+	                    }
+                    ]
+                });
+                
+            });
+        });
+    </script>
+</body>
+</html>

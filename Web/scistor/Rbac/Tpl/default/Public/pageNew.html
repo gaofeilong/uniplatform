@@ -1,0 +1,17 @@
+<div id="navigation" class="navigation">
+    <if condition="$currentPagenew elt 1">
+        <img src="__PUBLIC__/img/first.gif" title="首页" alt="首页" />
+        <img src="__PUBLIC__/img/previous.gif" title="上一页" alt="上一页" />        
+    <else />
+        <a href="__URL__/index/currentPagenew/1"><img src="__PUBLIC__/img/first.gif" title="首页" alt="首页" /></a>
+        <a href="__URL__/index/currentPagenew/{$previousPagenew}"><img src="__PUBLIC__/img/previous.gif" title="上一页" alt="上一页" /></a>
+    </if>
+    <if condition="$currentPagenew egt $lastPagenew">
+        <img src="__PUBLIC__/img/next.gif" title="下一页" alt="下一页" />
+        <img src="__PUBLIC__/img/last.gif" title="尾页" alt="尾页"/>
+    <else />    
+        <a href="__URL__/index/currentPagenew/{$nextPagenew}"><img src="__PUBLIC__/img/next.gif" title="下一页" alt="下一页" /></a>
+        <a href="__URL__/index/currentPagenew/{$lastPagenew}"><img src="__PUBLIC__/img/last.gif" title="尾页" alt="尾页"/></a>
+    </if>
+</div>
+<div id="text" class="page">当前第 <span id="currentpage">{$currentPagenew}</span> 页 &nbsp; 共 <span id="pagelimitnew">{$lastPagenew}</span> 页</div>

@@ -1,0 +1,41 @@
+<include file="Public:file"/>
+<body class="rightbody">
+    <div class="right_title" style="">
+        <span>首页 </span> &raquo; 网络管理  &raquo; 基础网络配置
+    </div>
+    <div class="right_main">
+        <div class="right_fortable">
+            <hr class="hr_top" />
+			
+            <!--页面操作成功与否提示-->
+            <div class="publicNotice pN_error" id="pN_info"></div>
+            <!--页面操作成功与否提示 over-->
+			
+            <form name="baseNetForm" id="baseNetForm" action="" method="post">
+            <fieldset class="d_lightblue">
+                <legend class="orange">基础网络配置</legend>
+                <table class="table3">
+                    <tr>
+                        <td width="120px">主机名：</td>
+                        <td><input type="text" name="hostName" id="hostName" value="{$hostName}" class="s_width2" /></td>
+                    </tr>
+                    <tr>
+                        <td>首选DNS：</td>
+                        <td><input type="text" name="dns0" id="dnsFirst" value="{$dns0}" class="s_width2" /></td>
+                    </tr>
+                    <tr>
+                        <td>备用DNS：</td>
+                        <td><input type="text" name="dns1" id="dnsReserve" value="{$dns1}" class="s_width2" /></td>
+                    </tr>
+                    <tr class="td_top">
+                        <td></td>
+                        <td class="td_top"><input type="button" value="确认" class="btn btn_big" onclick="Base_set()"/></td>
+                    </tr>
+                </table>
+            </fieldset>
+            </form>
+            
+            <hr class="hr_bottom" />
+        </div>
+    </div>
+</body>

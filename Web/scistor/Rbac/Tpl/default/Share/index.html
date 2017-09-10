@@ -1,0 +1,333 @@
+<include file="Public:file"/>
+<body class="rightbody">
+    <div class="right_title">
+        <span>首页 </span> &raquo; NAS管理 &raquo; 共享管理 &raquo; ISCSI共享
+    </div>
+    <div class="right_main">
+        <div class="right_fortable">
+            <!--头部切换页面标签栏-->
+            <div class="shareNav" style="overflow:hidden">
+                <ul>
+                    <li class="navson select"><a href="__URL__/index" >ISCSI共享</a></li>
+                    <li class="navson"><a href="__URL__/FCshare">FC共享</a></li>
+                    <li class="navson"><a href="__URL__/NASshare" >NAS共享</a></li>
+                </ul>
+            </div>
+            <!--over 头部切换页面标签栏-->
+            <!--页面操作成功与否提示-->
+            <div class="publicNotice pN_error" id="pN_info"></div>
+            <!--页面操作成功与否提示 over-->
+
+            <!--ISCSI target 设置-->
+            <fieldset class="d_lightblue marginSet">
+                <legend class="orange">ISCSI-Target 管理</legend>
+                <div>选择 Target: 
+                    <select name="is_sel" id="is_sel" class="s_widths" onchange="SelIqn()">
+                        <volist name='itlist' id ='i' key='k'>
+                            <option value="{$i}" <if condition = "$i eq $iqn">selected</if> >{$i}</option>
+                        </volist>
+                    </select>
+                    <input type="button" value="新建" class="btn btn_small build_is" />
+                    <input type="button" value="删除" class="btn btn_small delIs" />
+                </div>
+            </fieldset>
+            <!--ISCSI target 设置 over-->
+
+            <!--ISCSI用户-->
+            <div class="isUserL">
+                <h3 class="top ish3">在IQN[{$iqn}]上的 CHAP 用户</h3>
+                <form name="isUForm" id="isUForm" action="" method="post">
+                    <input type="hidden" name="iqn" value="{$iqn}"/>
+                    <fieldset class="isMgr">
+                    <div class="limitT1">
+                        <table class="table1" id="is_user">
+                            <tr class="top">
+                                <th width="40px"><input type="checkbox" name="isU_all" value="checkall" onclick="All(this, 'Uchoice')" /></th>
+                                <th>用户</th>
+                                <th>操作</th>
+                            </tr>
+                            <volist name='incominguser' id ='i' key='k'>
+                            <tr>
+                                <td><input type="checkbox" name="Uchoice" id="Uchoice{$k}" value="{$i['username']}" onclick="Item(this, 'isU_all')" /></td>
+                                <label for="Uchoice{$k}">
+                                <td class="isUser">{$i['username']}</td>
+                                <td>
+                                    <input type="button" value="密码设置" class="btn btn_middle" onclick="popupEditChap(\'{$i['username']}\',\'{$i['passwd']}\',1)"/>
+                                </td></label>
+                            </tr>
+                            </volist>
+                            <volist name='outgoinguesr' id ='o' key='k'>
+                            <tr>
+                                <td><input type="checkbox" name="Uchoice" id="Uchoice100{$k}" value="{$o['username']}" onclick="Item(this, 'isU_all')"/></td>
+                                <label for="Uchoice100{$k}">
+                                <td class="isUser">{$o['username']}</td>
+                                <td>
+                                    <input type="button" value="密码设置" class="btn " onclick="popupEditChap(\'{$o['username']}\',\'{$o['passwd']}\',1)"/>
+                                </td></label>
+                            </tr>
+                            </volist>
+                        </table>
+                    </div>
+                    </fieldset>
+                    <!--分页条-->
+                    <div id="controls" class="controls">
+                        <div id="perpage" class="perpage">
+                            <span>跳转到</span>
+                            <input type="text" name="gopage" value="{$jump_page}" class="gopage" id="gopage" /> 页
+                            <a href="#" id="jump_img"><img src="__PUBLIC__/img/left_grey.png" alt="跳页" title="跳转到指定页" onclick="jumpPage('Share')"/></a>
+                        </div>
+                        <include file="Public:page" />
+                    </div>
+                    <!--over 分页条-->
+                    <hr class="hr_bottom2" />
+                    <div class="tright bbb">
+                        <input type="button" value="添加" class="btn btn_middle build_isU" onclick="popupCreateChap('{$iqn}')"/>
+                        <input type="button" value="删除" class="btn btn_middle delIsU" onclick="popupDelChap('{$iqn}')"/>
+                    </div>
+                </form>
+            </div>
+            <!-- ISCSI Lun Map -->
+            <div class="isVolR">
+                <h3 class="top ish3">在IQN[{$iqn}]上的 Lun Map</h3>
+                <form action="" name="itLunFrom" id="itLunForm" method="post">
+                    <input type="hidden" name="iqn" value="{$iqn}"/>
+                    <fieldset class="isMgr">
+                    <div class="limitT1">
+                        <table class="table1" id="is_vol">
+                            <tr class="top">
+                                <!--<th width="40px"><input type="checkbox" name="isV_all" value="checkall" onclick="All(this, 'Vchoice[]')" /></th>-->
+                                <th>卷</th>
+                                <th>卷组</th>
+                                <th>空间(MB)</th>
+                                <th>读写模式</th>
+                                <th>传输模式</th>
+                                <th>BlockSize</th>
+                                <th>状态</th>
+                                <th title="映射到 {$iqn}">映射</th>
+                            </tr>
+                            <volist name='maplist' id='i' key='k'>
+                            <tr>
+                                <!--<td></td>-->
+                                <input type="hidden" name="lun[{$k-1}][path]" value="{$i['path']}"/>
+                                <label for="Vchoice{$k}">
+                                <td class="isVol">{$i['lv']}</td>
+                                <td>{$i['vg']}</td>
+                                <td>{$i['size']}</td>
+                                <td>
+                                    <select name="lun[{$k-1}][type]" id="" >
+                                        <option value="0" <if condition="$i['type'] eq 0 OR $i['type'] eq ''">selected</if>>fileio</option>
+                                        <option value="1" <if condition="$i['type'] eq 1">selected</if>>blockio</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select name="lun[{$k-1}][iomode]" id="" >
+                                        <option value="0" <if condition="$i['iomode'] eq 0 OR $i['iomode'] eq ''">selected</if>>WT(写入)</option>
+                                        <option value="1" <if condition="$i['iomode'] eq 1">selected</if>>WB(写回)</option>
+                                        <option value="2" <if condition="$i['iomode'] eq 2">selected</if>>RO(只读)</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select name="lun[{$k-1}][blockSize]" id="" >
+                                        <option value="512" <if condition="$i['blockSize'] eq 512 OR $i['blockSize'] eq ''">selected</if>>512</option>
+                                        <option value="1024" <if condition="$i['blockSize'] eq 1024">selected</if>>1024</option>
+                                        <option value="2048" <if condition="$i['blockSize'] eq 2048">selected</if>>2048</option>
+                                        <option value="4096" <if condition="$i['blockSize'] eq 4096">selected</if>>4096</option>
+                                    </select>
+                                </td>
+                                <td><if condition="$i['mapped'] eq 1">已映射</if><if condition="$i['mapped'] neq 1">空闲</if></td>
+                                <td><input type="checkbox" name="Vchoice[]" id="Vchoice{$k}" value="{$i['path']}" 
+                                    <if condition="$i['mapped'] eq 1">checked</if> />
+                                </td>
+                                </label>
+                            </tr>
+                            </volist>
+                        </table>
+                    </div>
+                    </fieldset>
+                    <!--分页条-->
+                    <div id="controlsA" class="controls">
+                        <div id="perpageA" class="perpage">
+                            <span>跳转到</span>
+                            <input type="text" name="gopageA" value="1" class="gopage" id="gopageA" /> 页
+                            <img src="__PUBLIC__/img/left_grey.png" alt="跳页" title="跳转到指定页" />
+                        </div>
+                        <div id="navigationA" class="navigation">
+                            <img src="__PUBLIC__/img/first.gif" title="首页" alt="首页" onclick="sorter.move(-1,true)" />
+                            <img src="__PUBLIC__/img/previous.gif" title="上一页" alt="上一页" onclick="sorter.move(-1)" />
+                            <img src="__PUBLIC__/img/next.gif" title="下一页" alt="下一页" onclick="sorter.move(1)" />
+                            <img src="__PUBLIC__/img/last.gif" title="尾页" alt="尾页" onclick="sorter.move(1,true)" />
+                        </div>
+                        <div id="textB" class="page">当前第 <span id="currentpageA">1</span> 页 &nbsp; 共 <span id="pagelimitA">1</span> 页</div>
+                    </div>
+                    <!--over 分页条-->
+                    <hr class="hr_bottom2" />
+                    <div class="tright">
+                        <input type="button" value="提交映射" class="btn btn_big " onclick="AddItLun()"/>
+                        <!--<input type="button" value="删除" class="btn btn_big delIsV" />-->
+                    </div>
+                </form>
+            </div>
+
+            <!--新建ISCSI target-->
+            <div class="hide new_is" id="new_is" style="width:500px">
+            <form name="newIsForm" id="newIsForm" action="" method="post">
+                <div class="n_p">
+                    <p>iqn名称:</p>
+                    <span class="orange" id="newIqnPrefix">iqn.{$today}.nas:</span>
+                    <input type="text" class="s_width250" name="new_isName" id="newTargetName" />
+                </div>
+                <div class="tright bottom_bg">
+                    <input type="button" value="确定" class="btn btn_small" onclick="AddTarget()"/>
+                    <input type="button" value="取消" class="btn btn_small cancel" />
+                </div>
+            </form>
+            </div>
+
+            <!--删除ISCSI target-->
+            <div class="hide del_is" id="del_is">
+            <form name="delIsForm" id="delIsForm" action="" method="post">
+                <div class="del_div1">
+                    <table>
+                        <tr><td class="vtop" width="90px;"><img src="__PUBLIC__/img/warning.png" alt="警告" /></td>
+                        <td>&nbsp;确定删除iscsi target:<span class="del_list" id="delIs_list"></span></td></tr>
+                    </table>
+                </div>
+                <div class="tright bottom_bg">
+                    <input type="button" value="确定" class="btn btn_small" onclick="DelTarget()"/>
+                    <input type="button" value="取消" class="btn btn_small cancel" />
+                </div>
+            </form>
+            </div>
+
+            <!--新建ISCSI CHAP 用户-->
+            <div class="hide new_isU" id="new_isU">
+            <form name="newIsUForm" id="newIsUForm" action="" method="post">
+                <input type="hidden" name="usertype" id="usertype" value="1"/>
+                <table class="margin10">
+                    <tr>
+                        <td width="100px">iqn:</td>
+                        <td><input type="text" class="s_width250" name="iqn" value="{$iqn}" readonly /></td>
+                    </tr>
+                    <tr>
+                        <td>用户名:</td>
+                        <td><input type="text" class="s_width250" id="isUser" name="username"/></td>
+                    </tr>
+                    <tr>
+                        <td>密码:</td>
+                        <td><input type="text" class="s_width250" id="isPass" name="passwd"/></td>
+                    </tr>
+                </table>
+                <div class="tright bottom_bg">
+                    <input type="button" value="确定" class="btn btn_small" onclick="AddChap()"/>
+                    <input type="button" value="取消" class="btn btn_small cancel" />
+                </div>
+            </form>
+            </div>
+
+            <!--修改ISCSI CHAP 用户密码-->
+            <div class="hide edit_isU" id="edit_isU">
+            <form name="editIsUForm" id="editIsUForm" action="" method="post">
+                <input type="hidden" name="usertype" id="usertype" value="1"/>
+                <table class="margin10">
+                    <tr>
+                        <td width="100px">iqn：</td>
+                        <td><input type="text" class="s_width250" name="iqn" value="{$iqn}" readonly /></td>
+                    </tr>
+                    <tr>
+                        <td>用户名：</td>
+                        <td><input type="text" class="s_width250" id="editUserName" name="username"  readonly /></td>
+                    </tr>
+                    <tr>
+                        <td>密码：</td>
+                        <td><input type="text" class="s_width250" id="editUserPass" name="passwd" />
+                    </tr>
+                </table>
+                <div class="tright bottom_bg">
+                    <input type="button" value="确定" class="btn btn_small" onclick="EditChap()"/>
+                    <input type="button" value="取消" class="btn btn_small cancel" />
+                </div>
+            </form>
+            </div>
+
+            <!--删除ISCSI 用户-->
+            <div class="hide del_isU" id="del_isU">
+            <form name="delIsUForm" id="delIsUForm" action="" method="post">
+                <input type="hidden" name="iqn" value="{$iqn}"/>
+                <input type="hidden" name="users_del" id="users_del" value=""/>
+                <div class="del_div1">
+                    <table>
+                        <tr><td class="vtop" width="90px;"><img src="__PUBLIC__/img/warning.png" alt="警告" /></td>
+                        <td>&nbsp;确定删除iscsi用户:<span class="del_list" id="delIsU_list"></span></td></tr>
+                    </table>
+                </div>
+                <div class="tright bottom_bg">
+                    <input type="button" value="确定" class="btn btn_small" onclick="DelChap()"/>
+                    <input type="button" value="取消" class="btn btn_small cancel" />
+                </div>
+            </form>
+            </div>
+
+            <!--新建 ISCSI-Target Lun 映射-->
+            <div class="hide new_isV" id="new_isV" style="width:500px">
+                <hr class="hr_top2" /> 映射到 Target: {$iqn}
+            <form name="newIsVForm" id="newIsVForm" action="" method="post">
+                <input type="hidden" name="iqn" value="{$iqn}"/>
+                <table class="table1">
+                    <tr class="top">
+                        <th width="40px"><input type="checkbox" name="newV_all" value="checkall" onclick="All(this, 'newVchoice')" /></th>
+                        <th>卷</th>
+                        <th>卷组</th>
+                        <th>空间</th>
+                        <th>读写模式</th>
+                        <th>传输模式</th>
+                    </tr>
+                    <volist name='unmaplun' id='i' key='k'>
+                    <tr>
+                        <td><input type="checkbox" name="newVchoice" id="newVchoice{$k}" value="{$i['path']}" onclick="Item(this, 'newV_all')" /></td>
+                        <label for="newVchoice{$k}">
+                        <td>{$i['path']}</td>
+                        <td></td>
+                        <td>{$i['size']}</td>
+                        <td>
+                            <select name="newVSel{$k}" id="newVSel1" >
+                                <option value="ro">RO(只读)</option>
+                                <option value="wt">WT(写入)</option>
+                                <option value="wb">WB(写回)</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select name="newtran_model{$k}" id="newtran_model" >
+                                <option value="ro">RO(只读)</option>
+                                <option value="wt">WT(写入)</option>
+                                <option value="wb">WB(写回)</option>
+                            </select>
+                        </td></label>
+                    </tr>
+                    </volist>
+                </table>
+                <div class="tright bottom_bg">
+                    <input type="button" value="确定" class="btn btn_small" onclick="AddLun()"/>
+                    <input type="button" value="取消" class="btn btn_small cancel" />
+                </div>
+            </form>
+            </div>
+
+            <!--删除 iscsi卷映射关系-->
+            <div class="hide del_isV" id="del_isV">
+            <form name="delIsVForm" id="delIsVForm" action="" method="post">
+                <input type="hidden" name="iqn" value="{$iqn}"/>
+                <div class="del_div1">
+                    <table>
+                        <tr><td class="vtop" width="90px;"><img src="__PUBLIC__/img/warning.png" alt="警告" /></td>
+                        <td>&nbsp;确定删除iscsi卷映射:<span class="del_list" id="delIsV_list"></span></td></tr>
+                    </table>
+                </div>
+                <div class="tright bottom_bg">
+                    <input type="button" value="确定" class="btn btn_small" onclick="DelLun()"/>
+                    <input type="button" value="取消" class="btn btn_small cancel" />
+                </div>
+            </form>
+            </div>
+        </div>
+    </div>
+</body>
